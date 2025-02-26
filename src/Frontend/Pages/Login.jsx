@@ -52,7 +52,7 @@ const role = useSelector((state) => state.userData.role)
         Cookies.set("token", role === 'student' ? responseData.data.accessToken : responseData.token, { expires: 7 });
         Cookies.set("user", JSON.stringify(role === 'student' ? responseData.data.student : role === 'teacher' ? responseData.teacher : responseData.user), { expires: 7 });        setToastMessage("Login successful!"), setToastIcon("right");
         setShowToast(true);
-        // window.location.href = "/dashboard";
+        window.location.href = "/dashboard";
       } else {
         setToastMessage({
           message: responseData.message || "Login failed",

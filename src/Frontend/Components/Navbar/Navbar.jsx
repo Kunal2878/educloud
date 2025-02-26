@@ -57,7 +57,7 @@ const NavBar = ({ User, onMenuClick }) => {
   const handleSignOut = () => {
     Cookies.remove("token");
     Cookies.remove("user");
-    window.location.href = "/login";
+    window.location.href = "/user-options";
   };
 
   return (

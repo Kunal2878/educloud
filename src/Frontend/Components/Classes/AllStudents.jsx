@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Search, Trash2, PenSquare, GraduationCap, Plus } from "lucide-react";
-
+import { Search, Loader,Trash2, PenSquare, GraduationCap, Plus } from "lucide-react";
+import {Link} from "react-router-dom"
 const StudentDetails = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,7 +51,10 @@ const StudentDetails = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="flex items-center justify-center h-96">
+            <Loader className="h-12 w-12 animate-spin text-purpleColor" />
+          </div>
+       
       </div>
     );
   }
@@ -75,11 +78,11 @@ const StudentDetails = () => {
             <span>Students</span>
           </div>
         </div>
-        <button className="p-2 border-2  border-primaryBlue text-sm text-primaryBlue rounded-full  transition-colors duration-200 transform hover:scale-105">
+        <Link to='/add-students' className="p-2 border-2  border-primaryBlue text-sm text-primaryBlue rounded-full  transition-colors duration-200 transform hover:scale-105">
           <span>
             <Plus size={24} />
           </span>{" "}
-        </button>
+        </Link>
       </div>
 
       {/* Filters */}
@@ -94,7 +97,7 @@ const StudentDetails = () => {
             placeholder="Search by name"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+            className="w-full pl-10 pr-4 py-2 border rounded-lg bg-primary-300 text-black-300 border-lamaSkyLight transition-all duration-200"
           />
         </div>
 
@@ -102,7 +105,7 @@ const StudentDetails = () => {
           <select
             value={timeFilter}
             onChange={(e) => setTimeFilter(e.target.value)}
-            className="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+            className="p-2 border rounded-lg bg-primary-300 text-black-300 border-lamaSkyLight transition-all duration-200"
           >
             <option>Last 30 days</option>
             <option>Last 60 days</option>
@@ -119,12 +122,9 @@ const StudentDetails = () => {
               <th className="px-6 py-4">
                 <input
                   type="checkbox"
-                  className="rounded bg-white border-gray-300 checked:bg-purple-500 checked:border-transparent"
+                  className="rounded bg-white border-gray-300 text-purple-500 checked:bg-purple-500 checked:border-transparent"
                 />
-              </th>
-              <th className="px-6 py-4 text-left">Student's Name</th>
-              <th className="px-6 py-4 text-center">Class</th>
-              <th className="px-6 py-4 text-center">Parent Name</th>
+              </th>              <th className="px-6 py-4 text-left">Student's Name</th>              <th className="px-6 py-4 text-center">Class</th>              <th className="px-6 py-4 text-center">Parent Name</th>
               <th className="px-6 py-4 text-center">Parent Contact</th>
               <th className="px-6 py-4 text-center">Action</th>
             </tr>

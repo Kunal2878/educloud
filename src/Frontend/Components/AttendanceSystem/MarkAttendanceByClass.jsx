@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Search, Check, X } from "lucide-react";
+import { Search, Check, X,Plus, Loader } from "lucide-react";
 import {Link} from 'react-router-dom';
 
 const ClassAttendanceTracker = () => {
@@ -77,12 +77,14 @@ const ClassAttendanceTracker = () => {
             <input
               type="text"
               placeholder="What do you want to find?"
-              className="w-full pl-10 pr-4 py-2   rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full pl-10 pr-4 py-2   rounded-lg focus:outline-none bg-primary-300 text-black-300 border-lamaSkyLight "
             />
           </div>
-          <Link to="/add-students" className="ml-4 px-4 py-2 border-2 border-purple-500 text-purple-500 rounded-lg ">
-            + Add New
-          </Link>
+          <Link to='/add-students' className="p-2 border-2  border-primaryBlue text-sm text-primaryBlue rounded-full  transition-colors duration-200 transform hover:scale-105">
+          <span>
+            <Plus size={24} />
+          </span>{" "}
+        </Link>
         </div>
 
         <div className="flex items-center text-sm text-gray-600">

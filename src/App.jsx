@@ -2,10 +2,11 @@ import { useState } from 'react'
 import{createBrowserRouter,RouterProvider} from 'react-router-dom'
 import './App.css'
 import LandingPage from './Frontend/Pages/LandingPage'
-import UserOption from './Frontend/Pages/UserOption'
+
 import Nav from './Frontend/Components/Navbar/Navbar'
 import RegisterPrincipal from './Frontend/Pages/Principal/RegisterPrincipal'
 import Login from './Frontend/Pages/Login'
+import UserOption from './Frontend/Pages/UserOption'
 import { Provider } from 'react-redux'
 import { store } from './Store/store'
 import Test from './Test'
@@ -27,6 +28,11 @@ function App() {
     {
       path: "/login",
       element: <Login/>
+    },
+    {
+      path: "/user-options",
+      element: < UserOption/> 
+
     },
     {
       path:'/dashboard',

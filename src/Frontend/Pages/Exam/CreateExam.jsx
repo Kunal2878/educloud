@@ -48,18 +48,18 @@ const url = import.meta.env.VITE_API_BASE_URL;
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+    <div className="min-h-screen  py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
           <div className="max-w-md mx-auto">
             <div className="divide-y divide-gray-200">
               <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                <h2 className="text-2xl font-bold mb-8 text-center text-gray-800">Create New Exam</h2>
+                <h2 className="text-2xl font-bold mb-8 text-center text-gray-800"><span className='text-purpleColor'>Create</span> New Exam</h2>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="relative">
                     <input 
                       type="text"
-                      className="peer w-full border-b-2 bg-primary-300 text-black-300 border-lamaSkyLight placeholder-transparent"
+                      className="peer w-full border-b-2 bg-primary-300 text-black-300 border-lamaSkyLight placeholder-transparent mt-3"
                       placeholder="Exam Name"
                       value={examData.name}
                       onChange={(e) => setExamData({...examData, name: e.target.value})}

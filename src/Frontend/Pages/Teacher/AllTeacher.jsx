@@ -1,37 +1,27 @@
 import React, { useState, useEffect } from 'react';
-
-
-
-
-import { Search, Trash2, PenSquare, GraduationCap } from 'lucide-react';
-import { Link } from 'react-router-dom';
-
-const StudentDetails = () => {
-  const [students, setStudents] = useState([]);
+import { Search, Trash2, PenSquare,GraduationCap,Plus,Loader } from 'lucide-react';
+import {Link} from 'react-router-dom'
+const TeacherDetails = () => {
+  const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [timeFilter, setTimeFilter] = useState('Last 30 days');
   const [selectedClass, setSelectedClass] = useState('all');
-
-  const studentsPerPage = 10;
+  const teachersPerPage = 10;
 
   useEffect(() => {
-
-    const fetchStudents = async () => {
+    const fetchTeachers = async () => {
       try {
         setLoading(true);
-
-        const response = await fetch('https://school-backend-ocze.onrender.com/api/v1/student/all-students');
+        const response = await fetch('https://school-backend-ocze.onrender.com/api/v1/teacher/all-teachers');
         const data = await response.json();
         
         if (data.statusCode === 200) {
-
-          setStudents(data.data.students);
+          setTeachers(data.data.teachers);
         } else {
-
-          setError('Failed to fetch students');
+          setError('Failed to fetch teachers');
         }
       } catch (err) {
         setError('Error connecting to the server');
@@ -40,33 +30,30 @@ const StudentDetails = () => {
       }
     };
 
-
-    fetchStudents();
+    fetchTeachers();
   }, []);
 
-
-
-
-
-  const filteredStudents = students.filter(student => 
-    student.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-    (selectedClass === 'all' || student.studentClass === selectedClass)
+  // Filter teachers based on search and class
+  const filteredTeachers = teachers.filter(teacher => 
+    teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+    (selectedClass === 'all' || teacher.assignedClasses.includes(selectedClass))
   );
 
-
-
-
-
-
-  const indexOfLastStudent = currentPage * studentsPerPage;
-  const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-  const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
-  const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
+  // Pagination
+  const indexOfLastTeacher = currentPage * teachersPerPage;
+  const indexOfFirstTeacher = indexOfLastTeacher - teachersPerPage;
+  const currentTeachers = filteredTeachers.slice(indexOfFirstTeacher, indexOfLastTeacher);
+  const totalPages = Math.ceil(filteredTeachers.length / teachersPerPage);
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+        
+
+           <div className="flex items-center justify-center h-96">
+                      <Loader className="h-12 w-12 animate-spin text-purpleColor" />
+                    </div>
+       
       </div>
     );
   }
@@ -81,36 +68,33 @@ const StudentDetails = () => {
 
   return (
     <div className="p-6 bg-white min-h-screen mt-12">
-
+      {/* Header */}
       <div className="flex flex-col md:flex-row text-gray-600 justify-between items-start md:items-center mb-6 bg-purple-50 p-2">
         <div className="mb-4 md:mb-0">
-
-          <h1 className="text-2xl font-semibold mb-2">All Students </h1>
+          <h1 className="text-2xl font-semibold mb-2">All Teachers </h1>
           <div className="flex items-center text-sm ">
             <span className="mr-2">Home /</span>
-
-            <span>Students</span>
+            <span >Teachers</span>
           </div>
         </div>
-
-
-        <Link to="/add-students" className="px-4 py-2 border-2 border-purple-500 text-sm text-purple-500 rounded-lg transition-colors duration-200 transform hover:scale-105">
-          + Add Student
+        <Link to='/add-teachers' className="p-2 border-2  border-primaryBlue text-sm text-primaryBlue rounded-full  transition-colors duration-200 transform hover:scale-105">
+          <span>
+            <Plus size={24} />
+          </span>{" "}
         </Link>
+      
       </div>
 
-
+      {/* Filters */}
       <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 mb-6">
         <div className="relative flex-1 max-w-md bg-slate-100 text-gray-600">
-
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2" size={20} />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2  " size={20} />
           <input
             type="text"
             placeholder="Search by name"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-
-            className="w-full bg-primary-300 text-black-300 border-lamaSkyLight pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+            className="w-full pl-10 pr-4 py-2 border rounded-lg bg-primary-300 text-black-300 border-lamaSkyLight transition-all duration-200"
           />
         </div>
         
@@ -121,24 +105,23 @@ const StudentDetails = () => {
             className="p-2 mr-4 bg-slate-100 text-gray-600 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
           >
             <option value="all">All Classes</option>
-
-
-
-            <option value="67adcc61b9b56ef6a16fc907">Class 1</option>
+            <option value="class1">Class 1</option>
+            <option value="class2">Class 2</option>
+            <option value="class3">Class 3</option>
           </select>
-
-
-
-
-
-
-
-
-
+          {/* <select
+            value={timeFilter}
+            onChange={(e) => setTimeFilter(e.target.value)}
+            className="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+          >
+            <option>Last 30 days</option>
+            <option>Last 60 days</option>
+            <option>Last 90 days</option>
+          </select> */}
         </div>
       </div>
 
-
+      {/* Table */}
       <div className="overflow-x-auto text-gray-600 text-xs">
         <table className="w-full min-w-[768px] pb-10">
           <thead className='bg-purple-50'>
@@ -146,25 +129,18 @@ const StudentDetails = () => {
               <th className="p-4">
                 <input type="checkbox" className="rounded bg-white accent-purple-500" />
               </th>
-
-              <th className="p-4 text-left">Student's Name</th>
+              <th className="p-4 text-left">Teacher's Name</th>
               <th className="p-4 text-center">Email</th>
-
-
-
-              <th className="p-4 text-center">Class</th>
-              <th className="p-4 text-center">Section</th>
-              <th className="p-4 text-center">Parent Name</th>
-              <th className="p-4 text-center">Parent Contact</th>
+              <th className="p-4 text-center">Subjects</th>
+              <th className="p-4 text-center">Assigned Classes</th>
+              <th className="p-4 text-center">Role</th>
               <th className="p-4 text-center">Action</th>
             </tr>
           </thead>
           <tbody>
-
-            {currentStudents.map((student) => (
+            {currentTeachers.map((teacher) => (
               <tr
-
-                key={student._id}
+                key={teacher._id}
                 className="border-b hover:bg-gray-50 transition-colors duration-150 animate-fade-in"
               >
                 <td className="p-4">
@@ -173,24 +149,17 @@ const StudentDetails = () => {
                 <td className="p-4">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-purple-100 rounded-full overflow-hidden flex flex-row justify-center items-center">
-
-                      <GraduationCap size={20}/>
+                    <GraduationCap size={20}/>
                     </div>
                     <span className="hover:text-purple-500 transition-colors duration-200">
-
-                      {student.name}
+                      {teacher.name}
                     </span>
                   </div>
                 </td>
-
-
-
-
-                <td className="p-4">{student.email}</td>
-                <td className="p-4">{student.studentClass}</td>
-                <td className="p-4">{student.section || '-'}</td>
-                <td className="p-4">{student.parentName}</td>
-                <td className="p-4">{student.parentContact}</td>
+                <td className="p-4">{teacher.email}</td>
+                <td className="p-4">{teacher.subject.length ? teacher.subject.join(', ') : '-'}</td>
+                <td className="p-4">{teacher.assignedClasses.length ? teacher.assignedClasses.join(', ') : '-'}</td>
+                <td className="p-4">{teacher.role || '-'}</td>
                 <td className="p-4">
                   <div className="flex justify-center gap-2">
                     <button className="p-1 hover:text-red-500 transition-colors duration-200 transform hover:scale-110">
@@ -207,12 +176,11 @@ const StudentDetails = () => {
         </table>
       </div>
 
-
+      {/* Pagination */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
         <div className="flex justify-between items-center max-w-screen-xl mx-auto">
           <span className="text-sm text-gray-600">
-
-            Showing {indexOfFirstStudent + 1} to {Math.min(indexOfLastStudent, filteredStudents.length)} of {filteredStudents.length} entries
+            Showing {indexOfFirstTeacher + 1} to {Math.min(indexOfLastTeacher, filteredTeachers.length)} of {filteredTeachers.length} entries
           </span>
           <div className="flex gap-2">
             {Array.from({ length: totalPages }, (_, i) => (
@@ -253,5 +221,4 @@ styles.textContent = `
 `;
 document.head.appendChild(styles);
 
-
-export default StudentDetails;
+export default TeacherDetails;

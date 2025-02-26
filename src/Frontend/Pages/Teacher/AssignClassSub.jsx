@@ -67,7 +67,7 @@
     return (
       <div className="min-h-screen  p-6 md:p-8">
         <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
-          <h1 className="text-2xl font-bold text-gray-800 mb-6">Assign Classes and Subjects</h1>
+          <h1 className="text-2xl font-bold text-gray-800 mb-6"> <span className='text-purpleColor'> Assign</span> Classes and Subjects</h1>
         
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="relative">
@@ -75,7 +75,7 @@
                 type="text"
                 value={teacherId}
                 onChange={handleTeacherIdChange}
-                className="w-full px-3 py-2 text-gray-600 border-b rounded-md focus:outline-none shadow-md transition-all peer placeholder-transparent"
+                className="w-full px-3 py-2 bg-primary-300 text-black-300 border-lamaSkyLight border-b rounded-md focus:outline-none shadow-md transition-all peer placeholder-transparent"
                 placeholder="Teacher ID"
                 id="teacherId"
                 required
