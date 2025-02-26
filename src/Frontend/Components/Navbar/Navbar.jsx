@@ -16,6 +16,11 @@ import AddTeachers from '../../Pages/Teacher/AddTeacher'
 import RegisterSubjects from '../../Pages/Subjects/RegisterSubject'
 import UploadTimeTable from '../../Pages/TimeTable/UploadTimeTable'
 import CreateExam from '../../Pages/Exam/CreateExam'
+import MyAttendance from '../../Pages/Student/MyAttendance'
+import MyExams from '../../Pages/Student/MyExam'
+import MyResults from '../../Pages/Student/MyResult'
+import MySubjects from '../../Pages/Student/MySubject'
+import MyStudents from '../../Pages/Teacher/MyStudent'
 
 import {
   Home,
@@ -92,7 +97,7 @@ const NavBar = ({ User, onMenuClick }) => {
   );
 };
 
-const Sidebar = ({ isOpen, userType = "admin" }) => {
+const Sidebar = ({ isOpen, role }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [activeItem, setActiveItem] = useState("dashboard");
@@ -148,18 +153,23 @@ const Sidebar = ({ isOpen, userType = "admin" }) => {
       { icon: Calendar, label: "Events", id: "events", path: "/events" },
     ],
     teacher: [
-      { icon: Home, label: "Dashboard", id: "dashboard" },
-      { icon: Users, label: "My Students", id: "students" },
-      { icon: Calendar, label: "Schedule", id: "schedule" },
-      { icon: FileText, label: "Exams", id: "exams" },
-      { icon: FileText, label: "Exams", id: "results" },
+      { icon: Home, label: "Dashboard", id: "dashboard",path:'/dashboard' },
+      { icon: Users, label: "My Students", id: "my-students",path:'/my-students' },
+      {
+        icon: Clock,label: "Time table", id: "time-table", path: "/time-table",
+      },
+      // { icon: Calendar, label: "Schedule", id: "schedule" },
+      { icon: FileText, label: "Exams", id: "exams", path:'/create-exams' },
+      { icon: Award, label: "Results", id: "results",path:'/results' },
     ],
     student: [
-      { icon: Home, label: "Dashboard", id: "dashboard" },
-      { icon: Calendar, label: "My Schedule", id: "schedule" },
-      { icon: FileText, label: "Exams", id: "exams" },
-      { icon: Clock, label: "Attendance", id: "attendance" },
-    ],
+      { icon: Home, label: "Dashboard", id: "dashboard",path:'/dashboard' },
+      // { icon: Calendar, label: "My Schedule", id: "schedule" },
+     { icon: BookOpen, label: "My Subjects", id: "my-subjects", path:'/my-subjects' },
+      { icon: Calendar, label: "My Attendance", id: "my-attendance", path:'/my-attendance' },
+      { icon: Clock, label: "My Time-table", id: "my-time-table", path:'/my-time-table' },
+      { icon: FileText, label: "My Exams", id: "exams", path:'/view-exams' },
+      { icon: Award, label: "My Results", id: "results", path:'/my-results' },    ],
   };
 
   const toggleSubmenu = (id) => {
@@ -184,7 +194,7 @@ const Sidebar = ({ isOpen, userType = "admin" }) => {
     `}
     >
       <div className="p-4">
-        {menuItems[userType].map((item) => (
+        {menuItems[role === 'principal' ? 'admin' : role === 'teacher' ? 'teacher' : 'student'].map((item) => (
           <div key={item.id}>
             {item.submenu ? (
               <button
@@ -194,10 +204,9 @@ const Sidebar = ({ isOpen, userType = "admin" }) => {
                   transition-colors duration-200
                   ${
                     activeItem === item.id
-                      ? themeColors[userType].active
+                      ? role && themeColors[role]?.active
                       : "text-black"
-                  }
-                  ${themeColors[userType].hover}
+                  }                  ${themeColors[role]?.hover}
                 `}
               >
                 <item.icon size={20} />
@@ -217,10 +226,10 @@ const Sidebar = ({ isOpen, userType = "admin" }) => {
                     transition-colors duration-200
                     ${
                       activeItem === item.id
-                        ? themeColors[userType].active
+                        ? themeColors[role]?.active
                         : "text-black"
                     }
-                    ${themeColors[userType].hover}
+                    ${themeColors[role]?.hover}
                   `}
                 >
                   <item.icon size={20} />
@@ -254,7 +263,7 @@ const Sidebar = ({ isOpen, userType = "admin" }) => {
                             ? "text-purple-500"
                             : "text-black"
                         }
-                        ${themeColors[userType].hover}
+                        ${themeColors[role]?.hover}
                       `}
                     >
                       {subItem.label}
@@ -266,16 +275,15 @@ const Sidebar = ({ isOpen, userType = "admin" }) => {
           </div>
         ))}
       </div>
-    </div>
-  );
+    </div>  );
 };
 
 // Main Layout Component
 const Nav = ({ children, path }) => {
   const dispatch = useDispatch();
-  const User = JSON.parse(Cookies.get("user")) || "{}";
-  if (User !== null || User !== undefined) {
-    dispatch(setUser(User));
+  const user = JSON.parse(Cookies.get("user")) || "{}";
+  if (user !== null || user !== undefined) {
+    dispatch(setUser(user));
   }
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userType, setUserType] = useState("admin");
@@ -286,7 +294,7 @@ const Nav = ({ children, path }) => {
   return (
     <div className="w-full flex flex-col">
       <NavBar User={User} onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
-      <Sidebar isOpen={sidebarOpen} userType={userType} />
+      <Sidebar isOpen={sidebarOpen} role={user.role} />
       <div className="w-full min-h-screen absolute top-0 mt-20">
         {path === "/dashboard" && <PerformanceDashboard />}
         {path === "/mark-attendance" && <ClassAttendanceTracker />}
@@ -301,6 +309,11 @@ const Nav = ({ children, path }) => {
         {path === "/register-subjects" && <RegisterSubjects />}
         {path === "/time-table" && <UploadTimeTable />}
         {path === "/create-exams" && <CreateExam />}
+        {path === "/my-attendance" && <MyAttendance />}
+        {path === "/my-exams" && <MyExams/>}
+        {path === "/my-subjects" && <MySubjects />}
+        {path === "/my-results" && <MyResults />}
+        {path === "/my-students" && <MyStudents />}
       </div>
 
       <main

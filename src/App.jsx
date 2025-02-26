@@ -81,6 +81,26 @@ function App() {
       element:<Nav path={"/create-exams"}/>
     },
     {
+      path:'/my-attendance',
+      element:<Nav path={"/my-attendance"}/>
+    },
+    {
+      path:'/my-exams',
+      element:<Nav path={"/my-exams"}/>
+    },
+    {
+      path:'/my-subjects',
+      element:<Nav path={"/my-subjects"}/>
+    },
+    {
+      path:'/my-results',
+      element:<Nav path={"/my-results"}/>
+    },
+    {
+      path:'/my-students',
+      element:<Nav path={"/my-students"}/>
+    },
+    {
       path:'/test',
       element:<Test/>
 

@@ -7,10 +7,21 @@ import { setUser } from "../../../Store/slice";
 const PerformanceDashboard = () => {
 const user = useSelector((state) => state.userData.user)
 
-const StudentData =[{ performance: '85%', days_Present:46, feedback:"Excellent" }]
-const TeachData=[{performance: '90%', leave: 2, feedback:"Good"}]
-const PrincipalData=[{stu_num:10000, teach_num:200, earning:"$4.2M"}]
-
+const StudentData =[
+  { name:"Performance", value: '85%', Icon: TrendingUp }, 
+  { name:"Days present", value:2, Icon: Calendar }, 
+  { name:"feedback", value:"Excellent", Icon: GraduationCap }
+]
+const TeachData=[
+  { name:"Performance", value: '95%', Icon: TrendingUp }, 
+  { name:"Leave records", value:'2 Days', Icon: Calendar }, 
+  { name:"feedback", value:"Excellent", Icon: GraduationCap }
+]
+const PrincipalData=[
+  { name:"Students", value:10000, Icon: GraduationCap }, 
+  { name:"Teachers", value:200, Icon: GraduationCap }, 
+  { name:"Earnings", value:"$4.2M", Icon: TrendingUp }
+]
   const [selectedClass, setSelectedClass] = useState('Class A');
   const [selectedDate, setSelectedDate] = useState('2024-05-05');
   const [isLoading, setIsLoading] = useState(true);
@@ -66,13 +77,19 @@ const PrincipalData=[{stu_num:10000, teach_num:200, earning:"$4.2M"}]
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
+      <div className="mb-4">
+              <h1 className="text-2xl font-bold text-gray-800 capitalize">
+                <span className='text-purpleColor'>{user.role}</span> - {user.name}
+              </h1>
+            </div>
       
-
       {/* Stats Cards with fade-in animation */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 w-full bg-gray-50 p-4 rounded-lg shadow-lg">
-        {statsCards.map((card, index) => (
+        {(user.role === 'principal' ? PrincipalData : 
+          user.role === 'teacher' ? TeachData : 
+          StudentData).map((card, index) => (
           <div 
-            key={card.title}
+            key={card.name}
             className={`p-4 rounded-lg flex items-center justify-between transform transition-all duration-500 ease-out overflow-hidden ${
               index === 0 ? 'bg-purple-100' : 
               index === 1 ? 'bg-blue-100' : 
@@ -86,7 +103,7 @@ const PrincipalData=[{stu_num:10000, teach_num:200, earning:"$4.2M"}]
             }}
           >
             <div className="min-w-0">
-              <p className="text-gray-500 truncate">{card.title}</p>
+              <p className="text-gray-500 truncate">{card.name}</p>
               <p className="text-2xl font-bold text-black truncate">{card.value}</p>
             </div>
             <card.Icon className={`w-8 h-8 flex-shrink-0 ${
