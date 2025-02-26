@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Loader2, FileSpreadsheet } from 'lucide-react';
+import { Loader, FileSpreadsheet } from 'lucide-react';
 
 const MyResults = () => {
   const [selectedExam, setSelectedExam] = useState('');
@@ -44,7 +44,7 @@ const MyResults = () => {
           <select
             value={selectedExam}
             onChange={(e) => setSelectedExam(e.target.value)}
-            className="w-full md:w-64 p-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full md:w-64 p-2 border rounded-lg shadow-sm bg-primary-300 text-black-300 border-lamaSkyLight "
           >
             <option value="">Select Exam Type</option>
             {examTypes.map((exam) => (
@@ -57,7 +57,7 @@ const MyResults = () => {
 
         {loading && (
           <div className="flex items-center justify-center p-8">
-            <Loader2 className="animate-spin h-8 w-8 text-blue-500" />
+            <Loader className="animate-spin h-8 w-8 text-purpleColor" />
           </div>
         )}
 

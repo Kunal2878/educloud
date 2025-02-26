@@ -30,7 +30,9 @@ if (user === null || user === undefined) {
   const fetchAttendance = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${url}/api/v1/student-attendance//students/${user.id}/attendance-history`);
+      // ${url}/api/v1/student-attendance//students/${user._id}/attendance-history`
+      const response = await fetch(`https://school-backend-ocze.onrender.com/api/v1/student-attendance//students/67b06eea0c026e1e1e98be72/attendance-history`);
+  
       const data = await response.json();
       setAttendance(data.attendanceHistory || []);
     } catch (error) {

@@ -168,7 +168,7 @@ const Sidebar = ({ isOpen, role }) => {
      { icon: BookOpen, label: "My Subjects", id: "my-subjects", path:'/my-subjects' },
       { icon: Calendar, label: "My Attendance", id: "my-attendance", path:'/my-attendance' },
       { icon: Clock, label: "My Time-table", id: "my-time-table", path:'/my-time-table' },
-      { icon: FileText, label: "My Exams", id: "exams", path:'/view-exams' },
+      { icon: FileText, label: "My Exams", id: "my-exams", path:'/my-exams' },
       { icon: Award, label: "My Results", id: "results", path:'/my-results' },    ],
   };
 
@@ -281,7 +281,7 @@ const Sidebar = ({ isOpen, role }) => {
 // Main Layout Component
 const Nav = ({ children, path }) => {
   const dispatch = useDispatch();
-  const user = JSON.parse(Cookies.get("user")) || "{}";
+  const user = JSON.parse(Cookies.get("user"||"student"||"teacher")) || "{}";
   if (user !== null || user !== undefined) {
     dispatch(setUser(user));
   }

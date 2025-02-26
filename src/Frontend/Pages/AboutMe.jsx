@@ -64,7 +64,7 @@ const user = useSelector((state) => state.userData.user)
                   <Phone className="w-5 h-5 text-purple-500" />
                   <div>
                     <label className="text-sm font-bold text-gray-500">Primary Phone</label>
-                    <p className="font-medium italic">{user?.phone||''}</p>
+                    <p className="font-medium italic">{user?.phone||user?.parentContact}</p>
                   </div>
                 </div>
 

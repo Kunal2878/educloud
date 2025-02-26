@@ -26,7 +26,16 @@ const role = useSelector((state) => state.userData.role)
     setError("");
 
     try {
-      const response = await fetch(`${url}/api/v1/principal/login`, {
+      let endpoint = `${url}/api/v1/principal/login`;
+      if (role === 'student') {
+        console.log("clicked here student")
+        endpoint = `${url}/api/v1/student/login`;
+      } else if (role === 'teacher') {
+        console.log("clicked here teacher")
+        endpoint = `${url}/api/v1/teacher/login`;
+      }
+
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,11 +49,10 @@ const role = useSelector((state) => state.userData.role)
       const responseData = await response.json();
       console.log("responseData", responseData);
       if (response.ok) {
-        Cookies.set("token", responseData.token, { expires: 7 });
-        Cookies.set("user", JSON.stringify(responseData.user), { expires: 7 });
-        setToastMessage("Login successful!"), setToastIcon("right");
+        Cookies.set("token", role === 'student' ? responseData.data.accessToken : responseData.token, { expires: 7 });
+        Cookies.set("user", JSON.stringify(role === 'student' ? responseData.data.student : role === 'teacher' ? responseData.teacher : responseData.user), { expires: 7 });        setToastMessage("Login successful!"), setToastIcon("right");
         setShowToast(true);
-        window.location.href = "/dashboard";
+        // window.location.href = "/dashboard";
       } else {
         setToastMessage({
           message: responseData.message || "Login failed",
