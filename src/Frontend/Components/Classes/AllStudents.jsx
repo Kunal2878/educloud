@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Search, Loader,Trash2, PenSquare, GraduationCap, Plus, ArrowLeft, ArrowRight, X } from "lucide-react";
+import { Search, Loader,Trash2, PenSquare, GraduationCap, Plus, ChevronLeft, ChevronRight, X } from "lucide-react";
 import AddStudents from '../../Pages/Student/AddStudent'
 import {Link} from "react-router-dom"
 const StudentDetails = () => {
@@ -55,73 +55,96 @@ const StudentDetails = () => {
   const renderPaginationButtons = () => {
     const buttons = [];
 
-    // Add first page
+    buttons.push(
+      <button
+        key="prev"
+        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+        disabled={currentPage === 1}
+        className="px-3 py-1 rounded-lg bg-purple-100 text-purple-600 disabled:opacity-50"
+      >
+        <ChevronLeft size={20} />
+      </button>
+    );
+
+    // Always show first page
     buttons.push(
       <button
         key={1}
         onClick={() => setCurrentPage(1)}
-        className={`px-3 py-1 rounded-md mx-1 ${
-          currentPage === 1
-            ? "bg-purple-500 text-white"
-            : "bg-gray-100 hover:bg-gray-200"
+        className={`px-3 py-1 rounded-lg ${
+          currentPage === 1 ? 'bg-purple-600 text-white' : 'bg-purple-100 text-purple-600'
         }`}
       >
         1
       </button>
     );
 
-    // Add ellipsis after first page if needed
+    // Show dots or numbers
     if (currentPage > 3) {
       buttons.push(
-        <span key="start-ellipsis" className="px-2">
-          ...
-        </span>
+        <button
+          key={2}
+          onClick={() => setCurrentPage(2)}
+          className="px-3 py-1 rounded-lg bg-purple-100 text-purple-600"
+        >
+          2
+        </button>
       );
+      buttons.push(<span key="dots1" className="px-2">...</span>);
     }
 
-    // Add current page and surrounding pages
-    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
-      if (i === 1 || i === totalPages) continue;
+    // Current page and surrounding pages
+    if (currentPage !== 1 && currentPage !== totalPages) {
       buttons.push(
         <button
-          key={i}
-          onClick={() => setCurrentPage(i)}
-          className={`px-3 py-1 rounded-md mx-1 ${
-            currentPage === i
-              ? "bg-purple-500 text-white"
-              : "bg-gray-100 hover:bg-gray-200"
-          }`}
+          key={currentPage}
+          onClick={() => setCurrentPage(currentPage)}
+          className="px-3 py-1 rounded-lg bg-purple-600 text-white"
         >
-          {i}
+          {currentPage}
         </button>
       );
     }
 
-    // Add ellipsis before last page if needed
+    // Show dots before last page
     if (currentPage < totalPages - 2) {
+      buttons.push(<span key="dots2" className="px-2">...</span>);
       buttons.push(
-        <span key="end-ellipsis" className="px-2">
-          ...
-        </span>
+        <button
+          key={totalPages - 1}
+          onClick={() => setCurrentPage(totalPages - 1)}
+          className="px-3 py-1 rounded-lg bg-purple-100 text-purple-600"
+        >
+          {totalPages - 1}
+        </button>
       );
     }
 
-    // Add last page
-    if (totalPages > 1) {
+    // Always show last page
+    if (totalPages !== 1) {
       buttons.push(
         <button
           key={totalPages}
           onClick={() => setCurrentPage(totalPages)}
-          className={`px-3 py-1 rounded-md mx-1 ${
-            currentPage === totalPages
-              ? "bg-purple-500 text-white"
-              : "bg-gray-100 hover:bg-gray-200"
+          className={`px-3 py-1 rounded-lg ${
+            currentPage === totalPages ? 'bg-purple-600 text-white' : 'bg-purple-100 text-purple-600'
           }`}
         >
           {totalPages}
         </button>
       );
     }
+
+    buttons.push(
+      <button
+        key="next"
+        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+        disabled={currentPage === totalPages}
+        className="px-3 py-1 rounded-lg bg-purple-100 text-purple-600 disabled:opacity-50"
+      >
+        <ChevronRight size={20} />
+      </button>
+    );
 
     return buttons;
   };
@@ -301,23 +324,9 @@ const StudentDetails = () => {
       </div>
 
       {/* Pagination */}
-      <div className=" bottom-0 left-0 right-0 flex justify-center items-center py-2">
-        <div className=" w-1/2 flex items-center justify-center space-x-1">
-          <button
-            onClick={() => setCurrentPage(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-3 py-1 rounded-md bg-white hover:bg-gray-200 disabled:opacity-50 "
-          >
-            <ArrowLeft size={20} className="text-black"/>
-          </button>
+      <div className="bottom-0 left-0 right-0 flex justify-center items-center py-4">
+        <div className="flex items-center justify-center space-x-2">
           {renderPaginationButtons()}
-          <button
-            onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 rounded-md bg-white hover:bg-gray-200 disabled:opacity-50"
-          >
-            <ArrowRight size={20} className="text-black"/>
-          </button>
         </div>
       </div>
 

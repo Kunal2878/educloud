@@ -4,6 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LineChart, Line } fro
 import { PieChart, Pie, Cell } from 'recharts';
 import { useSelector, useDispatch } from 'react-redux'
 import { setUser } from "../../../Store/slice";
+
 const PerformanceDashboard = () => {
 const user = useSelector((state) => state.userData.user)
 
@@ -27,7 +28,6 @@ const PrincipalData=[
   const [isLoading, setIsLoading] = useState(true);
   const [showCharts, setShowCharts] = useState(false);
 
-  // Sample data for Principal
   const attendanceData = [
     { day: '1', totalPresent: 8, totalAbsent: 2 },
     { day: '2', totalPresent: 8, totalAbsent: 2 },
@@ -39,7 +39,6 @@ const PrincipalData=[
     { day: '8', totalPresent: 2, totalAbsent: 4 },
   ];
 
-  // Sample data for Student
   const studentAttendanceData = [
     { day: '1', attendance: 90, performance: 85 },
     { day: '2', attendance: 95, performance: 88 },
@@ -51,7 +50,6 @@ const PrincipalData=[
     { day: '8', attendance: 93, performance: 89 },
   ];
 
-  // Sample data for Teacher
   const teacherData = [
     { day: '1', classPerformance: 88, attendance: 95 },
     { day: '2', classPerformance: 92, attendance: 98 },
@@ -63,15 +61,20 @@ const PrincipalData=[
     { day: '8', classPerformance: 89, attendance: 93 },
   ];
 
+  const MALE_COLOR = '#8B31FF';
+  const FEMALE_COLOR = '#FF9839';
+  const MALE_FADED = '#E9DFFF';
+  const FEMALE_FADED = '#FFE9D5';
+
   const pieData = user.role === 'principal' ? [
-    { name: 'Male 5500', value: 55 },
-    { name: 'Female 4500', value: 45 },
+    { name: 'Male Active', value: 55 },
+    { name: 'Male Inactive', value: 45 },
   ] : user.role === 'teacher' ? [
     { name: 'Present', value: 85 },
     { name: 'Absent', value: 15 },
   ] : [
-    { name: 'Completed 75', value: 75 },
-    { name: 'Pending 25', value: 25 },
+    { name: 'Completed', value: 75 },
+    { name: 'Pending', value: 25 },
   ];
 
   const financialData = [
@@ -81,8 +84,6 @@ const PrincipalData=[
     { year: '2023', revenue: 2100000, expenses: 1400000 },
     { year: '2024', revenue: 2300000, expenses: 1600000 },
   ];
-
-  const COLORS = ['#4287f5', '#40c4a7'];
 
   const classes = ['Class A', 'Class B', 'Class C', 'Class D'];
 
@@ -258,7 +259,7 @@ const PrincipalData=[
              user.role === 'teacher' ? 'Attendance Distribution' : 
              'Task Completion'}
           </h2>
-          <div className="h-64">
+          <div className="relative w-64 h-64 mx-auto">
             {!isLoading && (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -266,24 +267,55 @@ const PrincipalData=[
                     data={pieData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
+                    startAngle={90}
+                    endAngle={-270}
+                    innerRadius={65}
                     outerRadius={80}
-                    paddingAngle={5}
+                    paddingAngle={0}
                     dataKey="value"
-                    animationBegin={0}
-                    animationDuration={1500}
-                    animationEasing="ease-out"
-                    label={({ name }) => name}
                   >
-                    {pieData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={index === 0 ? '#A855F7' : '#EAB308'} 
-                      />
-                    ))}
+                    <Cell key="active" fill={MALE_COLOR} strokeWidth={0} />
+                    <Cell key="inactive" fill={MALE_FADED} strokeWidth={0} />
+                  </Pie>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    startAngle={90}
+                    endAngle={-270}
+                    innerRadius={50}
+                    outerRadius={65}
+                    paddingAngle={0}
+                    dataKey="value"
+                  >
+                    <Cell key="active" fill={FEMALE_COLOR} strokeWidth={0} />
+                    <Cell key="inactive" fill={FEMALE_FADED} strokeWidth={0} />
                   </Pie>
                 </PieChart>
-              </ResponsiveContainer>            )}
+              </ResponsiveContainer>
+            )}
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+              <div className="flex space-x-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke={MALE_COLOR}>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke={FEMALE_COLOR}>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <div className="text-gray-500 text-sm mt-2">Total</div>
+              <div className="text-2xl font-bold">10000</div>
+            </div>
+            <div className="absolute bottom-0 left-0 right-0 flex justify-center space-x-8 mb-2">
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: MALE_COLOR }}></div>
+                <span className="text-sm">Male</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: FEMALE_COLOR }}></div>
+                <span className="text-sm">Female</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
