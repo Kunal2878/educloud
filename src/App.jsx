@@ -2,6 +2,7 @@ import { useState } from 'react'
 import{createBrowserRouter,RouterProvider} from 'react-router-dom'
 import './App.css'
 import LandingPage from './Frontend/Pages/LandingPage'
+import SchoolLandingPage from './Frontend/Pages/LandingPage2'
 
 import Nav from './Frontend/Components/Navbar/Navbar'
 import RegisterPrincipal from './Frontend/Pages/Principal/RegisterPrincipal'
@@ -15,7 +16,7 @@ function App() {
   const routes = createBrowserRouter([
     {
       path: "/",
-      element: <LandingPage />
+      element: <SchoolLandingPage />
     },
     {
       path: "/user-options",
