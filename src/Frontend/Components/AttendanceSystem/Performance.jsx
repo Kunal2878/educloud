@@ -191,10 +191,10 @@ const PrincipalData=[
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <div className="mb-4">
+      <div className="mb-6">
               <h1 className="text-2xl font-bold text-gray-800 capitalize flex flex-col gap-2">
                 <span className='text-black text-5xl font-black'>Welcome back to <span className='text-purpleColor'>Edu</span>Cloud</span>
-                <span className='text-black '> where your success is our priority!</span> 
+                <span className='text-gray-400 '> <i>where your success is our priority!</i> </span> 
         </h1>
       </div>
       
@@ -271,7 +271,7 @@ const PrincipalData=[
                     startAngle={90}
                     endAngle={-270}
                     innerRadius={65}
-                    outerRadius={80}
+                    outerRadius={85}
                     paddingAngle={0}
                     dataKey="value"
                   >
@@ -284,8 +284,8 @@ const PrincipalData=[
                     cy="50%"
                     startAngle={90}
                     endAngle={-270}
-                    innerRadius={50}
-                    outerRadius={65}
+                    innerRadius={40}
+                    outerRadius={60}
                     paddingAngle={0}
                     dataKey="value"
                   >
