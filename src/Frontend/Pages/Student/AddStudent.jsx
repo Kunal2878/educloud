@@ -104,7 +104,7 @@ const AddStudents = () => {
               htmlFor="email"
               className="absolute left-3 -top-5 text-sm font-medium text-gray-700 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-5 peer-focus:text-sm"
             >
-              <span className="text-danger">* </span>Student Email Address
+              <span className="text-danger">* </span>Student Email Address/Admission Number
             </label>
             {errors.email && (
               <p className="text-danger text-sm mt-1">{errors.email.message}</p>

@@ -1,42 +1,63 @@
+
+
 import React, { useEffect, useRef } from 'react';
 import { useState } from 'react';
-
+import {Link} from "react-router-dom"
 // Main Landing Page Component
 const SchoolLandingPage = () => {
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-gradient-to-b from-blue-50 via-white to-blue-50">
-      {/* Particle Background */}
+      {/* Enhanced Particle Background - higher z-index but still behind content */}
       <ParticleBackground />
       
-      
+      {/* Navigation */}
+      <nav className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-sm shadow-sm">
+        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+          <div className="flex items-center">
+            <div className="text-black font-bold text-2xl"><span className="text-purpleColor">Edu</span>Cloud</div>
+          </div>
+          <div className="hidden md:flex space-x-8">
+            <NavLink href="#" label="Home" active />
+            <NavLink href="#" label="Learning Programs" />
+            <NavLink href="#" label="About Us" />
+            <NavLink href="#" label="Admissions" />
+          </div>
+          <div className="flex items-center space-x-4">
+         
+            <Link to='/user-options' className="border-2 border-purpleColor text-purpleColor px-6 py-2 rounded-full font-medium transition-all  hover:shadow-md">
+              Login
+            </Link>
+          </div>
+        </div>
+      </nav>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-12 md:py-20">
+      <section className="container mx-auto px-4 py-12 md:py-20 relative z-10">
         <div className="flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 md:pr-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight mb-6 animate-fadeIn">
               Let's Create a Brilliant Future with Our School
             </h1>
-            <p className="text-gray-600 mb-8 text-lg">
-              UP School is a technology-first school that is committed to providing high-quality education and employability in real-world contexts.
+            <p className="text-gray-600 mb-8 text-lg animate-slideUp">
+              EduCloud is a technology-first school that is committed to providing high-quality education and employability in real-world contexts.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-blue-600 text-white px-8 py-3 rounded-full font-medium transition-all hover:bg-blue-700 hover:shadow-md">
+            <div className="flex flex-col sm:flex-row gap-4 animate-slideUp" style={{animationDelay: "0.2s"}}>
+              <button className="bg-purpleColor text-white px-8 py-3 rounded-full font-medium transition-all hover:bg-purple-700 hover:shadow-md hover:scale-105">
                 JOIN WITH US
               </button>
-              <button className="border border-blue-600 text-blue-600 px-8 py-3 rounded-full font-medium transition-all hover:bg-blue-50">
+              <button className="border border-purpleColor text-purpleColor px-8 py-3 rounded-full font-medium transition-all hover:bg-blue-50 hover:scale-105">
                 Get to know more
               </button>
             </div>
             
-            <div className="flex justify-between mt-12 max-w-md">
-              <StatCounter number="60+" label="Teachers" />
-              <StatCounter number="2.5k" label="Students" />
-              <StatCounter number="A+" label="TRUSTED RATING" />
+            <div className="flex justify-between mt-12 max-w-md animate-slideUp" style={{animationDelay: "0.4s"}}>
+              <StatCounter number="200+" label="Teachers" />
+              <StatCounter number="10000" label="Students" />
+              <StatCounter number="4.6" label="TRUSTED RATING" />
             </div>
           </div>
-          <div className="md:w-1/2 mt-12 md:mt-0">
-            <div className="relative rounded-lg overflow-hidden shadow-xl transform transition-all hover:scale-105 duration-300">
+          <div className="md:w-1/2 mt-12 md:mt-0 animate-fadeIn" style={{animationDelay: "0.3s"}}>
+            <div className="relative rounded-lg overflow-hidden shadow-xl transform transition-all hover:scale-105 duration-500">
               <img 
                 src="/api/placeholder/600/400" 
                 alt="Students learning" 
@@ -48,10 +69,10 @@ const SchoolLandingPage = () => {
       </section>
 
       {/* Curved SVG Divider */}
-      <div className="w-full overflow-hidden">
+      <div className="w-full overflow-hidden relative z-10">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" className="w-full">
           <path 
-            fill="#0052CC" 
+            fill="#553c9a" 
             fillOpacity="1" 
             d="M0,32L60,42.7C120,53,240,75,360,74.7C480,75,600,53,720,53.3C840,53,960,75,1080,80C1200,85,1320,75,1380,69.3L1440,64L1440,100L1380,100C1320,100,1200,100,1080,100C960,100,840,100,720,100C600,100,480,100,360,100C240,100,120,100,60,100L0,100Z">
           </path>
@@ -59,27 +80,27 @@ const SchoolLandingPage = () => {
       </div>
 
       {/* Partners Section */}
-      <section className="bg-blue-600 py-8">
+      <section className="bg-purpleColor py-8 relative z-10">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center">
-            <PartnerLogo name="ORACLE" />
-            <PartnerLogo name="python" />
-            <PartnerLogo name="CISCO" />
-            <PartnerLogo name="Microsoft" />
+            <PartnerLogo name="Inovation" />
+            <PartnerLogo name="Technology" />
+            <PartnerLogo name="Smart Tech" />
+           
           </div>
         </div>
       </section>
 
       {/* Quality School Section */}
-      <section className="py-16 bg-gradient-to-b from-blue-50 to-white">
+      <section className="py-16 bg-gradient-to-b from-blue-50 to-white relative z-10">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row">
             <div className="md:w-1/2 p-6">
-              <div className="bg-blue-600 text-white py-4 px-6 rounded-lg inline-block mb-6 transform -rotate-1">
-                <h2 className="text-2xl font-bold">Choose a Quality School for a Bright Future</h2>
+              <div className="bg-purpleColor text-white py-4 px-6 rounded-lg inline-block mb-6 transform -rotate-1 hover:rotate-0 transition-all duration-300">
+                <h2 className="text-2xl font-bold">Choose a Quality Platform for a Bright Future</h2>
               </div>
               <p className="text-gray-600 mb-8 max-w-lg">
-                UP School is a technology-first school that is committed to providing high-quality education and employability in real-world contexts.
+                EduCloud is a technology-first school management platform that is committed to providing high-quality education through digital means
               </p>
             </div>
           </div>
@@ -88,39 +109,42 @@ const SchoolLandingPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
             <FeatureCard 
               icon={<SchoolIcon />}
-              title="Students will be guided by the teacher to grow and develop"
-              description="Our experienced teachers provide personalized guidance to help each student reach their full potential."
+              title="Advanced Scheduling"
+              description="Smart timetable management and event planning"
             />
             <FeatureCard 
               icon={<MindIcon />}
-              title="Students are mentally equipped to live their dreams"
-              description="We focus on helping students discover their goals and equip them with the skills to achieve them."
+              title="Analytics Dashboard"
+              description="Comprehensive insights into academic performance and trends"
               highlight
             />
             <FeatureCard 
               icon={<BenefitIcon />}
-              title="Beneficial for many people, both in the IT field or others"
-              description="Our curriculum is designed to provide valuable skills that translate to various career paths and industries."
+      title="Digital Assessment"
+      description= "Create and grade assessments with automated feedback"
+
+
+
             />
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8">
+      <footer className="bg-gray-800 text-white py-8 relative z-10">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">UP School</h3>
+              <h3 className="text-xl font-bold mb-4">EduCloud</h3>
               <p className="text-gray-400">Technology-first education for a brilliant future.</p>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-3">Programs</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>Computer Science</li>
-                <li>Data Science</li>
-                <li>Web Development</li>
-                <li>Mobile App Development</li>
+                <li>Digital Learning Tools</li>
+                <li>Mental Maths</li>
+                <li>Creativity Development</li>
+                <li>Self Awareness</li>
               </ul>
             </div>
             <div>
@@ -128,29 +152,60 @@ const SchoolLandingPage = () => {
               <ul className="space-y-2 text-gray-400">
                 <li>Student Portal</li>
                 <li>Learning Materials</li>
-                <li>Career Services</li>
-                <li>Blog</li>
+                <li>Digital Assesment</li>
+              
               </ul>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-3">Contact</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>info@upschool.com</li>
-                <li>+1 (123) 456-7890</li>
-                <li>123 Education St, Tech City</li>
+                <li>info@educloud.com</li>
+                <li>+91&835629</li>
+                <li>Assam, India</li>
               </ul>
             </div>
           </div>
           <div className="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500">
-            <p>© {new Date().getFullYear()} UP School. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} EduCloud. All rights reserved.</p>
           </div>
         </div>
       </footer>
+
+      {/* CSS Animations */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+          from { transform: translateY(20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes float {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+          100% { transform: translateY(0px); }
+        }
+        
+        .animate-fadeIn {
+          animation: fadeIn 1s ease forwards;
+        }
+        
+        .animate-slideUp {
+          animation: slideUp 0.8s ease forwards;
+        }
+        
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 };
 
-// Particle Background Component
+// Enhanced Particle Background Component with more vibrant colors and movement
 const ParticleBackground = () => {
   const canvasRef = useRef(null);
   
@@ -161,21 +216,38 @@ const ParticleBackground = () => {
     canvas.height = window.innerHeight;
     
     const particles = [];
+    const colorPalette = [
+      'rgba(66, 133, 244, 0.7)',   // Blue
+      'rgba(219, 68, 55, 0.7)',    // Red
+      'rgba(244, 180, 0, 0.7)',    // Yellow
+      'rgba(15, 157, 88, 0.7)',    // Green
+      'rgba(98, 0, 238, 0.7)'      // Purple
+    ];
     
     class Particle {
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1;
-        this.speedX = Math.random() * 1 - 0.5;
-        this.speedY = Math.random() * 1 - 0.5;
-        this.color = `rgba(66, 133, 244, ${Math.random() * 0.3})`;
+        this.size = Math.random() * 5 + 2; // Larger particles
+        this.speedX = Math.random() * 2 - 1; // Faster movement
+        this.speedY = Math.random() * 2 - 1; // Faster movement
+        this.color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+        this.opacity = Math.random() * 0.5 + 0.2; // More visible
       }
       
       update() {
+        // Add some randomness to movement for more natural flow
+        this.speedX += (Math.random() - 0.5) * 0.1;
+        this.speedY += (Math.random() - 0.5) * 0.1;
+        
+        // Limit speed
+        this.speedX = Math.max(-1.5, Math.min(1.5, this.speedX));
+        this.speedY = Math.max(-1.5, Math.min(1.5, this.speedY));
+        
         this.x += this.speedX;
         this.y += this.speedY;
         
+        // Wrap around screen edges
         if (this.x > canvas.width) this.x = 0;
         if (this.x < 0) this.x = canvas.width;
         if (this.y > canvas.height) this.y = 0;
@@ -183,16 +255,18 @@ const ParticleBackground = () => {
       }
       
       draw() {
+        ctx.globalAlpha = this.opacity;
         ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
+        ctx.globalAlpha = 1;
       }
     }
     
     // Create particles
     const createParticles = () => {
-      const particleCount = Math.floor(canvas.width * canvas.height / 20000);
+      const particleCount = Math.floor(canvas.width * canvas.height / 10000); // More particles
       for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle());
       }
@@ -202,24 +276,51 @@ const ParticleBackground = () => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
+      // Add movement effects over time
+      const time = Date.now() * 0.0005;
+      const waveAmplitude = 0.5;
+      
       for (let i = 0; i < particles.length; i++) {
+        // Add wave-like motion
+        particles[i].speedX += Math.sin(time + particles[i].y * 0.01) * waveAmplitude * 0.01;
+        particles[i].speedY += Math.cos(time + particles[i].x * 0.01) * waveAmplitude * 0.01;
+        
         particles[i].update();
         particles[i].draw();
         
-        // Connect particles with lines
+        // Connect particles with lines - only connect nearby particles
         for (let j = i; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           
-          if (distance < 100) {
+          if (distance < 120) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(66, 133, 244, ${0.2 - distance / 500})`;
-            ctx.lineWidth = 0.5;
+            // Gradient lines based on particle colors
+            const gradient = ctx.createLinearGradient(
+              particles[i].x, particles[i].y, 
+              particles[j].x, particles[j].y
+            );
+            gradient.addColorStop(0, particles[i].color);
+            gradient.addColorStop(1, particles[j].color);
+            
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 0.8;
+            ctx.globalAlpha = 0.4 - distance / 300;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.stroke();
+            ctx.globalAlpha = 1;
           }
+        }
+      }
+      
+      // Occasionally add new particles
+      if (Math.random() > 0.97) {
+        particles.push(new Particle());
+        // Remove a particle if we have too many
+        if (particles.length > 200) {
+          particles.shift();
         }
       }
       
@@ -247,7 +348,7 @@ const ParticleBackground = () => {
   return (
     <canvas 
       ref={canvasRef} 
-      className="absolute top-0 left-0 w-full h-full -z-10"
+      className="fixed top-0 left-0 w-full h-full z-0"
     ></canvas>
   );
 };
@@ -256,13 +357,13 @@ const ParticleBackground = () => {
 const NavLink = ({ href, label, active }) => (
   <a 
     href={href}
-    className={`font-medium transition-colors hover:text-blue-600 ${active ? 'text-blue-600' : 'text-gray-700'}`}
+    className={`font-medium transition-colors hover:text-purpleColor ${active ? 'text-purpleColor' : 'text-gray-700'}`}
   >
     {label}
   </a>
 );
 
-// Stat Counter Component
+// Stat Counter Component with animation
 const StatCounter = ({ number, label }) => {
   const [count, setCount] = useState(0);
   const finalNumber = parseInt(number) || 0;
@@ -290,8 +391,8 @@ const StatCounter = ({ number, label }) => {
   }, [finalNumber]);
   
   return (
-    <div className="text-center">
-      <div className="text-3xl font-bold text-blue-600">{isNaN(finalNumber) ? number : count}</div>
+    <div className="text-center transform transition-transform hover:scale-110 duration-300">
+      <div className="text-3xl font-bold text-purpleColor">{isNaN(finalNumber) ? number : count}</div>
       <div className="text-sm text-gray-500 uppercase tracking-wider">{label}</div>
     </div>
   );
@@ -299,17 +400,17 @@ const StatCounter = ({ number, label }) => {
 
 // Partner Logo Component
 const PartnerLogo = ({ name }) => (
-  <div className="flex items-center justify-center">
+  <div className="flex items-center justify-center transform transition-all hover:scale-110 duration-300">
     <span className="text-white font-bold text-xl md:text-2xl">{name}</span>
   </div>
 );
 
-// Feature Card Component
+// Feature Card Component with hover animation
 const FeatureCard = ({ icon, title, description, highlight }) => (
   <div 
-    className={`rounded-xl p-6 transition-all duration-300 transform hover:-translate-y-2 ${
+    className={`rounded-xl p-6 transition-all duration-500 transform hover:-translate-y-3 hover:shadow-xl ${
       highlight 
-        ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg' 
+        ? 'bg-gradient-to-br from-purpleColor to-blue-700 text-white shadow-lg' 
         : 'bg-white shadow hover:shadow-md'
     }`}
   >
@@ -320,8 +421,8 @@ const FeatureCard = ({ icon, title, description, highlight }) => (
         {icon}
       </div>
       <div className="w-full flex justify-end">
-        <button className={`rounded-full p-2 ${
-          highlight ? 'bg-white/20 text-white' : 'bg-gray-100 text-blue-600'
+        <button className={`rounded-full p-2 transform transition-transform hover:scale-110 ${
+          highlight ? 'bg-white/20 text-white' : 'bg-gray-100 text-purpleColor'
         }`}>
           <ArrowIcon />
         </button>
@@ -344,7 +445,7 @@ const ArrowIcon = () => (
 );
 
 const SchoolIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-purpleColor" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path d="M12 14l9-5-9-5-9 5 9 5z" />
     <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
@@ -358,7 +459,7 @@ const MindIcon = () => (
 );
 
 const BenefitIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-purpleColor" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 );
