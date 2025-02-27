@@ -114,7 +114,7 @@ const Sidebar = ({ isOpen, role }) => {
         id: "students",
         submenu: [
           { label: "All Students", id: "all-students", path: "/all-students" },
-          { label: "Add Student", id: "add-student", path: "/add-students" },
+          // { label: "Add Student", id: "add-student", path: "/add-students" },
           { label: "Attendance", id: "attendance", path: "/mark-attendance" },
         ],
       },
@@ -124,7 +124,7 @@ const Sidebar = ({ isOpen, role }) => {
         id: "teachers",
         submenu: [
           { label: "All Teachers", id: "all-teachers", path: "/all-teachers" },
-          { label: "Add-teachers", id: "add-teachers", path: "/add-teachers" },
+          // { label: "Add-teachers", id: "add-teachers", path: "/add-teachers" },
           {
             label: "Assign classes/Subjects",
             id: "assign-classes-subjects",

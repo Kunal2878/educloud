@@ -54,25 +54,34 @@ const StudentDetails = () => {
 
   const renderPaginationButtons = () => {
     const buttons = [];
-    const maxButtons = 5;
-    let startPage = 1;
-    let endPage = totalPages;
 
-    if (totalPages > maxButtons) {
-      const leftOffset = Math.floor(maxButtons / 2);
-      const rightOffset = maxButtons - leftOffset - 1;
+    // Add first page
+    buttons.push(
+      <button
+        key={1}
+        onClick={() => setCurrentPage(1)}
+        className={`px-3 py-1 rounded-md mx-1 ${
+          currentPage === 1
+            ? "bg-purple-500 text-white"
+            : "bg-gray-100 hover:bg-gray-200"
+        }`}
+      >
+        1
+      </button>
+    );
 
-      if (currentPage <= leftOffset) {
-        endPage = maxButtons;
-      } else if (currentPage >= totalPages - rightOffset) {
-        startPage = totalPages - maxButtons + 1;
-      } else {
-        startPage = currentPage - leftOffset;
-        endPage = currentPage + rightOffset;
-      }
+    // Add ellipsis after first page if needed
+    if (currentPage > 3) {
+      buttons.push(
+        <span key="start-ellipsis" className="px-2">
+          ...
+        </span>
+      );
     }
 
-    for (let i = startPage; i <= endPage; i++) {
+    // Add current page and surrounding pages
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+      if (i === 1 || i === totalPages) continue;
       buttons.push(
         <button
           key={i}
@@ -88,34 +97,26 @@ const StudentDetails = () => {
       );
     }
 
-    if (startPage > 1) {
-      buttons.unshift(
-        <span key="start-ellipsis" className="px-2">
-          ...
-        </span>
-      );
-      buttons.unshift(
-        <button
-          key={1}
-          onClick={() => setCurrentPage(1)}
-          className="px-3 py-1 rounded-md mx-1 bg-gray-100 hover:bg-gray-200"
-        >
-          1
-        </button>
-      );
-    }
-
-    if (endPage < totalPages) {
+    // Add ellipsis before last page if needed
+    if (currentPage < totalPages - 2) {
       buttons.push(
         <span key="end-ellipsis" className="px-2">
           ...
         </span>
       );
+    }
+
+    // Add last page
+    if (totalPages > 1) {
       buttons.push(
         <button
           key={totalPages}
           onClick={() => setCurrentPage(totalPages)}
-          className="px-3 py-1 rounded-md mx-1 bg-gray-100 hover:bg-gray-200"
+          className={`px-3 py-1 rounded-md mx-1 ${
+            currentPage === totalPages
+              ? "bg-purple-500 text-white"
+              : "bg-gray-100 hover:bg-gray-200"
+          }`}
         >
           {totalPages}
         </button>
@@ -156,7 +157,7 @@ const StudentDetails = () => {
             <button 
               onClick={() => setShowAddStudent(false)}
 
-              className="absolute top-6 lg:top-4 right-2 p-2 bg-white rounded-full text-gray-600 hover:text-gray-800 transition-colors duration-200 transform hover:scale-110 shadow-md"
+              className="absolute top-6 lg:top-4 right-2 p-2 bg-white rounded-full text-gray-600 hover:text-gray-800 transition-colors duration-200 transform hover:scale-110 shadow-lg"
             >
               <X size={24} />
             </button>
@@ -184,7 +185,7 @@ const StudentDetails = () => {
       </div>
 
       {/* Filters */}
-<div className="bg-white p-2">
+<div className="bg-white p-2 rounded-md hadow-lg">
       <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 mb-6 bg-white">
         <div className="relative flex-1 max-w-md text-gray-600 p-2 ml-4">
           <Search
@@ -234,7 +235,7 @@ const StudentDetails = () => {
       <div className="overflow-x-auto text-black-300 text-xs bg-white m-4">
         <table className="w-full min-w-[768px] pb-10">
           <thead className="">
-            <tr className="border-b bg-purple-50">
+            <tr className="border-b bg-purple-100">
               <th className="px-6 py-4">
                 <input
                   type="checkbox"
@@ -300,12 +301,12 @@ const StudentDetails = () => {
       </div>
 
       {/* Pagination */}
-      <div className=" bottom-0 left-0 right-0 flex justify-center items-center py-2  shadow-lg">
+      <div className=" bottom-0 left-0 right-0 flex justify-center items-center py-2">
         <div className=" w-1/2 flex items-center justify-center space-x-1">
           <button
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
-          className="px-3 py-1 rounded-md bg-white hover:bg-gray-200 disabled:opacity-50 "
+            className="px-3 py-1 rounded-md bg-white hover:bg-gray-200 disabled:opacity-50 "
           >
             <ArrowLeft size={20} className="text-black"/>
           </button>

@@ -69,7 +69,7 @@ const TeacherDetails = () => {
   }
 
   return (
-    <div className="p-6 bg-white min-h-screen mt-12">
+    <div className="pl-6 pr-6 pb-6 min-h-screen mt-2">
       {/* Header */}
       <div className="flex flex-col md:flex-row text-gray-600 justify-between items-start md:items-center mb-6 bg-purple-50 p-2">
         <div className="mb-4 md:mb-0">
@@ -105,6 +105,9 @@ const TeacherDetails = () => {
         </div>
       )}
 
+
+
+<div>
       {/* Filters */}
       <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 mb-6">
         <div className="relative flex-1 max-w-md bg-slate-100 text-gray-600">
@@ -144,7 +147,7 @@ const TeacherDetails = () => {
       {/* Table */}
       <div className="overflow-x-auto text-gray-600 text-xs">
         <table className="w-full min-w-[768px] pb-10">
-          <thead className='bg-purple-50'>
+          <thead className='bg-purple-100'>
             <tr className="border-b">
               <th className="p-4">
                 <input type="checkbox" className="rounded bg-white accent-purple-500" />
@@ -195,6 +198,9 @@ const TeacherDetails = () => {
           </tbody>
         </table>
       </div>
+
+
+</div>
 
       {/* Pagination */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">

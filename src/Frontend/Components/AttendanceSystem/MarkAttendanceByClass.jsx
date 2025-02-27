@@ -1,29 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { Search, Check, X,Plus, Loader } from "lucide-react";
+import { Search, Check, X, Plus, Loader, ChevronLeft, ChevronRight } from "lucide-react";
 import AddStudents from '../../Pages/Student/AddStudent'
 
 const ClassAttendanceTracker = () => {
   const [students, setStudents] = useState([
-    { id: 1, name: "Michelle Johnson" },
-    { id: 2, name: "Courtney Henry" },
-    { id: 3, name: "Jacob Jones" },
-    { id: 4, name: "Robert Fox" },
-    { id: 5, name: "Cody Fisher" },
-    { id: 6, name: "Arlene McCoy" },
-    { id: 7, name: "Jerome Bell" },
-    { id: 8, name: "Theresa Webb" },
-    { id: 9, name: "Dianne Russell" },
-    { id: 10, name: "Eleanor Pena" },
-    { id: 11, name: "Arlene McCoy" },
-    { id: 12, name: "Jerome Bell" },
-    { id: 13, name: "Theresa Webb" },
-    { id: 14, name: "Dianne Russell" },
-    { id: 15, name: "Eleanor Pena" },
+    { id: 1, name: "Michelle Johnson", class: "Class 1A" },
+  
+    { id: 2, name: "Courtney Henry", class: "Class 1B" },
+    { id: 3, name: "Jacob Jones", class: "Class 2A" },
+    { id: 4, name: "Robert Fox", class: "Class 2B" },
+    { id: 5, name: "Cody Fisher", class: "Class 3A" },
+    { id: 6, name: "Arlene McCoy", class: "Class 3B" },
+    { id: 7, name: "Jerome Bell", class: "Class 4A" },
+    { id: 8, name: "Theresa Webb", class: "Class 4B" },
+    { id: 9, name: "Dianne Russell", class: "Class 5A" },
+    { id: 10, name: "Eleanor Pena", class: "Class 5B" },
+    { id: 11, name: "Arlene McCoy", class: "Class 6A" },
+    { id: 12, name: "Jerome Bell", class: "Class 6B" },
+    { id: 13, name: "Theresa Webb", class: "Class 7A" },
+    { id: 14, name: "Dianne Russell", class: "Class 7B" },
+    { id: 15, name: "Eleanor Pena", class: "Class 8A" },
   ]);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedClass, setSelectedClass] = useState("Class One (Section A)");
+  const [selectedClass, setSelectedClass] = useState("Class 1A");
   const [showAddStudents, setShowAddStudents] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const studentsPerPage = 10;
 
   // Initialize attendance data
@@ -43,8 +45,8 @@ const ClassAttendanceTracker = () => {
   };
 
   const isHoliday = (day) => {
-    const date = new Date(2024, 1, day); // February 2024
-    return date.getDay() === 0; // Sunday
+    const date = new Date(2024, 1, day);
+    return date.getDay() === 0;
   };
 
   const toggleAttendance = (studentId, day, status) => {
@@ -62,36 +64,140 @@ const ClassAttendanceTracker = () => {
     );
   };
 
-  const [daysInMonth, setDaysInMonth] = useState(31); // Add this state
-  const [selectedMonth, setSelectedMonth] = useState({ year: 2024, month: 1 }); // Add this state
+  const [daysInMonth, setDaysInMonth] = useState(31);
+  const [selectedMonth, setSelectedMonth] = useState({ year: 2024, month: 1 });
+
+  // Filter students based on search query and selected class
+  const filteredStudents = students.filter(student => {
+    const matchesSearch = student.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesClass = selectedClass === "all" || student.class === selectedClass;
+    return matchesSearch && matchesClass;
+  });
+
+  // Generate class options
+  const classOptions = Array.from({ length: 10 }, (_, i) => {
+    const classNum = i + 1;
+    return [
+      `Class ${classNum}A`,
+      `Class ${classNum}B`
+    ];
+  }).flat();
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    
+    buttons.push(
+      <button
+        key="prev"
+        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+        disabled={currentPage === 1}
+        className="px-3 py-1 rounded-lg bg-purple-100 text-purple-600 disabled:opacity-50"
+      >
+        <ChevronLeft size={20} />
+      </button>
+    );
+
+    // Always show first page
+    buttons.push(
+      <button
+        key={1}
+        onClick={() => setCurrentPage(1)}
+        className={`px-3 py-1 rounded-lg ${
+          currentPage === 1 ? 'bg-purple-600 text-white' : 'bg-purple-100 text-purple-600'
+        }`}
+      >
+        1
+      </button>
+    );
+
+    // Show dots or numbers
+    if (currentPage > 3) {
+      buttons.push(
+        <button
+          key={2}
+          onClick={() => setCurrentPage(2)}
+          className="px-3 py-1 rounded-lg bg-purple-100 text-purple-600"
+        >
+          2
+        </button>
+      );
+      buttons.push(<span key="dots1" className="px-2">...</span>);
+    }
+
+    // Current page and surrounding pages
+    if (currentPage !== 1 && currentPage !== totalPages) {
+      buttons.push(
+        <button
+          key={currentPage}
+          onClick={() => setCurrentPage(currentPage)}
+          className="px-3 py-1 rounded-lg bg-purple-600 text-white"
+        >
+          {currentPage}
+        </button>
+      );
+    }
+
+    // Show dots before last page
+    if (currentPage < totalPages - 2) {
+      buttons.push(<span key="dots2" className="px-2">...</span>);
+      buttons.push(
+        <button
+          key={totalPages - 1}
+          onClick={() => setCurrentPage(totalPages - 1)}
+          className="px-3 py-1 rounded-lg bg-purple-100 text-purple-600"
+        >
+          {totalPages - 1}
+        </button>
+      );
+    }
+
+    // Always show last page
+    if (totalPages !== 1) {
+      buttons.push(
+        <button
+          key={totalPages}
+          onClick={() => setCurrentPage(totalPages)}
+          className={`px-3 py-1 rounded-lg ${
+            currentPage === totalPages ? 'bg-purple-600 text-white' : 'bg-purple-100 text-purple-600'
+          }`}
+        >
+          {totalPages}
+        </button>
+      );
+    }
+
+    buttons.push(
+      <button
+        key="next"
+        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+        disabled={currentPage === totalPages}
+        className="px-3 py-1 rounded-lg bg-purple-100 text-purple-600 disabled:opacity-50"
+      >
+        <ChevronRight size={20} />
+      </button>
+    );
+
+    return buttons;
+  };
 
   return (
     <div className="pl-6 pr-6 pb-6 pt-0  min-h-screen">
       {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="relative flex-1 max-w-md bg-slate-100 rounded-md text-gray-600">
-            <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600"
-              size={20}
-            />
-            <input
-              type="text"
-              placeholder="What do you want to find?"
-              className="w-full pl-10 pr-4 py-2   rounded-lg focus:outline-none bg-primary-300 text-black-300 border-lamaSkyLight "
-            />
+      <div className="flex flex-col md:flex-row text-black justify-between items-start md:items-center mb-6 p-2">
+        <div className="mb-4 md:mb-0">
+          <h1 className="text-2xl font-semibold mb-2">Mark Attendance </h1>
+          <div className="flex items-center text-sm">
+            <span className="mr-2">Students /</span>
+            <span>Attendance</span>
           </div>
-          <button onClick={() => setShowAddStudents(true)} className="p-2 border-2  border-primaryBlue text-sm text-primaryBlue rounded-full  transition-colors duration-200 transform hover:scale-105">
+        </div>
+        <button onClick={() => setShowAddStudents(true)} className="p-2 border-2 border-primaryBlue text-sm text-primaryBlue rounded-full transition-colors duration-200 transform hover:scale-105">
           <span>
             <Plus size={24} />
-          </span>{" "}
+          </span>
         </button>
-        </div>
-
-        <div className="flex items-center text-sm text-gray-600">
-          <span className="mr-2">Students /</span>
-          <span>Attendance</span>
-        </div>
       </div>
 
       {showAddStudents && (
@@ -113,44 +219,50 @@ const ClassAttendanceTracker = () => {
       )}
 
 
-      
-      {/* Class Selection and Calendar */}
-      <div className="flex justify-between items-center mb-4 ">
-        <div className="flex items-center gap-4">
-          <select
-            className="p-2   rounded-lg text-xs text-gray-600 bg-slate-100"
-            value={selectedClass}
-            onChange={(e) => setSelectedClass(e.target.value)}
-          >
-            <option value="Class One (Section A)">Class One (Section A)</option>
-            <option value="Class One (Section B)">Class One (Section B)</option>
-            <option value="Class Two (Section A)">Class Two (Section A)</option>
-            <option value="Class Two (Section B)">Class Two (Section B)</option>
-            <option value="Class Three (Section A)">
-              Class Three (Section A)
-            </option>
-            <option value="Class Three (Section B)">
-              Class Three (Section B)
-            </option>
-          </select>
+<div className="bg-white p-4 rounded-lg shadow-lg">
 
+      {/* Class Selection, Search and Calendar */}
+      <div className="flex items-center gap-4 mb-4">
+        <div className="relative flex-1 max-w-md bg-slate-100 rounded-md text-gray-600">
+          <Search
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+            size={20}
+          />
           <input
-            type="month"
-            className="p-2  rounded-lg text-xs text-gray-600 bg-slate-100"
-            defaultValue="2024-02"
-            onChange={(e) => {
-              const [year, month] = e.target.value.split("-");
-              const daysInMonth = new Date(year, month, 0).getDate();
-              setDaysInMonth(daysInMonth);
-              setSelectedMonth({
-                year: parseInt(year),
-                month: parseInt(month) - 1,
-              });
-            }}
+            type="text"
+            placeholder="Search student by name..."
+            className="w-full pl-10 pr-4 py-2 rounded-lg focus:outline-none bg-primary-300 text-black-300 border-lamaSkyLight"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+        <select
+          className="p-2 rounded-lg text-xs text-gray-600 bg-slate-100"
+          value={selectedClass}
+          onChange={(e) => setSelectedClass(e.target.value)}
+        >
+          <option value="all">All Classes</option>
+          {classOptions.map((className) => (
+            <option key={className} value={className}>
+              {className}
+            </option>
+          ))}
+        </select>
+        <input
+          type="month"
+          className="p-2 rounded-lg text-xs text-gray-600 bg-slate-100"
+          defaultValue="2024-02"
+          onChange={(e) => {
+            const [year, month] = e.target.value.split("-");
+            const daysInMonth = new Date(year, month, 0).getDate();
+            setDaysInMonth(daysInMonth);
+            setSelectedMonth({
+              year: parseInt(year),
+              month: parseInt(month) - 1,
+            });
+          }}
+        />
       </div>
-
 
       {/* Attendance Table */}
       <div
@@ -176,7 +288,7 @@ const ClassAttendanceTracker = () => {
             </tr>
           </thead>
           <tbody>
-            {students
+            {filteredStudents
               .slice(
                 (currentPage - 1) * studentsPerPage,
                 currentPage * studentsPerPage
@@ -249,35 +361,14 @@ const ClassAttendanceTracker = () => {
           </tbody>
         </table>
       </div>
+      </div>
 
       {/* Pagination */}
-      <div className="flex justify-center items-center gap-4 mt-6">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className="px-4 py-2 rounded-lg bg-purple-100 text-purple-600 disabled:opacity-50"
-        >
-          Previous
-        </button>
-        <span className="text-gray-600">
-          Page {currentPage} of {Math.ceil(students.length / studentsPerPage)}
-        </span>
-        <button
-          onClick={() =>
-            setCurrentPage((prev) =>
-              Math.min(prev + 1, Math.ceil(students.length / studentsPerPage))
-            )
-          }
-          disabled={
-            currentPage === Math.ceil(students.length / studentsPerPage)
-          }
-          className="px-4 py-2 rounded-lg bg-purple-100 text-purple-600 disabled:opacity-50"
-        >
-          Next
-        </button>
+      <div className="flex justify-center items-center gap-2 mt-6">
+        {renderPaginationButtons()}
       </div>
-    </div>
-  );
-};
+      </div>
+    
+  );};
 
 export default ClassAttendanceTracker;
