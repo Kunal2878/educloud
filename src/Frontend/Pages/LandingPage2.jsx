@@ -57,11 +57,11 @@ const SchoolLandingPage = () => {
             </div>
           </div>
           <div className="md:w-1/2 mt-12 md:mt-0 animate-fadeIn" style={{animationDelay: "0.3s"}}>
-            <div className="relative rounded-lg overflow-hidden shadow-xl transform transition-all hover:scale-105 duration-500">
+            <div className="flex justify-center items-center relative rounded-lg overflow-hidden  transform transition-all hover:scale-105 duration-500">
               <img 
-                src="/api/placeholder/600/400" 
+                src="/3D Vector_landing.png" 
                 alt="Students learning" 
-                className="w-full h-auto rounded-lg"
+                className="w-72 h-96 auto rounded-lg"
               />
             </div>
           </div>
