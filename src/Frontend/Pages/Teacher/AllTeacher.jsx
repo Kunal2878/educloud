@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Trash2, PenSquare,GraduationCap,Plus,Loader } from 'lucide-react';
+import { Search, Trash2, PenSquare,GraduationCap,Plus,Loader, X } from 'lucide-react';
 import {Link} from 'react-router-dom'
+import AddTeachers from './Addteacher'
 const TeacherDetails = () => {
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,6 +10,7 @@ const TeacherDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [timeFilter, setTimeFilter] = useState('Last 30 days');
   const [selectedClass, setSelectedClass] = useState('all');
+  const [showAddTeacher, setShowAddTeacher] = useState(false);
   const teachersPerPage = 10;
 
   useEffect(() => {
@@ -73,17 +75,35 @@ const TeacherDetails = () => {
         <div className="mb-4 md:mb-0">
           <h1 className="text-2xl font-semibold mb-2">All Teachers </h1>
           <div className="flex items-center text-sm ">
-            <span className="mr-2">Home /</span>
-            <span >Teachers</span>
+            <span className="mr-2">Teachers /</span>
+            <span > All Teachers</span>
           </div>
         </div>
-        <Link to='/add-teachers' className="p-2 border-2  border-primaryBlue text-sm text-primaryBlue rounded-full  transition-colors duration-200 transform hover:scale-105">
+        <button onClick={() => setShowAddTeacher(true)} className="p-2 border-2  border-primaryBlue text-sm text-primaryBlue rounded-full  transition-colors duration-200 transform hover:scale-105">
           <span>
             <Plus size={24} />
           </span>{" "}
-        </Link>
+        </button>
       
       </div>
+
+      {showAddTeacher && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            setShowAddTeacher(false);
+          }
+        }}>
+          <div className="relative rounded-lg w-auto max-w-4xl p-4">
+            <button
+              onClick={() => setShowAddTeacher(false)}
+              className="absolute top-6 lg:top-4 right-2 p-2 bg-white rounded-full text-gray-600 hover:text-gray-800 transition-colors duration-200 transform hover:scale-110 shadow-md"
+            >
+              <X size={24} />
+            </button>
+            <AddTeachers onClose={() => setShowAddTeacher(false)} />
+          </div>
+        </div>
+      )}
 
       {/* Filters */}
       <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 mb-6">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Search, Check, X,Plus, Loader } from "lucide-react";
-import {Link} from 'react-router-dom';
+import AddStudents from '../../Pages/Student/AddStudent'
 
 const ClassAttendanceTracker = () => {
   const [students, setStudents] = useState([
@@ -23,6 +23,7 @@ const ClassAttendanceTracker = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedClass, setSelectedClass] = useState("Class One (Section A)");
+  const [showAddStudents, setShowAddStudents] = useState(false);
   const studentsPerPage = 10;
 
   // Initialize attendance data
@@ -65,7 +66,7 @@ const ClassAttendanceTracker = () => {
   const [selectedMonth, setSelectedMonth] = useState({ year: 2024, month: 1 }); // Add this state
 
   return (
-    <div className="p-6 bg-white mt-12">
+    <div className="pl-6 pr-6 pb-6 pt-0  min-h-screen">
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
@@ -80,19 +81,39 @@ const ClassAttendanceTracker = () => {
               className="w-full pl-10 pr-4 py-2   rounded-lg focus:outline-none bg-primary-300 text-black-300 border-lamaSkyLight "
             />
           </div>
-          <Link to='/add-students' className="p-2 border-2  border-primaryBlue text-sm text-primaryBlue rounded-full  transition-colors duration-200 transform hover:scale-105">
+          <button onClick={() => setShowAddStudents(true)} className="p-2 border-2  border-primaryBlue text-sm text-primaryBlue rounded-full  transition-colors duration-200 transform hover:scale-105">
           <span>
             <Plus size={24} />
           </span>{" "}
-        </Link>
+        </button>
         </div>
 
         <div className="flex items-center text-sm text-gray-600">
-          <span className="mr-2">Home /</span>
+          <span className="mr-2">Students /</span>
           <span>Attendance</span>
         </div>
       </div>
 
+      {showAddStudents && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            setShowAddStudents(false);
+          }
+        }}>
+          <div className="relative rounded-lg w-auto max-w-4xl p-4">
+            <button
+              onClick={() => setShowAddStudents(false)}
+              className="absolute top-6 lg:top-4 right-2 p-2 bg-white rounded-full text-gray-600 hover:text-gray-800 transition-colors duration-200 transform hover:scale-110 shadow-md"
+            >
+              <X size={24} />
+            </button>
+            <AddStudents onClose={() => setShowAddStudents(false)} />
+          </div>
+        </div>
+      )}
+
+
+      
       {/* Class Selection and Calendar */}
       <div className="flex justify-between items-center mb-4 ">
         <div className="flex items-center gap-4">
@@ -130,15 +151,16 @@ const ClassAttendanceTracker = () => {
         </div>
       </div>
 
+
       {/* Attendance Table */}
       <div
         className="overflow-x-auto"
         style={{ scrollbarWidth: "thin", scrollbarColor: "#CBD5E0 #EDF2F7" }}
       >
-        <table className="w-full border-collapse min-w-[768px] text-xs">
-          <thead className="bg-purple-50 border-2 border-purple-50">
+        <table className="w-full border-collapse min-w-[768px] text-xs bg-white">
+          <thead className=" border-2 border-purple-50 bg-purple-100">
             <tr className="">
-              <th className="px-6 py-4 text-left w-64 text-gray-500 sticky left-0 bg-purple-50 whitespace-nowrap z-20">
+              <th className="px-6 py-4 text-left w-64 text-gray-500 sticky left-0 bg-purple-100 whitespace-nowrap z-20">
                 Student's Name
               </th>
               {Array.from({ length: daysInMonth }, (_, i) => i + 1).map(

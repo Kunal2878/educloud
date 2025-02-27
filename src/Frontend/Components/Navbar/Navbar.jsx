@@ -12,7 +12,7 @@ import AssignClassSub from "../../Pages/Teacher/AssignClassSub";
 import Events from "../../Pages/Events";
 import RegisterClass from "../../Pages/Classes/RegisterClass";
 import AddStudents from '../../Pages/Student/AddStudent'
-import AddTeachers from '../../Pages/Teacher/AddTeacher'
+// import AddTeachers from '../../Pages/Teacher/AddTeacher'
 import RegisterSubjects from '../../Pages/Subjects/RegisterSubject'
 import UploadTimeTable from '../../Pages/TimeTable/UploadTimeTable'
 import CreateExam from '../../Pages/Exam/CreateExam'
