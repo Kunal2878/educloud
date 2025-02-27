@@ -8,26 +8,7 @@ const SchoolLandingPage = () => {
       {/* Particle Background */}
       <ParticleBackground />
       
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-sm shadow-sm">
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <div className="flex items-center">
-            <div className="text-blue-600 font-bold text-2xl">UP School</div>
-          </div>
-          <div className="hidden md:flex space-x-8">
-            <NavLink href="#" label="Home" active />
-            <NavLink href="#" label="Learning Programs" />
-            <NavLink href="#" label="About Us" />
-            <NavLink href="#" label="Admissions" />
-          </div>
-          <div className="flex items-center space-x-4">
-            <div className="text-gray-500 font-medium">Eng</div>
-            <button className="bg-blue-600 text-white px-6 py-2 rounded-full font-medium transition-all hover:bg-blue-700 hover:shadow-md">
-              Login
-            </button>
-          </div>
-        </div>
-      </nav>
+      
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-12 md:py-20">

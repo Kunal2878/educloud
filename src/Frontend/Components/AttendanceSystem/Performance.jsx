@@ -296,25 +296,24 @@ const PrincipalData=[
               </ResponsiveContainer>
             )}
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-              <div className="flex space-x-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke={MALE_COLOR}>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke={FEMALE_COLOR}>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
+              <div className="flex flex-row space-x-4 jsutify-center items-center">
+               
+
+                <img className="w-16 h-20" src='/f_m.png'/>
+             
+                
               </div>
-              <div className="text-gray-500 text-sm mt-2">Total</div>
-              <div className="text-2xl font-bold">10000</div>
+              {/* <div className="text-gray-500 text-sm mt-2">Total</div>
+              <div className="text-2xl font-bold">10000</div> */}
             </div>
             <div className="absolute bottom-0 left-0 right-0 flex justify-center space-x-8 mb-2">
               <div className="flex items-center">
                 <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: MALE_COLOR }}></div>
-                <span className="text-sm">Male</span>
+                <span className="text-sm "style={{ color: MALE_COLOR }}>Male</span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: FEMALE_COLOR }}></div>
-                <span className="text-sm">Female</span>
+                <span className="text-sm" style={{ color:FEMALE_COLOR }}>Female</span>
               </div>
             </div>
           </div>
