@@ -208,7 +208,7 @@ const TeacherDetails = () => {
               placeholder="Search by name"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border rounded-lg bg-primary-300 text-black-300 border-lamaSkyLight transition-all duration-200"
+              className="w-full pl-10 pr-4 py-2 border rounded-lg outline-none bg-primary-300 text-black-300 border-lamaSkyLight transition-all duration-200"
             />
           </div>
           
@@ -216,7 +216,7 @@ const TeacherDetails = () => {
             <select
               value={selectedClass}
               onChange={(e) => setSelectedClass(e.target.value)}
-              className="p-2 mr-4 bg-slate-100 text-gray-600 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+              className="p-2 mr-4 outline-none border rounded-lg bg-primary-300 text-black-300 border-lamaSkyLight transition-all duration-200"
             >
               <option value="all">All Classes</option>
               <option value="class1">Class 1</option>

@@ -221,9 +221,10 @@ const ClassAttendanceTracker = () => {
 
 <div className="bg-white p-4 rounded-lg shadow-lg">
 
+         
       {/* Class Selection, Search and Calendar */}
-      <div className="flex items-center gap-4 mb-4">
-        <div className="relative flex-1 max-w-md bg-slate-100 rounded-md text-gray-600">
+      <div className="flex flex-row  items-center justify-between gap-4 mb-4">
+        <div className="relative flex-1 max-w-md  bg-slate-100 rounded-md text-gray-600">
           <Search
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600"
             size={20}
@@ -231,13 +232,14 @@ const ClassAttendanceTracker = () => {
           <input
             type="text"
             placeholder="Search student by name..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg focus:outline-none bg-primary-300 text-black-300 border-lamaSkyLight"
+            className="w-full pl-10 pr-4 py-2 rounded-lg  focus:outline-none bg-primary-300 text-black-300 border-lamaSkyLight"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+        <div className="flex gap-4">
         <select
-          className="p-2 rounded-lg text-xs text-gray-600 bg-slate-100"
+          className="p-2 rounded-lg text-xs outline-none bg-primary-300 text-black-300 border-lamaSkyLight"
           value={selectedClass}
           onChange={(e) => setSelectedClass(e.target.value)}
         >
@@ -250,7 +252,7 @@ const ClassAttendanceTracker = () => {
         </select>
         <input
           type="month"
-          className="p-2 rounded-lg text-xs text-gray-600 bg-slate-100"
+          className="p-2 rounded-lg text-xs  outline-none bg-primary-300 text-black-300 border-lamaSkyLight"
           defaultValue="2024-02"
           onChange={(e) => {
             const [year, month] = e.target.value.split("-");
@@ -262,7 +264,9 @@ const ClassAttendanceTracker = () => {
             });
           }}
         />
-      </div>
+  
+        </div>
+        </div>
 
       {/* Attendance Table */}
       <div

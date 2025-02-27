@@ -67,7 +67,7 @@ const RegisterClass = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 sm:p-6 lg:p-10">
+    <div className="min-h-screen  p-6 sm:p-6 lg:p-8">
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8 transition-all duration-300 hover:shadow-lg">
         <h2 className="text-2xl font-bold mb-12 mt-4 text-gray-800"><span className="text-purpleColor">Register</span> New Class</h2>
         
