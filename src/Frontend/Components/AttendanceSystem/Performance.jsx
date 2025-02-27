@@ -192,10 +192,11 @@ const PrincipalData=[
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <div className="mb-4">
-              <h1 className="text-2xl font-bold text-gray-800 capitalize">
-                <span className='text-purpleColor'>{user.role}</span> - {user.name}
-              </h1>
-            </div>
+              <h1 className="text-2xl font-bold text-gray-800 capitalize flex flex-col gap-2">
+                <span className='text-black text-5xl font-black'>Welcome back to <span className='text-purpleColor'>Edu</span>Cloud</span>
+                <span className='text-black '> where your success is our priority!</span> 
+        </h1>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 w-full bg-gray-50 p-4 rounded-lg shadow-lg">
         {(user.role === 'principal' ? PrincipalData : 
