@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import dotenv from "dotenv";
+import Cookies from "js-cookie";
 import {
   Mail,
   Lock,
@@ -27,7 +28,8 @@ const AddTeachers = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastIcon, setToastIcon] = useState("");
   const url = import.meta.env.VITE_API_BASE_URL;
-
+  const token = Cookies.get("token");
+console.log(token)
   const onSubmit = async (data) => {
     setLoading(true);
     try {
@@ -35,6 +37,7 @@ const AddTeachers = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": token
         },
         body: JSON.stringify(data),
       });
@@ -196,7 +199,7 @@ const AddTeachers = () => {
             className="w-full flex items-center justify-center py-3 px-4  rounded-lg text-purple-500  focus:outline-none border-2 border-purple-500 hover:scale-[1.02] hover:shadow-lg"
           >
             {loading ? (
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-500"></div>
             ) : (
               <>
                Add

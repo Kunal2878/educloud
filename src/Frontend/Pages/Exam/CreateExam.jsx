@@ -3,7 +3,8 @@ import { useState } from "react";
 import Toast from "../../Components/Toast";
 import Cookies from "js-cookie";
 const CreateExam = () => {
-      const token = Cookies.get('token');
+  const token = Cookies.get('token');
+  const url = import.meta.env.VITE_API_BASE_URL;
   const [examData, setExamData] = useState({
     name: "",
     date: "",
@@ -14,7 +15,6 @@ const CreateExam = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [showToast, setShowToast] = useState({ show: false, message: "", type: "" });
-  const url = import.meta.env.VITE_API_BASE_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +31,7 @@ const CreateExam = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
+    
         setExamId(data._id);
         setExamCreated(true);
         setShowToast({ show: true, message: "Exam created successfully!", type: "right" });
