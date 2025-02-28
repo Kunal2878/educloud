@@ -5,22 +5,22 @@ import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../../../Store/slice";
 import PerformanceDashboard from "../AttendanceSystem/Performance";
 import ClassAttendanceTracker from "../AttendanceSystem/MarkAttendanceByClass";
-import ProfilePage from "../../Pages/AboutMe";
+import { ProfilePage, TeacherDetails } from "../../Pages";
 import StudentDetails from "../Classes/AllStudents";
-import TeacherDetails from "../../Pages/Teacher/AllTeacher";
+// import TeacherDetails from "../../Pages/Teacher/AllTeacher";
 import AssignClassSub from "../../Pages/Teacher/AssignClassSub";
 import Events from "../../Pages/Events";
 import RegisterClass from "../../Pages/Classes/RegisterClass";
-import AddStudents from '../../Pages/Student/AddStudent'
-import RegisterSubjects from '../../Pages/Subjects/RegisterSubject'
-import UploadTimeTable from '../../Pages/TimeTable/UploadTimeTable'
-import CreateExam from '../../Pages/Exam/CreateExam'
-import MyAttendance from '../../Pages/Student/MyAttendance'
-import MyExams from '../../Pages/Student/MyExam'
-import MyResults from '../../Pages/Student/MyResult'
-import MySubjects from '../../Pages/Student/MySubject'
-import MyStudents from '../../Pages/Teacher/MyStudent'
-
+import AddStudents from "../../Pages/Student/AddStudent";
+import RegisterSubjects from "../../Pages/Subjects/RegisterSubject";
+import UploadTimeTable from "../../Pages/TimeTable/UploadTimeTable";
+import CreateExam from "../../Pages/Exam/CreateExam";
+import MyAttendance from "../../Pages/Student/MyAttendance";
+import MyExams from "../../Pages/Student/MyExam";
+import MyResults from "../../Pages/Student/MyResult";
+import MySubjects from "../../Pages/Student/MySubject";
+import MyStudents from "../../Pages/Teacher/MyStudent";
+import AllClasses from '../../Pages/Classes/AllClass';
 import {
   Home,
   AlignLeft,
@@ -60,7 +60,7 @@ const NavBar = ({ User, onMenuClick }) => {
   };
 
   return (
-    <nav className="w-full  shadow-lg fixed flex flex-row top-0 z-50 bg-slate-200 pr-4 p-2">
+    <nav className="w-full  shadow-lg fixed flex flex-row top-0 z-50 bg-accent-100 pr-4 p-2">
       <div className="w-full flex flex-row  justify-between items-center">
         {/* Left side */}
 
@@ -135,13 +135,30 @@ const Sidebar = ({ isOpen, role }) => {
         icon: School,
         label: "Classes",
         id: "classes",
-        path: "/register-class",
+        submenu: [
+          { label: "Register Class", id: "register-class", path: "/register-class" },
+          
+        {
+            label: "All Classes",
+            id: "all-classes",
+            path: "/all-classes",
+          },
+        ],
+      
       },
-      { icon: BookOpen, label: "Subjects", id: "subjects", path: "/register-subjects" },
-      { icon: FileText, label: "Exam", id: "exam", 
-        submenu:[
-          { label: "Create Exam", id: "create-exam", path: "/create-exams"}
-        ]
+      {
+        icon: BookOpen,
+        label: "Subjects",
+        id: "subjects",
+        path: "/register-subjects",
+      },
+      {
+        icon: FileText,
+        label: "Exam",
+        id: "exam",
+        submenu: [
+          { label: "Create Exam", id: "create-exam", path: "/create-exams" },
+        ],
       },
       {
         icon: Clock,
@@ -152,23 +169,47 @@ const Sidebar = ({ isOpen, role }) => {
       { icon: Calendar, label: "Events", id: "events", path: "/events" },
     ],
     teacher: [
-      { icon: Home, label: "Dashboard", id: "dashboard",path:'/dashboard' },
-      { icon: Users, label: "My Students", id: "my-students",path:'/my-students' },
+      { icon: Home, label: "Dashboard", id: "dashboard", path: "/dashboard" },
       {
-        icon: Clock,label: "Time table", id: "time-table", path: "/time-table",
+        icon: Users,
+        label: "My Students",
+        id: "my-students",
+        path: "/my-students",
+      },
+      {
+        icon: Clock,
+        label: "Time table",
+        id: "time-table",
+        path: "/time-table",
       },
       // { icon: Calendar, label: "Schedule", id: "schedule" },
-      { icon: FileText, label: "Exams", id: "exams", path:'/create-exams' },
-      { icon: Award, label: "Results", id: "results",path:'/results' },
+      { icon: FileText, label: "Exams", id: "exams", path: "/create-exams" },
+      { icon: Award, label: "Results", id: "results", path: "/results" },
     ],
     student: [
-      { icon: Home, label: "Dashboard", id: "dashboard",path:'/dashboard' },
+      { icon: Home, label: "Dashboard", id: "dashboard", path: "/dashboard" },
       // { icon: Calendar, label: "My Schedule", id: "schedule" },
-     { icon: BookOpen, label: "My Subjects", id: "my-subjects", path:'/my-subjects' },
-      { icon: Calendar, label: "My Attendance", id: "my-attendance", path:'/my-attendance' },
-      { icon: Clock, label: "My Time-table", id: "my-time-table", path:'/my-time-table' },
-      { icon: FileText, label: "My Exams", id: "my-exams", path:'/my-exams' },
-      { icon: Award, label: "My Results", id: "results", path:'/my-results' },    ],
+      {
+        icon: BookOpen,
+        label: "My Subjects",
+        id: "my-subjects",
+        path: "/my-subjects",
+      },
+      {
+        icon: Calendar,
+        label: "My Attendance",
+        id: "my-attendance",
+        path: "/my-attendance",
+      },
+      {
+        icon: Clock,
+        label: "My Time-table",
+        id: "my-time-table",
+        path: "/my-time-table",
+      },
+      { icon: FileText, label: "My Exams", id: "my-exams", path: "/my-exams" },
+      { icon: Award, label: "My Results", id: "results", path: "/my-results" },
+    ],
   };
 
   const toggleSubmenu = (id) => {
@@ -193,7 +234,13 @@ const Sidebar = ({ isOpen, role }) => {
     `}
     >
       <div className="p-4">
-        {menuItems[role === 'principal' ? 'admin' : role === 'teacher' ? 'teacher' : 'student'].map((item) => (
+        {menuItems[
+          role === "principal"
+            ? "admin"
+            : role === "teacher"
+            ? "teacher"
+            : "student"
+        ].map((item) => (
           <div key={item.id}>
             {item.submenu ? (
               <button
@@ -274,13 +321,15 @@ const Sidebar = ({ isOpen, role }) => {
           </div>
         ))}
       </div>
-    </div>  );
+    </div>
+  );
 };
 
 // Main Layout Component
 const Nav = ({ children, path }) => {
   const dispatch = useDispatch();
-  const user = JSON.parse(Cookies.get("user"||"student"||"teacher")) || "{}";
+  const user =
+    JSON.parse(Cookies.get("user" || "student" || "teacher")) || "{}";
   if (user !== null || user !== undefined) {
     dispatch(setUser(user));
   }
@@ -309,10 +358,11 @@ const Nav = ({ children, path }) => {
         {path === "/time-table" && <UploadTimeTable />}
         {path === "/create-exams" && <CreateExam />}
         {path === "/my-attendance" && <MyAttendance />}
-        {path === "/my-exams" && <MyExams/>}
+        {path === "/my-exams" && <MyExams />}
         {path === "/my-subjects" && <MySubjects />}
         {path === "/my-results" && <MyResults />}
         {path === "/my-students" && <MyStudents />}
+        {path === "/all-classes" && <AllClasses />}
       </div>
 
       <main

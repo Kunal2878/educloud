@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Search, Loader,Trash2, PenSquare, GraduationCap, Plus, ChevronLeft, ChevronRight, X } from "lucide-react";
-import AddStudents from '../../Pages/Student/AddStudent'
-import {Link} from "react-router-dom"
+import {
+  Search,
+  Loader,
+  Trash2,
+  PenSquare,
+  GraduationCap,
+  Plus,
+  ChevronLeft,
+  ChevronRight,
+  X,
+} from "lucide-react";
+import AddStudents from "../../Pages/Student/AddStudent";
+import { Link } from "react-router-dom";
 const StudentDetails = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,8 +48,11 @@ const StudentDetails = () => {
 
   // Filter students based on search and class
   const filteredStudents = students.filter((student) => {
-    const nameMatch = student.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const classMatch = timeFilter === "" || (student.studentClass?.className === timeFilter);
+    const nameMatch = student.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const classMatch =
+      timeFilter === "" || student.studentClass?.className === timeFilter;
     return nameMatch && classMatch;
   });
 
@@ -58,7 +71,7 @@ const StudentDetails = () => {
     buttons.push(
       <button
         key="prev"
-        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
         disabled={currentPage === 1}
         className="px-3 py-1 rounded-lg bg-purple-100 text-purple-600 disabled:opacity-50"
       >
@@ -72,7 +85,9 @@ const StudentDetails = () => {
         key={1}
         onClick={() => setCurrentPage(1)}
         className={`px-3 py-1 rounded-lg ${
-          currentPage === 1 ? 'bg-purple-600 text-white' : 'bg-purple-100 text-purple-600'
+          currentPage === 1
+            ? "bg-purple-600 text-white"
+            : "bg-purple-100 text-purple-600"
         }`}
       >
         1
@@ -90,7 +105,11 @@ const StudentDetails = () => {
           2
         </button>
       );
-      buttons.push(<span key="dots1" className="px-2">...</span>);
+      buttons.push(
+        <span key="dots1" className="px-2">
+          ...
+        </span>
+      );
     }
 
     // Current page and surrounding pages
@@ -108,7 +127,11 @@ const StudentDetails = () => {
 
     // Show dots before last page
     if (currentPage < totalPages - 2) {
-      buttons.push(<span key="dots2" className="px-2">...</span>);
+      buttons.push(
+        <span key="dots2" className="px-2">
+          ...
+        </span>
+      );
       buttons.push(
         <button
           key={totalPages - 1}
@@ -127,7 +150,9 @@ const StudentDetails = () => {
           key={totalPages}
           onClick={() => setCurrentPage(totalPages)}
           className={`px-3 py-1 rounded-lg ${
-            currentPage === totalPages ? 'bg-purple-600 text-white' : 'bg-purple-100 text-purple-600'
+            currentPage === totalPages
+              ? "bg-purple-600 text-white"
+              : "bg-purple-100 text-purple-600"
           }`}
         >
           {totalPages}
@@ -138,9 +163,9 @@ const StudentDetails = () => {
     buttons.push(
       <button
         key="next"
-        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
         disabled={currentPage === totalPages}
-        className="px-3 py-1 rounded-lg bg-purple-100 text-purple-600 disabled:opacity-50"
+        className="px-3 py-1 rounded-lg bg-lamaPurpleLight text-purpleColor disabled:opacity-50"
       >
         <ChevronRight size={20} />
       </button>
@@ -153,9 +178,8 @@ const StudentDetails = () => {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="flex items-center justify-center h-96">
-            <Loader className="h-12 w-12 animate-spin text-purpleColor" />
-          </div>
-       
+          <Loader className="h-12 w-12 animate-spin text-purpleColor" />
+        </div>
       </div>
     );
   }
@@ -165,21 +189,23 @@ const StudentDetails = () => {
       <div className="flex justify-center items-center min-h-screen text-red-500">
         {error}
       </div>
-    )
+    );
   }
 
   return (
     <div className="pl-6 pr-6 pb-6 pt-0  min-h-screen">
       {showAddStudent && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" onClick={(e) => {
-          if (e.target === e.currentTarget) {
-            setShowAddStudent(false);
-          }
-        }}>
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowAddStudent(false);
+            }
+          }}
+        >
           <div className="relative rounded-lg w-auto max-w-4xl p-4">
-            <button 
+            <button
               onClick={() => setShowAddStudent(false)}
-
               className="absolute top-6 lg:top-4 right-2 p-2 bg-white rounded-full text-gray-600 hover:text-gray-800 transition-colors duration-200 transform hover:scale-110 shadow-lg"
             >
               <X size={24} />
@@ -197,130 +223,130 @@ const StudentDetails = () => {
             <span>All Students</span>
           </div>
         </div>
-        <button 
+        <button
           onClick={() => setShowAddStudent(true)}
-          className="p-2 border-2 border-primaryBlue text-sm text-primaryBlue rounded-full transition-colors duration-200 transform hover:scale-105"
+          className="flex items-center text-lg p-2 border-2 border-primaryBlue text-primaryBlue rounded-lg transition-colors duration-200 transform hover:scale-105"
         >
           <span>
-            <Plus size={24} />
-          </span>
+            <Plus size={20} />
+          </span>{" "}
+          Add
         </button>
       </div>
 
       {/* Filters */}
-<div className="bg-white p-2 rounded-md hadow-lg">
-      <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 mb-6 bg-white">
-        <div className="relative flex-1 max-w-md text-gray-600 p-2 ml-4">
-          <Search
-            className="absolute left-3 top-1/2 transform -translate-y-1/2  "
-            size={20}
-          />
-          <input
-            type="text"
-            placeholder="Search by name"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border rounded-lg bg-primary-300 text-black-300 border-lamaSkyLight transition-all duration-200"
-          />
+      <div className="bg-white p-2 rounded-md hadow-lg">
+        <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 mb-6 bg-white">
+          <div className="relative flex-1 max-w-md text-gray-600 p-2 ml-4">
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2  "
+              size={20}
+            />
+            <input
+              type="text"
+              placeholder="Search by name"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border rounded-lg bg-primary-300 text-black-300 border-lamaSkyLight transition-all duration-200"
+            />
+          </div>
+
+          <div className="flex gap-4 mr-4">
+            <select
+              value={timeFilter}
+              onChange={(e) => setTimeFilter(e.target.value)}
+              className="p-2 border rounded-lg bg-primary-300 text-black-300 border-lamaSkyLight transition-all duration-200"
+            >
+              <option value="">All Classes</option>
+              <option value="Class 1A">Class 1A</option>
+              <option value="Class 1B">Class 1B</option>
+              <option value="Class 2A">Class 2A</option>
+              <option value="Class 2B">Class 2B</option>
+              <option value="Class 3A">Class 3A</option>
+              <option value="Class 3B">Class 3B</option>
+              <option value="Class 4A">Class 4A</option>
+              <option value="Class 4B">Class 4B</option>
+              <option value="Class 5A">Class 5A</option>
+              <option value="Class 5B">Class 5B</option>
+              <option value="Class 6A">Class 6A</option>
+              <option value="Class 6B">Class 6B</option>
+              <option value="Class 7A">Class 7A</option>
+              <option value="Class 7B">Class 7B</option>
+              <option value="Class 8A">Class 8A</option>
+              <option value="Class 8B">Class 8B</option>
+              <option value="Class 9A">Class 9A</option>
+              <option value="Class 9B">Class 9B</option>
+              <option value="Class 10A">Class 10A</option>
+              <option value="Class 10B">Class 10B</option>{" "}
+            </select>
+          </div>
         </div>
 
-        <div className="flex gap-4 mr-4">
-          <select
-            value={timeFilter}
-            onChange={(e) => setTimeFilter(e.target.value)}
-            className="p-2 border rounded-lg bg-primary-300 text-black-300 border-lamaSkyLight transition-all duration-200"
-          >
-            <option value="">All Classes</option>
-            <option value="Class 1A">Class 1A</option>
-            <option value="Class 1B">Class 1B</option>
-            <option value="Class 2A">Class 2A</option>
-            <option value="Class 2B">Class 2B</option>
-            <option value="Class 3A">Class 3A</option>
-            <option value="Class 3B">Class 3B</option>
-            <option value="Class 4A">Class 4A</option>
-            <option value="Class 4B">Class 4B</option>
-            <option value="Class 5A">Class 5A</option>
-            <option value="Class 5B">Class 5B</option>
-            <option value="Class 6A">Class 6A</option>
-            <option value="Class 6B">Class 6B</option>
-            <option value="Class 7A">Class 7A</option>
-            <option value="Class 7B">Class 7B</option>
-            <option value="Class 8A">Class 8A</option>
-            <option value="Class 8B">Class 8B</option>
-            <option value="Class 9A">Class 9A</option>
-            <option value="Class 9B">Class 9B</option>
-            <option value="Class 10A">Class 10A</option>
-            <option value="Class 10B">Class 10B</option>          </select>
-        </div>
-      </div>
-
-      {/* Table */}
-      <div className="overflow-x-auto text-black-300 text-xs bg-white m-4">
-        <table className="w-full min-w-[768px] pb-10">
-          <thead className="">
-            <tr className="border-b bg-purple-100">
-              <th className="px-6 py-4">
-                <input
-                  type="checkbox"
-                  className="rounded bg-white border-gray-300 text-purple-500 checked:bg-purple-500 checked:border-transparent"
-                />
-              </th>
-              <th className="px-6 py-4 text-left">Student's Name</th>              
-              <th className="px-6 py-4 text-center">Email</th>              
-              <th className="px-6 py-4 text-center">Class</th>              
-              <th className="px-6 py-4 text-center">Parent Name</th>
-              <th className="px-6 py-4 text-center">Parent Contact</th>
-              <th className="px-6 py-4 text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentStudents.map((student) => (
-              <tr
-                key={student._id}
-                className="border-b hover:bg-gray-50 transition-colors duration-150 animate-fade-in"
-              >
-                <td className="px-6 py-4">
+        {/* Table */}
+        <div className="overflow-x-auto text-black-300 text-base bg-white m-4">
+          <table className="w-full min-w-[768px] pb-10">
+            <thead className="">
+              <tr className="border-b bg-lamaPurpleLight">
+                <th className="px-6 py-4">
                   <input
                     type="checkbox"
-                    className="rounded bg-white checked:bg-purple-500 checked:border-transparent"
+                    className="rounded h-4 w-4 bg-white border-gray-300 text-purpleColor checked:bg-purple-500 checked:border-transparent"
                   />
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-purple-100 rounded-full overflow-hidden flex flex-row justify-center items-center">
-                      <GraduationCap size={20} />
-                    </div>
-                    <span className="hover:text-purple-500 transition-colors duration-200">
-                      {student.name}
-                    </span>
-                  </div>
-                </td>
-                <td className="px-6 py-4 text-center">{student.email}</td>
-                <td className="px-6 py-4 text-center">
-                  {student.studentClass?.className || "-"}
-                </td>
-                <td className="px-6 py-4 text-center">
-                  {student.parentName || "-"}
-                </td>
-                <td className="px-6 py-4 text-center">
-                  {student.parentContact || "-"}
-                </td>
-
-                <td className="px-6 py-4">
-                  <div className="flex justify-center gap-2">
-                    <button className="p-1 hover:text-red-500 transition-colors duration-200 transform hover:scale-110">
-                      <Trash2 size={18} />
-                    </button>
-                    <button className="p-1 hover:text-purple-500 transition-colors duration-200 transform hover:scale-110">
-                      <PenSquare size={18} />
-                    </button>
-                  </div>
-                </td>
+                </th>
+                <th className="px-6 py-4 text-left ">Student's Name</th>
+                <th className="px-6 py-4 text-left">Email</th>
+                <th className="px-6 py-4 text-left">Class</th>
+                <th className="px-6 py-4 text-left">Parent Name</th>
+                <th className="px-6 py-4 text-left">Parent Contact</th>
+                <th className="px-6 py-4 text-left">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {currentStudents.map((student) => (
+                <tr
+                  key={student._id}
+                  className="border-b hover:bg-gray-50 transition-colors duration-150 animate-fade-in"
+                >
+                  <td className="px-6 py-4">
+                    <input
+                      type="checkbox"
+                      className="rounded h-4 w-4 bg-white checked:border-transparent"
+                    />
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-lamaPurpleLight rounded-full overflow-hidden flex flex-row justify-center items-center">
+                        <GraduationCap size={20} />
+                      </div>
+                      <span className="">{student.name}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-left">{student.email}</td>
+                  <td className="px-6 py-4 text-left">
+                    {student.studentClass?.className || "-"}
+                  </td>
+                  <td className="px-6 py-4 text-left">
+                    {student.parentName || "-"}
+                  </td>
+                  <td className="px-6 py-4 text-left">
+                    {student.parentContact || "-"}
+                  </td>
+
+                  <td className="px-6 py-4">
+                    <div className="flex justify-start gap-2">
+                      <button className="p-1 hover:text-danger transition-colors duration-200 transform hover:scale-110">
+                        <Trash2 size={18} />
+                      </button>
+                      <button className="p-1 hover:text-purpleColor transition-colors duration-200 transform hover:scale-110">
+                        <PenSquare size={18} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Pagination */}
@@ -329,10 +355,8 @@ const StudentDetails = () => {
           {renderPaginationButtons()}
         </div>
       </div>
-
-</div>
-)
-
+    </div>
+  );
 };
 
 // Add custom animation class

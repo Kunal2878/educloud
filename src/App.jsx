@@ -108,6 +108,10 @@ function App() {
       element:<Nav path={"/my-students"}/>
     },
     {
+      path:'/all-classes',
+      element:<Nav path={"/all-classes"}/>
+    },
+    {
       path:'/test',
       element:<Test/>
 

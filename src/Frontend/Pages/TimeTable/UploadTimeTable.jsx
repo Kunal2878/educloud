@@ -1,9 +1,28 @@
 import { useForm } from 'react-hook-form'
-import { useState } from 'react'
-
+import { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from "react-redux";
 const UploadTimeTable = () => {
   const { register, handleSubmit, formState: { errors } } = useForm()
   const [loading, setLoading] = useState(false)
+  const [classes, setClasses] = useState([])
+  const dispatch = useDispatch();
+  const user =  useSelector((state) => state.userData.user);
+  const url=  import.meta.env.VITE_API_BASE_URL
+
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const response = await fetch(`${url}/api/v1/class/all-classes`);
+        const result = await response.json();
+        if (result.statusCode === 200) {
+          setClasses(result.data.classes);
+        }
+      } catch (error) {
+        console.error('Error fetching classes:', error);
+      }
+    };
+    fetchClasses();
+  }, []);
 
   const onSubmit = async (data) => {
     setLoading(true)
@@ -11,14 +30,20 @@ const UploadTimeTable = () => {
     formData.append('timeTable', data.timeTable[0])
     formData.append('className', data.className)
 
+    const selectedClass = classes.find(c => c.className === data.className);
+    if (!selectedClass) {
+      alert('Invalid class name');
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch(`https://school-backend-ocze.onrender.com/api/v1/class/67adcc2db9b56ef6a16fc903/upload-timetable`, {
+      const response = await fetch(`${url}/api/v1/class/${selectedClass._id}/upload-timetable`, {
         method: 'POST',
         body: formData
       })
 
       if (response.ok) {
-        // Handle success
         alert('Time table uploaded successfully')
       } else {
         alert('Failed to upload time table')
@@ -50,6 +75,12 @@ const UploadTimeTable = () => {
 
         <div className="mb-10">
           <div className="relative flex justify-start">
+            <label htmlFor="timeTable" className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-white border border-purple-500 text-purple-500 rounded-full hover:bg-purple-50 transition-all">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+              </svg>
+              Upload File
+            </label>
             <input
               type="file"
               accept=".pdf"
@@ -59,7 +90,7 @@ const UploadTimeTable = () => {
                   lessThan5MB: (files) => !files[0] || files[0].size <= 5000000 || 'File size must be less than 5MB',
                 }
               })}
-              className="w-3/4 lg:w-1/4 px-3 py-2 mt-4 border-b text-gray-600 rounded-md focus:outline-none shadow-md transition-all peer"
+              className="hidden"
               id="timeTable"
               onChange={(e) => {
                 if (e.target.files[0]?.size > 5000000) {
@@ -68,9 +99,7 @@ const UploadTimeTable = () => {
                 }
               }}
             />
-            <label htmlFor="timeTable" className="absolute left-3 -top-5 text-sm font-medium text-gray-700">
-              <span className="text-red-500">*</span>Upload Time Table (Max 5MB)
-            </label>
+            <span className="ml-3 text-sm text-gray-500">Max size: 5MB</span>
           </div>
         </div>
 
