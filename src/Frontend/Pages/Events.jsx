@@ -3,16 +3,17 @@
   import Cookies from "js-cookie";
   const Events = () => {
     const token = Cookies.get('token');
+    const url=  import.meta.env.VITE_API_BASE_URL
 
     const [events, setEvents] = useState([]);
     const [announcements, setAnnouncements] = useState([]);
-    const url=  import.meta.env.VITE_API_BASE_URL
     const [selectedEvents, setSelectedEvents] = useState([]);
     const [selectedAnnouncements, setSelectedAnnouncements] = useState([]);
     const [activeTab, setActiveTab] = useState('events');
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastIcon, setToastIcon] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const [newEvent, setNewEvent] = useState({
       title: '',
       description: '',
@@ -28,6 +29,15 @@
       fetchEvents();
       fetchAnnouncements();
     }, []);
+
+    useEffect(() => {
+      if (showToast) {
+        const timer = setTimeout(() => {
+          setShowToast(false);
+        }, 3000);
+        return () => clearTimeout(timer);
+      }
+    }, [showToast]);
 
     const fetchEvents = async () => {
       try {
@@ -57,8 +67,8 @@
 
     const handleEventSubmit = async (e) => {
       e.preventDefault();
+      setIsLoading(true);
       try {
-      
         const response = await fetch(`${url}/api/v1/event/create-event`, {
           method: 'POST',
           headers: {
@@ -68,23 +78,27 @@
           body: JSON.stringify(newEvent),
         });
         if (response.ok) {
-          fetchEvents();
+          await fetchEvents();
           setNewEvent({ title: '', description: '', date: '', location: '' });
           setToastMessage('Event created successfully');
           setToastIcon('right');
           setShowToast(true);
+        } else {
+          throw new Error('Failed to create event');
         }
       } catch (error) {
         setToastMessage('Error creating event');
         setToastIcon('wrong');
         setShowToast(true);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     const handleAnnouncementSubmit = async (e) => {
       e.preventDefault();
+      setIsLoading(true);
       try {
-
         const response = await fetch(`${url}/api/v1/announcement/create-announcement`, {
           method: 'POST',
           headers: {
@@ -94,16 +108,20 @@
           body: JSON.stringify(newAnnouncement),
         });
         if (response.ok) {
-          fetchAnnouncements();
+          await fetchAnnouncements();
           setNewAnnouncement({ title: '', description: '' });
           setToastMessage('Announcement created successfully');
           setToastIcon('right');
           setShowToast(true);
+        } else {
+          throw new Error('Failed to create announcement');
         }
       } catch (error) {
         setToastMessage('Error creating announcement');
         setToastIcon('wrong');
         setShowToast(true);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -125,6 +143,7 @@
 
     const handleDeleteEvents = async () => {
       if (selectedEvents.length === 0) return;
+      setIsLoading(true);
       try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${url}/api/v1/event/delete-events`, {
@@ -136,7 +155,7 @@
           body: JSON.stringify({ eventIds: selectedEvents }),
         });
         if (response.ok) {
-          fetchEvents();
+          await fetchEvents();
           setSelectedEvents([]);
           setToastMessage('Events deleted successfully');
           setToastIcon('right');
@@ -146,11 +165,14 @@
         setToastMessage('Error deleting events');
         setToastIcon('wrong');
         setShowToast(true);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     const handleDeleteAnnouncements = async () => {
       if (selectedAnnouncements.length === 0) return;
+      setIsLoading(true);
       try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${url}/api/v1/announcement/delete-announcement`, {
@@ -162,7 +184,7 @@
           body: JSON.stringify({ announcementIds: selectedAnnouncements }),
         });
         if (response.ok) {
-          fetchAnnouncements();
+          await fetchAnnouncements();
           setSelectedAnnouncements([]);
           setToastMessage('Announcements deleted successfully');
           setToastIcon('right');
@@ -172,6 +194,8 @@
         setToastMessage('Error deleting announcements');
         setToastIcon('wrong');
         setShowToast(true);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -240,17 +264,26 @@
                   value={newEvent.location}
                   onChange={(e) => setNewEvent({...newEvent, location: e.target.value})}
                 />
-                <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
-                  Create Event
+                <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 flex items-center justify-center" disabled={isLoading}>
+                  {isLoading ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  ) : (
+                    'Create Event'
+                  )}
                 </button>
               </form>
 
               {selectedEvents.length > 0 && (
                 <button
                   onClick={handleDeleteEvents}
-                  className="w-full mb-4 bg-red-500 text-white p-2 rounded hover:bg-red-600"
+                  className="w-full mb-4 bg-red-500 text-white p-2 rounded hover:bg-red-600 flex items-center justify-center"
+                  disabled={isLoading}
                 >
-                  Delete Selected Events
+                  {isLoading ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  ) : (
+                    'Delete Selected Events'
+                  )}
                 </button>
               )}
 
@@ -300,17 +333,26 @@
                   value={newAnnouncement.description}
                   onChange={(e) => setNewAnnouncement({...newAnnouncement, description: e.target.value})}
                 />
-                <button type="submit" className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">
-                  Create Announcement
+                <button type="submit" className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 flex items-center justify-center" disabled={isLoading}>
+                  {isLoading ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  ) : (
+                    'Create Announcement'
+                  )}
                 </button>
               </form>
 
               {selectedAnnouncements.length > 0 && (
                 <button
                   onClick={handleDeleteAnnouncements}
-                  className="w-full mb-4 bg-red-500 text-white p-2 rounded hover:bg-red-600"
+                  className="w-full mb-4 bg-red-500 text-white p-2 rounded hover:bg-red-600 flex items-center justify-center"
+                  disabled={isLoading}
                 >
-                  Delete Selected Announcements
+                  {isLoading ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  ) : (
+                    'Delete Selected Announcements'
+                  )}
                 </button>
               )}
 
