@@ -81,7 +81,7 @@ const NavBar = ({ User, onMenuClick }) => {
           </button>
         </div>
 
-        <div className="sidebar-user-info flex items-center gap-2">
+        {/* <div className="sidebar-user-info flex items-center gap-2">
           <img
             src={educloud}
             alt="avatar"
@@ -93,7 +93,7 @@ const NavBar = ({ User, onMenuClick }) => {
           <div className="hidden lg:block">
             <h2 className="h2 capitalize">Katlicherra Central School</h2>
           </div>
-        </div>
+        </div> */}
 
         <div className="flex flex-row items-center space-x-4">
           <button

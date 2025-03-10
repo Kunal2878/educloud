@@ -49,21 +49,30 @@ const SchoolLandingPage = () => {
               className="flex flex-col justify-between sm:flex-row gap-4 animate-slideUp"
               style={{ animationDelay: "0.2s" }}
             >
-              <button className="bg-purpleColor text-white px-8 py-3 rounded-full font-medium transition-all hover:shadow-md hover:scale-105">
+              <Link to ='/user-options'className="bg-purpleColor text-white px-8 py-3 rounded-full font-medium transition-all hover:shadow-md hover:scale-105">
                 JOIN WITH US
-              </button>
-              <button className="border border-purpleColor text-purpleColor px-8 py-3 rounded-full font-medium transition-all hover:bg-blue-50 hover:scale-105">
+              </Link>
+              <Link to='/know-more'className="border border-purpleColor text-purpleColor px-8 py-3 rounded-full font-medium transition-all hover:bg-blue-50 hover:scale-105">
                 Get to know more
-              </button>
+              </Link>
             </div>
 
             <div
               className="flex justify-between mt-12 max-w-md animate-slideUp"
               style={{ animationDelay: "0.4s" }}
             >
-              <StatCounter number="20" label="Teachers" />
-              <StatCounter number="100" label="Students" />
-              <StatCounter number="4.6" label="TRUSTED RATING" />
+              <div className="text-center">
+                <div className="text-3xl font-bold text-purpleColor">20+</div>
+                <div className="text-gray-600">Schools</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-purpleColor">100k+</div>
+                <div className="text-gray-600">Students</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-purpleColor">4.8</div>
+                <div className="text-gray-600">TRUSTED RATING</div>
+              </div>
             </div>
           </div>
           <div
@@ -157,7 +166,7 @@ const SchoolLandingPage = () => {
                 Technology-first education for a brilliant future.
               </p>
             </div>
-            <div>
+            {/* <div>
               <h4 className="text-lg font-semibold mb-3">Programs</h4>
               <ul className="space-y-2 text-gray-400">
                 <li>Digital Learning Tools</li>
@@ -165,28 +174,28 @@ const SchoolLandingPage = () => {
                 <li>Creativity Development</li>
                 <li>Self Awareness</li>
               </ul>
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <h4 className="text-lg font-semibold mb-3">Resources</h4>
               <ul className="space-y-2 text-gray-400">
                 <li>Student Portal</li>
                 <li>Learning Materials</li>
                 <li>Digital Assesment</li>
               </ul>
-            </div>
+            </div> */}
             <div>
               <h4 className="text-lg font-semibold mb-3">Contact</h4>
               <ul className="space-y-2 text-gray-400">
                 <li>info@educloud.com</li>
-                <li>+91&835629</li>
+                <li>+919957052223</li>
                 <li>Assam, India</li>
               </ul>
             </div>
           </div>
           <div className="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500">
             <p>© {new Date().getFullYear()} EduCloud. All rights reserved.</p>
-          </div>
-        </div>
+            <p>Designed and Developed by SudamaSolutions Technologies and Health Care Pvt Ltd</p>
+          </div>        </div>
       </footer>
 
       {/* CSS Animations */}

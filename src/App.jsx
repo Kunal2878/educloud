@@ -10,6 +10,7 @@ import Login from './Frontend/Pages/Login'
 import UserOption from './Frontend/Pages/UserOption'
 import { Provider } from 'react-redux'
 import { store } from './Store/store'
+import About from './Frontend/Pages/About'
 import Test from './Test'
 
 function App() {
@@ -166,6 +167,11 @@ function App() {
     {
       path:'/test',
       element:<Test/>
+
+    },
+    {
+      path:'/know-more',
+      element:<About/>
 
     }
   ])
