@@ -148,8 +148,12 @@ function App() {
       element:<Nav path={"/my-subjects"}/>
     },
     {
-      path:'/my-subjects',
+      path:'/finance',
       element:<Nav path={"/finance"}/>
+    },
+    {
+      path:'/complaints',
+      element:<Nav path={"/complaints"}/>
     },
     {
       path:'/under-maintenance',
