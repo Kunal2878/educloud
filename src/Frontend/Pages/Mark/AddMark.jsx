@@ -63,7 +63,7 @@ const AddMark = () => {
 
   const fetchClasses = async () => {
     try {
-      const response = await axios.get(`${url}/api/v1/${GetAllClass}`, {
+      const response = await axios.get(`${url}${GetAllClass}`, {
         headers: { "Authorization": `Bearer ${token}` }
       })
       setClasses(response.data.data.classes)
@@ -77,7 +77,7 @@ const AddMark = () => {
 
   const fetchStudents = async (classId) => {
     try {
-      const response = await axios.get(`${url}/api/v1/student/getstudentbyclassid/${classId}`, {
+      const response = await axios.get(`${url}student/getstudentbyclassid/${classId}`, {
         headers: { "Authorization": `Bearer ${token}` }
       })
       setStudents(response.data.data.students)
@@ -91,7 +91,7 @@ const AddMark = () => {
 
   const fetchSubjects = async (classId) => {
     try {
-      const response = await axios.get(`${url}/api/v1/subject/getsubjectbyclassid/${classId}`, {
+      const response = await axios.get(`${url}subject/getsubjectbyclassid/${classId}`, {
         headers: { "Authorization": `Bearer ${token}` }
       })
       setSubjects(response.data.data.subjects)
@@ -105,7 +105,7 @@ const AddMark = () => {
 
   const fetchExams = async () => {
     try {
-      const response = await axios.get(`${url}/api/v1/${GetAllExams}`, {
+      const response = await axios.get(`${url}${GetAllExams}`, {
         headers: { "Authorization": `Bearer ${token}` }
       })
       setExams(response.data.data.exams)
@@ -200,7 +200,7 @@ const AddMark = () => {
         marks: formattedMarks
       }
 
-      const response = await axios.post(`${url}/api/v1/mark/add`, markData, {
+      const response = await axios.post(`${url}mark/add`, markData, {
         headers: { "Authorization": `Bearer ${token}` }
       })
 

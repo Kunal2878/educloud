@@ -29,7 +29,7 @@ const AllClasses = () => {
     const fetchClasses = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${url}/api/v1/${GetAllClass}`);
+        const response = await axios.get(`${url}${GetAllClass}`);
 
         if (response.data.statusCode === 200) {
           setClasses(response.data.data.classes);

@@ -32,7 +32,7 @@ if (user === null || user === undefined) {
   const fetchAttendance = async () => {
     setLoading(true);
     try {
-      // ${url}/api/v1/student-attendance//students/${user._id}/attendance-history`
+      // ${url}student-attendance//students/${user._id}/attendance-history`
       const response = await axios.get(`https://school-backend-ocze.onrender.com/api/v1/student-attendance//students/67b06eea0c026e1e1e98be72/attendance-history`);
   
       setAttendance(response.data.attendanceHistory || []);

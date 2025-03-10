@@ -35,7 +35,7 @@ const AddTeachers = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${url}/api/v1/${SignupTeacher}`,
+        `${url}${SignupTeacher}`,
         data,
         {
           headers: {

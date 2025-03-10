@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import{createBrowserRouter,RouterProvider} from 'react-router-dom'
 import './App.css'
-import LandingPage from './Frontend/Pages/LandingPage'
 import SchoolLandingPage from './Frontend/Pages/LandingPage2'
 import UnderMaintenance from './Frontend/Pages/UnderMaintence'
 import Nav from './Frontend/Components/Navbar/Navbar'
@@ -156,6 +155,11 @@ function App() {
       path:'/complaints',
       element:<Nav path={"/complaints"}/>
     },
+    {
+      path:'/my-complaints',
+      element:<Nav path={"/my-complaints"}/>
+    },
+    
     {
       path:'/under-maintenance',
       element:<UnderMaintenance/>

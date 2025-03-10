@@ -24,7 +24,7 @@ const RegisterPrincipal = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await axios.post(`${url}/api/v1/${SignupPrincipal}`, data);
+      const response = await axios.post(`${url}${SignupPrincipal}`, data);
       if (response.status === 200||response.status === 204||response.status === 200||response.status === 201) {
         setToastMessage("Registration successful");
         setToastIcon("right");

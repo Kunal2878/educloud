@@ -33,13 +33,13 @@ const Login = () => {
     console.log(data);
 
     try {
-      let endpoint = `${url}/api/v1/${LoginPrincipal}`;
+      let endpoint = `${url}${LoginPrincipal}`;
       if (role === "student") {
         console.log("clicked here student");
-        endpoint = `${url}/api/v1/${LoginStudent}`;
+        endpoint = `${url}${LoginStudent}`;
       } else if (role === "teacher") {
         console.log("clicked here teacher");
-        endpoint = `${url}/api/v1/${LoginTeacher}`;
+        endpoint = `${url}${LoginTeacher}`;
       }
 
       const response = await axios.post(endpoint, {

@@ -26,7 +26,7 @@ const AssignClassSub = () => {
 
   const fetchClasses = async () => {
     try {
-      const response = await axios.get(`${url}/api/v1/${GetAllClass}`, {
+      const response = await axios.get(`${url}${GetAllClass}`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         },
@@ -44,7 +44,7 @@ const AssignClassSub = () => {
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
-        const response = await axios.get(`${url}/api/v1/${GetAllTeacher}`)
+        const response = await axios.get(`${url}${GetAllTeacher}`)
         setTeachers(response.data.data.teachers)
       } catch (error) {
         console.error('Error fetching teachers:', error)
@@ -94,7 +94,7 @@ const AssignClassSub = () => {
     const selectedTeacherData = teachers.find(teacher => teacher.email === selectedTeacher);
     try {
       if (activeTab === "subjects") {
-        await axios.put(`${url}/api/v1/teacher/${selectedTeacherData._id}/assign-subjects`, {
+        await axios.put(`${url}teacher/${selectedTeacherData._id}/assign-subjects`, {
           subjects: selectedSubjects,
         }, {
           headers: {
@@ -108,7 +108,7 @@ const AssignClassSub = () => {
         });
         setSelectedSubjects([]);
       } else {
-        await axios.put(`${url}/api/v1/teacher/${selectedTeacherData._id}/assign-classes`, {
+        await axios.put(`${url}teacher/${selectedTeacherData._id}/assign-classes`, {
           classes: selectedClassIds,
         }, {
           headers: {

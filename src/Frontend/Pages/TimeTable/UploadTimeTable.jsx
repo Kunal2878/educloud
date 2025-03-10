@@ -20,7 +20,7 @@ const UploadTimeTable = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await axios.get(`${url}/api/v1/${GetAllClass}`, {
+        const response = await axios.get(`${url}${GetAllClass}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -49,7 +49,7 @@ const UploadTimeTable = () => {
     }
 
     try {
-      const response = await axios.post(`${url}/api/v1/class/${classId}/upload-timetable`, formData);
+      const response = await axios.post(`${url}class/${classId}/upload-timetable`, formData);
 
       if (response.status === 200) {
         setToastMessage("Time table uploaded successfully")

@@ -31,7 +31,7 @@ const AllExams = () => {
   const fetchExams = async () => {
     setIsLoadingExams(true);
     try {
-      const response = await axios.get(`${url}/api/v1/${GetAllExams}`, {
+      const response = await axios.get(`${url}${GetAllExams}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -64,7 +64,7 @@ const AllExams = () => {
       }
 
       const response = await axios.post(
-        `${url}/api/v1/${CreateExam}`,
+        `${url}${CreateExam}`,
         formData,
         {
           headers: {

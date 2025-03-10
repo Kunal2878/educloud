@@ -23,7 +23,7 @@ const RegisterSubjects = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await axios.get(`${url}/api/v1/${GetAllClass}`, {
+        const response = await axios.get(`${url}${GetAllClass}`, {
           headers: {
             "Authorization": `Bearer ${token}`,
           },
@@ -41,7 +41,7 @@ const RegisterSubjects = () => {
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
-        const response = await axios.get(`${url}/api/v1/${GetAllTeacher}`)
+        const response = await axios.get(`${url}${GetAllTeacher}`)
         setTeachers(response.data.data.teachers)
       } catch (error) {
         console.error('Error fetching teachers:', error)
@@ -81,7 +81,7 @@ const RegisterSubjects = () => {
         syllabus: syllabusArray
       }
 
-          const response = await axios.post(`${url}/api/v1/subject/register`, requestBody, {
+          const response = await axios.post(`${url}subject/register`, requestBody, {
             headers: {
               "Authorization": `Bearer ${token}`,
             }

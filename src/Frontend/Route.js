@@ -9,6 +9,8 @@
     export const SignupTeacher = 'teacher/register'
     export const LoginTeacher = 'teacher/login'
     export const GetAllTeacher = 'teacher/all-teachers'
+    export const MarkTeacherAttendance = 'teacher/attendance/mark'
+    export const GetTeacherAttendance = 'teacher/getattendancehistory'
 
 
     // Student endpoints
@@ -44,3 +46,8 @@ export const DeleteEvent = 'event/delete-events'
 // Announcements
 export const CreateAnnouncement = 'announcement/create-announcement'
 export const DeleteAnnouncement = 'announcement/delete-announcement'
+
+//Complaints
+export const CreateComplaint = 'student-complain/create-complaint'
+export const GetAllComplaints= 'student-complain/getallcomplaints'
+export const DeleteComplaint= 'student-complain/delete-complaint'

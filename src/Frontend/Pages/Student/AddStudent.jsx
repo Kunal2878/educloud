@@ -44,7 +44,7 @@ const AddStudents = () => {
 
   const fetchClasses = async () => {
     try {
-      const response = await axios.get(`${url}/api/v1/${GetAllClass}`, {
+      const response = await axios.get(`${url}${GetAllClass}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -71,7 +71,7 @@ const AddStudents = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${url}/api/v1/${SignupStudent}`,
+        `${url}${SignupStudent}`,
         st_data,
         {
           headers: {

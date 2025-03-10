@@ -26,6 +26,8 @@ import AllClasses from "../../Pages/Classes/AllClass";
 import PaymentMethodSelector from "../../Pages/Payment/PaymentMode";
 import LeaderBoard from "../../Pages/Mark/LeaderBoard"; 
 import UnderMaintenance from "../../Pages/UnderMaintence"; 
+import AllComplaints from '../../Pages/Complaints/AllComplaint';
+import StudentComplaints from '../../Pages/Complaints/StudentComplaintDetails'
 // import AddMark from "../../Pages/Mark/AddMark";  
  
 import {
@@ -250,6 +252,7 @@ const Sidebar = ({ isOpen, role, onMenuClick }) => {
       },
       { icon: FileText, label: "My Exams", id: "my-exams", path: "/my-exams" },
       { icon: Award, label: "My Results", id: "results", path: "/my-results" },
+      { icon: ShieldAlert, label: "My Complaints", id: "complaints", path: "/my-complaints" },
     ],
   };
 
@@ -389,6 +392,7 @@ const Nav = ({ children, path }) => {
     JSON.parse(Cookies.get("user" || "student" || "teacher")) || "{}";
   if (user !== null || user !== undefined) {
     dispatch(setUser(user));
+    console.log(user);
   }
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userType, setUserType] = useState("admin");
@@ -431,7 +435,8 @@ const Nav = ({ children, path }) => {
         {path === "/teacher-attendance" && <UnderMaintenance />}
         {path === "/my-time-table" && <UnderMaintenance />}
         {path === "/finance" && <UnderMaintenance />}
-        {path === "/complaints" && <UnderMaintenance />}
+        {path === "/complaints" && <AllComplaints/>}
+        {path === "/my-complaints" && <StudentComplaints/>}
       </div>
 
       <main

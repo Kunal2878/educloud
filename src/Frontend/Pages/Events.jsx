@@ -52,7 +52,7 @@ const Events = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get(`${url}/api/v1/event/getallevents`, {
+      const response = await axios.get(`${url}event/getallevents`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -70,7 +70,7 @@ const Events = () => {
   const fetchAnnouncements = async () => {
     try {
       const response = await axios.get(
-        `${url}/api/v1/announcement/getallannouncements`,
+        `${url}announcement/getallannouncements`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -91,7 +91,7 @@ const Events = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        `${url}/api/v1/event/create-event`,
+        `${url}event/create-event`,
         newEvent,
         {
           headers: {
@@ -128,7 +128,7 @@ const Events = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        `${url}/api/v1/announcement/create-announcement`,
+        `${url}announcement/create-announcement`,
         newAnnouncement,
         {
           headers: {
@@ -181,7 +181,7 @@ const Events = () => {
     if (selectedEvents.length === 0) return;
     setIsLoading(true);
     try {
-      const response = await axios.delete(`${url}/api/v1/event/delete-events`, {
+      const response = await axios.delete(`${url}event/delete-events`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -212,7 +212,7 @@ const Events = () => {
     setIsLoading(true);
     try {
       const response = await axios.delete(
-        `${url}/api/v1/announcement/delete-announcement`,
+        `${url}announcement/delete-announcement`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

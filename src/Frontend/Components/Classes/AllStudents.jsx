@@ -29,7 +29,7 @@ const StudentDetails = () => {
     const fetchStudents = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${url}/api/v1/${GetAllStudent}`);
+        const response = await axios.get(`${url}${GetAllStudent}`);
 
         if (response.data.statusCode === 200) {
           setStudents(response.data.data.students);

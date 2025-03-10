@@ -34,7 +34,7 @@ const LeaderBoard = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await axios.get(`${url}/api/v1/${GetAllClass}`, {
+        const response = await axios.get(`${url}${GetAllClass}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (
@@ -61,7 +61,7 @@ const LeaderBoard = () => {
   useEffect(() => {
     const fetchExams = async () => {
       try {
-        const response = await axios.get(`${url}/api/v1/${GetAllExams}`, {
+        const response = await axios.get(`${url}${GetAllExams}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -90,7 +90,7 @@ const LeaderBoard = () => {
     const fetchLeaderboard = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${url}/api/v1/leaderboard`, {
+        const response = await axios.get(`${url}leaderboard`, {
           headers: { Authorization: `Bearer ${token}` },
           params: {
             classId: selectedClass,

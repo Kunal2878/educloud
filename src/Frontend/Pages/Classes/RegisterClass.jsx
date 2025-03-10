@@ -35,7 +35,7 @@ const RegisterClass = () => {
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
-        const response = await axios.get(`${url}/api/v1/${GetAllTeacher}`);
+        const response = await axios.get(`${url}${GetAllTeacher}`);
         setTeachers(response.data.data.teachers);
       } catch (error) {
         console.error("Error fetching teachers:", error);
@@ -89,7 +89,7 @@ const RegisterClass = () => {
 
     try {
       const response = await axios.post(
-        `${url}/api/v1/${CreateClass}`,
+        `${url}${CreateClass}`,
         classData,
         {
           headers: {

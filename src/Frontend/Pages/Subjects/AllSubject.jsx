@@ -35,7 +35,7 @@ const AllSubjects = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await axios.get(`${url}/api/v1/${GetAllClass}`, {
+        const response = await axios.get(`${url}${GetAllClass}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -66,7 +66,7 @@ const AllSubjects = () => {
         setLoading(true);
         console.log(selectedClassId);
         const response = await axios.get(
-          `${url}/api/v1/subject/getsubjectsbyclass`,
+          `${url}subject/getsubjectsbyclass`,
           {
             data: { classId: selectedClassId },
             headers: {

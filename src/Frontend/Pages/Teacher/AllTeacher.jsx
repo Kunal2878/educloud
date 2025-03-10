@@ -30,7 +30,7 @@ const TeacherDetails = () => {
     const fetchTeachers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${url}/api/v1/${GetAllTeacher}`);
+        const response = await axios.get(`${url}${GetAllTeacher}`);
 
         if (response.data.statusCode === 200) {
           setTeachers(response.data.data.teachers);

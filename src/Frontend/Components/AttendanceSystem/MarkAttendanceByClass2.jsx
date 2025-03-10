@@ -37,7 +37,7 @@ const AttendanceSystem = () => {
   const fetchClasses = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${url}/api/v1/${GetAllClass}`);
+      const response = await axios.get(`${url}${GetAllClass}`);
       setClasses(response.data.data.classes);
     } catch (error) {
       console.error("Error fetching classes:", error);
@@ -74,7 +74,7 @@ const AttendanceSystem = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${url}/api/v1/student-attendance/classes/${classId}/attendance/${date}`
+        `${url}student-attendance/classes/${classId}/attendance/${date}`
       );
 
       if (response.data.attendance && response.data.attendance.students) {
@@ -140,7 +140,7 @@ const AttendanceSystem = () => {
       };
       console.log(attendanceData);
       await axios.post(
-        `${url}/api/v1/student-attendance/classes/${selectedClass}/attendance`,
+        `${url}student-attendance/classes/${selectedClass}/attendance`,
         payload
       );
 
