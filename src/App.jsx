@@ -152,6 +152,10 @@ function App() {
       element:<UnderMaintenance/>
     },
     {
+      path:'/finance',
+      element:<UnderMaintenance/>
+    },
+    {
       path:'/test',
       element:<Test/>
 

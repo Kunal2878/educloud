@@ -174,9 +174,9 @@ const PerformanceDashboard = () => {
     { name: "feedback", value: "Excellent", Icon: GraduationCap },
   ];
   const PrincipalData = [
-    { name: "Students", value: 10000, Icon: GraduationCap },
-    { name: "Teachers", value: 200, Icon: Pen },
-    { name: "Earnings", value: "4.2M", Icon: IndianRupee },
+    { name: "Students", value: 20, Icon: GraduationCap },
+    { name: "Teachers", value: 100, Icon: Pen },
+    { name: "Earnings", value: "1200000", Icon: IndianRupee },
   ];
   const [selectedClass, setSelectedClass] = useState("Class A");
   const [selectedDate, setSelectedDate] = useState("2024-05-05");

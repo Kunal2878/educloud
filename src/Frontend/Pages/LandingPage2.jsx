@@ -61,8 +61,8 @@ const SchoolLandingPage = () => {
               className="flex justify-between mt-12 max-w-md animate-slideUp"
               style={{ animationDelay: "0.4s" }}
             >
-              <StatCounter number="200+" label="Teachers" />
-              <StatCounter number="10000" label="Students" />
+              <StatCounter number="20" label="Teachers" />
+              <StatCounter number="100" label="Students" />
               <StatCounter number="4.6" label="TRUSTED RATING" />
             </div>
           </div>
