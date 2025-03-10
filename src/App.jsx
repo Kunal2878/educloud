@@ -148,6 +148,10 @@ function App() {
       element:<Nav path={"/my-subjects"}/>
     },
     {
+      path:'/my-subjects',
+      element:<Nav path={"/finance"}/>
+    },
+    {
       path:'/under-maintenance',
       element:<UnderMaintenance/>
     },
