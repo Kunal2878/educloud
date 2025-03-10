@@ -11,7 +11,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import AddTeachers from "./AddTeacher";
+import AddTeachers from "../../Pages/Teacher/AddTeacher";
 import { GetAllTeacher } from "../../Route";
 import axios from "axios";
 

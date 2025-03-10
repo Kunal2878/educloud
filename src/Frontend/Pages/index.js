@@ -16,7 +16,7 @@ import AddStudents from "./Student/AddStudent";
 // teacher
 import MyStudent from "./Teacher/MyStudent";
 import AssignClassSub from "./Teacher/AssignClassSub";
-import AddTeacher from "./Teacher/Addteacher";
+// import AddTeacher from "./Teacher/Addteacher";
 import TeacherDetails from "./Teacher/AllTeacher";
 import Results from "./Teacher/Results";
 // subjects
@@ -45,7 +45,7 @@ export {
   // teacher
   MyStudent,
   AssignClassSub,
-  AddTeacher,
+  // AddTeacher,
   TeacherDetails,
   Results,
   // subject
