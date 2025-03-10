@@ -66,7 +66,7 @@ const SchoolLandingPage = () => {
                 <div className="text-gray-600">Schools</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-purpleColor">100k+</div>
+                <div className="text-3xl font-bold text-purpleColor">10k+</div>
                 <div className="text-gray-600">Students</div>
               </div>
               <div className="text-center">

@@ -84,7 +84,7 @@
                 <p className="text-gray-600">Schools Connected</p>
               </div>
               <div>
-                <h3 className="text-4xl font-bold text-blue-500 mb-2">100k+</h3>
+                <h3 className="text-4xl font-bold text-blue-500 mb-2">10k+</h3>
                 <p className="text-gray-600">Active Students</p>
               </div>
               <div>
