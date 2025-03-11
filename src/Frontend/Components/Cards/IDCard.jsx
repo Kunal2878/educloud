@@ -212,6 +212,7 @@ const IDCardGenerator = () => {
       
       // Convert to image
       const dataUrl = await toPng(idCardElement);
+      
       // For debugging - display the generated PNG in a new window
       const newWindow = window.open();
       newWindow.document.write(`<img src="${dataUrl}" alt="ID Card Preview"/>`);
