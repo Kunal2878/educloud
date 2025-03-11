@@ -10,10 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^4.3.0",
     "@reduxjs/toolkit": "^2.5.1",
     "axios": "^1.8.1",
     "crypto-js": "^4.2.0",
+    "dom-to-image": "^2.6.0",
+    "dom-to-pdf": "^0.3.2",
+    "html-to-image": "^1.11.13",
+    "html2canvas": "^1.4.1",
     "js-cookie": "^3.0.5",
+    "jspdf": "^3.0.0",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

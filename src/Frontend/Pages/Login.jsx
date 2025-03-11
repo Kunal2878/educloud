@@ -122,7 +122,7 @@ const Login = () => {
                 <input
                   id="email"
                   type="email"
-                  className="h-11 w-full px-3 py-2 bg-transparent border-2  border-black-200 text-gray-600  rounded-md focus:outline   peer placeholder-transparent"
+                  className="h-11 w-full px-3 py-2 bg-transparent border-2  border-black-200 text-black-300  rounded-md focus:outline   peer placeholder-transparent"
                   placeholder="Email address"
                   {...register("email", {
                     required: true,
@@ -143,7 +143,7 @@ const Login = () => {
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  className="h-11 w-full px-3 py-2 bg-transparent border-2  border-black-200 text-gray-600 rounded-md shadow-sm focus:outline   peer placeholder-transparent"
+                  className="h-11 w-full px-3 py-2 bg-transparent border-2  border-black-200 text-black-300 rounded-md shadow-sm focus:outline   peer placeholder-transparent"
                   placeholder="Password"
                   {...register("password", { required: true })}
                 />
