@@ -3,14 +3,20 @@ import axios from "axios";
 import { GetAllClass } from "../../Route";
 import { toPng } from "dom-to-image";
 import { jsPDF } from "jspdf";
+import {User} from 'lucide-react'
+import { Document, Page, Image, pdf } from '@react-pdf/renderer';
+import domToImage from 'dom-to-image';
 
 const IDCardGenerator = () => {
   const [classes, setClasses] = useState([]);
   const [selectedClass, setSelectedClass] = useState("");
   const [students, setStudents] = useState([]);
+  const [student, setStudent] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [selectedStudents, setSelectedStudents] = useState([]);
+  const [userPhoto, setUserPhoto] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const idCardRef = useRef(null);
   const url = import.meta.env.VITE_API_BASE_URL;
 
@@ -49,12 +55,10 @@ const IDCardGenerator = () => {
     }
   };
 
-  const fetchStudents = async (classId) => {
+const fetchStudents = async (classId) => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `https://school-backend-ocze.onrender.com/api/v1/student/getstudentbyclassid/${classId}`
-      );
+      const response = await axios.get(`${url}student/getstudentbyclassid/:${classId}`);
       setStudents(response.data.data.students);
     } catch (error) {
       console.error("Error fetching students:", error);
@@ -65,6 +69,24 @@ const IDCardGenerator = () => {
     }
   };
 
+
+
+
+  const fetchStudentById = async (studentId) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `https://school-backend-ocze.onrender.com/api/v1/student/getstudentbyid/${studentId}`
+      );
+      setStudent([response.data.student]);
+    } catch (error) {
+      console.error("Error fetching student:", error);
+      setMessage("Failed to fetch student");
+      setStudents([]);
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleClassChange = (e) => {
     setSelectedClass(e.target.value);
   };
@@ -79,331 +101,41 @@ const IDCardGenerator = () => {
       }
     });
   };
-
+  
   const generateIDCard = async (student) => {
+    await fetchStudentById(student._id);
+    
+    if (!idCardRef.current) return;
+    setIsLoading(true);
     try {
-      // Create a temporary container to render the ID card
-      const tempContainer = document.createElement('div');
-      tempContainer.style.position = 'absolute';
-      tempContainer.style.left = '-9999px';
-      document.body.appendChild(tempContainer);
-      
-      // Create ID card element with background image
-      const idCardElement = document.createElement('div');
-      idCardElement.style.width = '350px';
-      idCardElement.style.height = '600px';
-      idCardElement.style.backgroundImage = `url(${bgImagePath})`;
-      idCardElement.style.backgroundSize = 'cover';
-      idCardElement.style.backgroundPosition = 'center';
-      idCardElement.style.position = 'relative';
-      idCardElement.style.fontFamily = 'Arial, sans-serif';
-      
-      // Profile picture
-      const profileDiv = document.createElement('div');
-      profileDiv.style.position = 'absolute';
-      profileDiv.style.left = '50%';
-      profileDiv.style.transform = 'translateX(-50%)';
-      profileDiv.style.top = '175px';
-      profileDiv.style.width = '128px';
-      profileDiv.style.height = '128px';
-      profileDiv.style.borderRadius = '50%';
-      profileDiv.style.overflow = 'hidden';
-      
-      const profileImg = document.createElement('img');
-      profileImg.src = student.profilePicture || "/api/placeholder/128/128";
-      profileImg.alt = "Student Profile";
-      profileImg.style.width = '100%';
-      profileImg.style.height = '100%';
-      profileImg.style.objectFit = 'cover';
-      
-      profileDiv.appendChild(profileImg);
-      idCardElement.appendChild(profileDiv);
-      
-      // Student Name
-      const nameDiv = document.createElement('div');
-      nameDiv.style.position = 'absolute';
-      nameDiv.style.left = '0';
-      nameDiv.style.width = '100%';
-      nameDiv.style.top = '330px';
-      nameDiv.style.textAlign = 'center';
-      nameDiv.style.fontWeight = 'bold';
-      nameDiv.style.fontSize = '28px';
-      nameDiv.style.textTransform = 'uppercase';
-      nameDiv.textContent = student.name;
-      idCardElement.appendChild(nameDiv);
-      
-      // Role (STUDENT)
-      const roleDiv = document.createElement('div');
-      roleDiv.style.position = 'absolute';
-      roleDiv.style.left = '0';
-      roleDiv.style.width = '100%';
-      roleDiv.style.top = '375px';
-      roleDiv.style.textAlign = 'center';
-      roleDiv.style.fontSize = '18px';
-      roleDiv.style.textTransform = 'uppercase';
-      roleDiv.textContent = 'STUDENT';
-      idCardElement.appendChild(roleDiv);
-      
-      // Admission Number
-      const admissionDiv = document.createElement('div');
-      admissionDiv.style.position = 'absolute';
-      admissionDiv.style.left = '30px';
-      admissionDiv.style.right = '30px';
-      admissionDiv.style.top = '430px';
-      admissionDiv.style.fontSize = '16px';
-      
-      const admissionLabel = document.createElement('span');
-      admissionLabel.style.fontWeight = 'bold';
-      admissionLabel.style.display = 'inline-block';
-      admissionLabel.style.width = '150px';
-      admissionLabel.textContent = 'Admission No';
-      
-      const admissionValue = document.createElement('span');
-      admissionValue.textContent = `: ${student.rollNumber || "N/A"}`;
-      
-      admissionDiv.appendChild(admissionLabel);
-      admissionDiv.appendChild(admissionValue);
-      idCardElement.appendChild(admissionDiv);
-      
-      // Email
-      const emailDiv = document.createElement('div');
-      emailDiv.style.position = 'absolute';
-      emailDiv.style.left = '30px';
-      emailDiv.style.right = '30px';
-      emailDiv.style.top = '470px';
-      emailDiv.style.fontSize = '16px';
-      
-      const emailLabel = document.createElement('span');
-      emailLabel.style.fontWeight = 'bold';
-      emailLabel.style.display = 'inline-block';
-      emailLabel.style.width = '150px';
-      emailLabel.textContent = 'E-mail';
-      
-      const emailValue = document.createElement('span');
-      emailValue.textContent = `: ${student.email || "N/A"}`;
-      
-      emailDiv.appendChild(emailLabel);
-      emailDiv.appendChild(emailValue);
-      idCardElement.appendChild(emailDiv);
-      
-      // Phone
-      const phoneDiv = document.createElement('div');
-      phoneDiv.style.position = 'absolute';
-      phoneDiv.style.left = '30px';
-      phoneDiv.style.right = '30px';
-      phoneDiv.style.top = '510px';
-      phoneDiv.style.fontSize = '16px';
-      
-      const phoneLabel = document.createElement('span');
-      phoneLabel.style.fontWeight = 'bold';
-      phoneLabel.style.display = 'inline-block';
-      phoneLabel.style.width = '150px';
-      phoneLabel.textContent = 'Phone';
-      
-      const phoneValue = document.createElement('span');
-      phoneValue.textContent = `: ${student.phone || "N/A"}`;
-      
-      phoneDiv.appendChild(phoneLabel);
-      phoneDiv.appendChild(phoneValue);
-      idCardElement.appendChild(phoneDiv);
-      
-      // Append to temporary container
-      tempContainer.appendChild(idCardElement);
-      
-      // Convert to image
-      const dataUrl = await toPng(idCardElement);
-      
-      // For debugging - display the generated PNG in a new window
-      const newWindow = window.open();
-      newWindow.document.write(`<img src="${dataUrl}" alt="ID Card Preview"/>`);
-      
-      // Create PDF
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: [105, 148] // ID card size
-      });
-      
-      pdf.addImage(dataUrl, 'PNG', 0, 0, 105, 148);
-      
-      // Open in a new window for download
-      window.open(URL.createObjectURL(pdf.output('blob')));
-      
-      // Clean up
-      document.body.removeChild(tempContainer);
-      
-      setMessage(`ID Card for ${student.name} generated successfully`);
-    } catch (error) {
-      console.error("Error generating ID card:", error);
-      setMessage("Failed to generate ID card");
-    }
-  };
-
-  const generateMultipleIDCards = async () => {
-    if (selectedStudents.length === 0) {
-      setMessage("Please select at least one student");
-      return;
-    }
-
-    try {
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: [105, 148]
-      });
-
-      for (let i = 0; i < selectedStudents.length; i++) {
-        const student = selectedStudents[i];
-        
-        // Create a temporary container
-        const tempContainer = document.createElement('div');
-        tempContainer.style.position = 'absolute';
-        tempContainer.style.left = '-9999px';
-        document.body.appendChild(tempContainer);
-        
-        // Create ID card with background image
-        const idCardElement = document.createElement('div');
-        idCardElement.style.width = '350px';
-        idCardElement.style.height = '600px';
-        idCardElement.style.backgroundImage = `url(${bgImagePath})`;
-        idCardElement.style.backgroundSize = 'cover';
-        idCardElement.style.backgroundPosition = 'center';
-        idCardElement.style.position = 'relative';
-        idCardElement.style.fontFamily = 'Arial, sans-serif';
-        
-        // Profile picture
-        const profileDiv = document.createElement('div');
-        profileDiv.style.position = 'absolute';
-        profileDiv.style.left = '50%';
-        profileDiv.style.transform = 'translateX(-50%)';
-        profileDiv.style.top = '175px';
-        profileDiv.style.width = '128px';
-        profileDiv.style.height = '128px';
-        profileDiv.style.borderRadius = '50%';
-        profileDiv.style.overflow = 'hidden';
-        
-        const profileImg = document.createElement('img');
-        profileImg.src = student.profilePicture || "/api/placeholder/128/128";
-        profileImg.alt = "Student Profile";
-        profileImg.style.width = '100%';
-        profileImg.style.height = '100%';
-        profileImg.style.objectFit = 'cover';
-        
-        profileDiv.appendChild(profileImg);
-        idCardElement.appendChild(profileDiv);
-        
-        // Student Name
-        const nameDiv = document.createElement('div');
-        nameDiv.style.position = 'absolute';
-        nameDiv.style.left = '0';
-        nameDiv.style.width = '100%';
-        nameDiv.style.top = '330px';
-        nameDiv.style.textAlign = 'center';
-        nameDiv.style.fontWeight = 'bold';
-        nameDiv.style.fontSize = '28px';
-        nameDiv.style.textTransform = 'uppercase';
-        nameDiv.textContent = student.name;
-        idCardElement.appendChild(nameDiv);
-        
-        // Role (STUDENT)
-        const roleDiv = document.createElement('div');
-        roleDiv.style.position = 'absolute';
-        roleDiv.style.left = '0';
-        roleDiv.style.width = '100%';
-        roleDiv.style.top = '375px';
-        roleDiv.style.textAlign = 'center';
-        roleDiv.style.fontSize = '18px';
-        roleDiv.style.textTransform = 'uppercase';
-        roleDiv.textContent = 'STUDENT';
-        idCardElement.appendChild(roleDiv);
-        
-        // Admission Number
-        const admissionDiv = document.createElement('div');
-        admissionDiv.style.position = 'absolute';
-        admissionDiv.style.left = '30px';
-        admissionDiv.style.right = '30px';
-        admissionDiv.style.top = '430px';
-        admissionDiv.style.fontSize = '16px';
-        
-        const admissionLabel = document.createElement('span');
-        admissionLabel.style.fontWeight = 'bold';
-        admissionLabel.style.display = 'inline-block';
-        admissionLabel.style.width = '150px';
-        admissionLabel.textContent = 'Admission No';
-        
-        const admissionValue = document.createElement('span');
-        admissionValue.textContent = `: ${student.rollNumber || "N/A"}`;
-        
-        admissionDiv.appendChild(admissionLabel);
-        admissionDiv.appendChild(admissionValue);
-        idCardElement.appendChild(admissionDiv);
-        
-        // Email
-        const emailDiv = document.createElement('div');
-        emailDiv.style.position = 'absolute';
-        emailDiv.style.left = '30px';
-        emailDiv.style.right = '30px';
-        emailDiv.style.top = '470px';
-        emailDiv.style.fontSize = '16px';
-        
-        const emailLabel = document.createElement('span');
-        emailLabel.style.fontWeight = 'bold';
-        emailLabel.style.display = 'inline-block';
-        emailLabel.style.width = '150px';
-        emailLabel.textContent = 'E-mail';
-        
-        const emailValue = document.createElement('span');
-        emailValue.textContent = `: ${student.email || "N/A"}`;
-        
-        emailDiv.appendChild(emailLabel);
-        emailDiv.appendChild(emailValue);
-        idCardElement.appendChild(emailDiv);
-        
-        // Phone
-        const phoneDiv = document.createElement('div');
-        phoneDiv.style.position = 'absolute';
-        phoneDiv.style.left = '30px';
-        phoneDiv.style.right = '30px';
-        phoneDiv.style.top = '510px';
-        phoneDiv.style.fontSize = '16px';
-        
-        const phoneLabel = document.createElement('span');
-        phoneLabel.style.fontWeight = 'bold';
-        phoneLabel.style.display = 'inline-block';
-        phoneLabel.style.width = '150px';
-        phoneLabel.textContent = 'Phone';
-        
-        const phoneValue = document.createElement('span');
-        phoneValue.textContent = `: ${student.phone || "N/A"}`;
-        
-        phoneDiv.appendChild(phoneLabel);
-        phoneDiv.appendChild(phoneValue);
-        idCardElement.appendChild(phoneDiv);
-        
-        // Append to temporary container
-        tempContainer.appendChild(idCardElement);
-        
-        // Convert to image
-        const dataUrl = await toPng(idCardElement);
-        
-        // Add new page for each student except the first one
-        if (i > 0) {
-          pdf.addPage();
+      const dataUrl = await domToImage.toPng(idCardRef.current, {
+        quality: 1.0,
+        width: idCardRef.current.offsetWidth,
+        height: idCardRef.current.offsetHeight,
+        style: {
+          transformOrigin: 'top left'
         }
-        
-        pdf.addImage(dataUrl, 'PNG', 0, 0, 105, 148);
-        
-        // Clean up
-        document.body.removeChild(tempContainer);
-      }
+      });
+      console.log(dataUrl)
       
-      // Open in a new window for download
-      window.open(URL.createObjectURL(pdf.output('blob')));
+      const MyDocument = () => (
+        <Document>
+          <Page size="A3" orientation="landscape" style={{ position: 'relative' }}>
+            <Image src={dataUrl} style={{ width: '100%', height: '100%' }} />
+          </Page>
+        </Document>
+      );
       
-      setMessage(`Generated ${selectedStudents.length} ID cards successfully`);
+      const blob = await pdf(React.createElement(MyDocument)).toBlob();
+      
+      const blobUrl = URL.createObjectURL(blob);
+      window.open(blobUrl, '_blank');
+      
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+      setIsLoading(false);
     } catch (error) {
-      console.error("Error generating multiple ID cards:", error);
-      setMessage("Failed to generate ID cards");
+      console.error('Error generating PDF:', error);
+      setIsLoading(false);
     }
   };
 
@@ -521,6 +253,68 @@ const IDCardGenerator = () => {
             </div>
           </div>
         )}
+        <div className="mb-8">
+  <h2 className="text-xl font-semibold mb-4">ID Card Preview</h2>
+  <div className="border rounded-md p-4 bg-gray-50 flex justify-center">
+    <div
+      ref={idCardRef}
+      className="relative w-full max-w-md aspect-[9/16] bg-white text-black"
+      style={{
+        backgroundImage: "url('/IDCard.png')",
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        fontFamily: "'Roboto', sans-serif"
+      }}
+    >
+      {/* Organization Logo */}
+      <div className="absolute" style={{ top: '5%', left: '5%' }}>
+        {/* Logo will be part of the background image */}
+      </div>
+      
+      {/* Profile Photo */}
+      <div className="absolute" style={{ top: '20%', left: '50%', transform: 'translateX(-50%)' }}>
+        {userPhoto ? (
+          <img 
+            src={userPhoto} 
+            alt="Profile Photo" 
+            className="rounded-full w-32 h-32 object-cover border-4 border-blue-600" 
+          />
+        ) : (
+          <div className="rounded-full w-32 h-32 bg-gray-200 flex items-center justify-center">
+            <User size={48} />
+          </div>
+        )}
+      </div>
+      
+      {/* Name and Position */}
+      <div className="absolute w-full text-center" style={{ top: '50%' }}>
+        <h2 className="text-3xl font-bold text-black">{student.name || 'FULL NAME'}</h2>
+      </div>
+      
+      {/* User Details */}
+      <div className="absolute w-full px-8" style={{ top: '65%' }}>
+        <div className="flex justify-between mb-2">
+          <span className="font-medium">Admission No</span>
+          {/* <span>: {userAdmissionNo || '1234567890'}</span> */}
+        </div>
+        <div className="flex justify-between mb-2">
+          <span className="font-medium">E-mail</span>
+          <span>: {student.email || 'user@example.com'}</span>
+        </div>
+        <div className="flex justify-between mb-2">
+          <span className="font-medium">Phone</span>
+          <span>: {student.parentContact || '+123-456-7890'}</span>
+        </div>
+      </div>
+      
+      {/* Footer Elements */}
+      <div className="absolute w-full bottom-0">
+        {/* Wave design will be part of the background image */}
+      </div>
+    </div>
+  </div>
+</div>
       </div>
     </div>
   );

@@ -10,8 +10,8 @@ import IDCardGenerator from './Frontend/Components/Cards/IDCard'
 const Test = () => {
     return (
         <div>
-            <CertificateGenerator/>
-            {/* <IDCardGenerator/> */}
+            {/* <CertificateGenerator/> */}
+            <IDCardGenerator/>
         </div>
     );
 };
