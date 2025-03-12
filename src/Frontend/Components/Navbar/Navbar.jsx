@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../../../Store/slice";
 import PerformanceDashboard from "../AttendanceSystem/Performance";
-import ClassAttendanceTracker from "../AttendanceSystem/MarkAttendanceByClass";
 import AttendanceSystem from "../AttendanceSystem/MarkAttendanceByClass2";
 import { ProfilePage, TeacherDetails } from "../../Pages";
 import StudentDetails from "../Classes/AllStudents";
@@ -30,6 +29,7 @@ import AllComplaints from '../../Pages/Complaints/AllComplaint';
 import StudentComplaints from '../../Pages/Complaints/StudentComplaintDetails'
 import CertificateGenerator from '../Cards/Certificate'
 import IDCardGenerator from '../Cards/IDCard'
+import TeacherAttendanceSystem from "../AttendanceSystem/MarkAttendanceTeacher"
 // import AddMark from "../../Pages/Mark/AddMark";  
  
 import {
@@ -395,7 +395,7 @@ const Nav = ({ children, path }) => {
     JSON.parse(Cookies.get("user" || "student" || "teacher")) || "{}";
   if (user !== null || user !== undefined) {
     dispatch(setUser(user));
-    console.log(user);
+   
   }
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userType, setUserType] = useState("admin");
@@ -434,13 +434,13 @@ const Nav = ({ children, path }) => {
         {path === "/all-subjects" && <AllSubjects />}
         {path === "/leaderboard" && <LeaderBoard />}
         {path === "/add-marks" && <LeaderBoard />}
-        {path === "/teacher-attendance" && <UnderMaintenance />}
         {path === "/my-time-table" && <UnderMaintenance />}
         {path === "/finance" && <UnderMaintenance />}
         {path === "/complaints" && <AllComplaints/>}
         {path === "/my-complaints" && <StudentComplaints/>}
         {path === "/certificate" && <CertificateGenerator/>}
         {path === "/id-card" && <IDCardGenerator/>}
+        {path === "/teacher-attendance" && <TeacherAttendanceSystem/>}
       </div>
 
       <main

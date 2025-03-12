@@ -2,9 +2,6 @@
     export const SignupPrincipal = 'principal/register'
     export const LoginPrincipal = 'principal/login'
 
-
-
-
     // Teacher endpoints
     export const SignupTeacher = 'teacher/register'
     export const LoginTeacher = 'teacher/login'
@@ -12,16 +9,10 @@
     export const MarkTeacherAttendance = 'teacher/attendance/mark'
     export const GetTeacherAttendance = 'teacher/getattendancehistory'
 
-
     // Student endpoints
     export const SignupStudent = 'student/register'
     export const LoginStudent = 'student/login'
     export const GetAllStudent = 'student/getallstudents'
-
-
-
-
-
 
     // Class endpoints
     export const CreateClass = 'class/register'

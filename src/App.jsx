@@ -147,10 +147,7 @@ function App() {
       path:'/my-subjects',
       element:<Nav path={"/my-subjects"}/>
     },
-    {
-      path:'/finance',
-      element:<Nav path={"/finance"}/>
-    },
+   
     {
       path:'/complaints',
       element:<Nav path={"/complaints"}/>
@@ -184,6 +181,11 @@ function App() {
     {
       path:'/know-more',
       element:<About/>
+
+    },
+    {
+      path:'/teacher-attendance',
+      element:<Nav path={"/teacher-attendance"}/>
 
     }
   ])
