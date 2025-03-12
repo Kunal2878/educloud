@@ -85,38 +85,42 @@ const NavBar = ({ User, onMenuClick }) => {
           </button>
         </div>
 
-        {/* <div className="sidebar-user-info flex items-center gap-2">
-          <img
-            src={educloud}
-            alt="avatar"
-            width={44}
-            height={44}
-            className="sidebar-user-avatar"
-          />
-
-          <div className="hidden lg:block">
-            <h2 className="h2 capitalize">Katlicherra Central School</h2>
-          </div>
-        </div> */}
-
         <div className="flex flex-row items-center space-x-4">
           <button
             onClick={handleSignOut}
-            className="px-4 py-2 rounded-md cursor-ponter text-white font-semibold bg-brand flex items-center gap-2"
+            className="hidden md:flex px-4 py-2 rounded-md cursor-ponter text-white font-semibold bg-brand items-center gap-2"
           >
             <span>
               <LogOut size={18} className="mr-1" />
             </span>
             Logout
           </button>
-          <Link
-            to="/profile"
-            className="rounded-full size-8 flex items-center justify-center text-purpleColor border-2 border-purpleColor"
-          >
-            <span>
-              <User size={24} />
-            </span>
-          </Link>
+          <div className="relative">
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="rounded-full size-8 flex items-center justify-center text-purpleColor border-2 border-purpleColor"
+            >
+              <span>
+                <User size={24} />
+              </span>
+            </button>
+            {dropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 md:hidden">
+                <Link
+                  to="/profile"
+                  className="block px-4 py-2 text-center text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Profile
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="block w-full text-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>

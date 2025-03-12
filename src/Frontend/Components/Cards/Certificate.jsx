@@ -359,18 +359,18 @@ const generatePDF = async () => {
           >
             {/* Certificate Title */}
             <div className="absolute w-full text-center text-black" style={{ top: '25%' }}>
-              <h2 className="text-3xl font-bold text-black" style={{ fontFamily: "'Pinyon Script', cursive" }}>{certificateName}</h2>
+              <h2 className="text-xl md:text-3xl font-bold text-black" style={{ fontFamily: "'Pinyon Script', cursive" }}>{certificateName}</h2>
             </div>
             
             {/* Student Name */}
             <div className="absolute w-full text-center text-black" style={{ top: '35%' }}>
-              <p className="text-2xl text-black" style={{ fontFamily: "'Dancing Script', cursive" }}>This certificate is proudly presented to</p>
-              <p className="text-3xl font-bold mt-4 text-black" style={{ fontFamily: "'Great Vibes', cursive" }}>{getStudentName()}</p>
+              <p className="text-lg md:text-2xl text-black" style={{ fontFamily: "'Dancing Script', cursive" }}>This certificate is proudly presented to</p>
+              <p className="text-xl md:text-3xl font-bold mt-4 text-black" style={{ fontFamily: "'Great Vibes', cursive" }}>{getStudentName()}</p>
             </div>
             
             {/* Class Name and Description */}
-            <div className="absolute w-full text-center px-16 text-black" style={{ top: '55%' }}>
-              <p className="text-sm md:text-md italic text-black" style={{ fontFamily: "'Dancing Script', cursive" }}>
+            <div className="absolute w-full text-center px-8 md:px-16 text-black" style={{ top: '55%' }}>
+              <p className="text-xs md:text-md italic text-black" style={{ fontFamily: "'Dancing Script', cursive" }}>
                 <span className="font-semibold text-black">of {getClassName()}</span>
                 {certificateDescription ? ` — ${certificateDescription}` : 
                 ' — For demonstrating outstanding academic excellence and exceptional dedication to learning. Your consistent hard work, intellectual curiosity, and commitment to personal growth have set you apart as a model student.'}
@@ -378,31 +378,31 @@ const generatePDF = async () => {
             </div>
             
             {/* Signatures */}
-            <div className="absolute w-full flex justify-between px-32 text-black" style={{ bottom: '10%' }}>
+            <div className="absolute w-full flex justify-between px-16 md:px-32 text-black" style={{ bottom: '10%' }}>
               <div className="text-center">
                 {principalSignature ? (
-                  <img src={principalSignature} alt="Principal Signature" className="h-12 mx-auto mb-1" />
+                  <img src={principalSignature} alt="Principal Signature" className="h-8 md:h-12 mx-auto mb-1" />
                 ) : (
-                  <div className="h-12 flex items-end justify-center">
-                    <FileSignature size={32} />
+                  <div className="h-8 md:h-12 flex items-end justify-center">
+                    <FileSignature size={24} className="md:w-8 md:h-8" />
                   </div>
                 )}
-                <div className="w-48 border-t border-black mx-auto"></div>
-                <p className="text-center font-semibold mt-1 text-black" style={{ fontFamily: "'Dancing Script', cursive" }}>PRINCIPAL</p>
-                <p className="text-sm text-black" style={{ fontFamily: "'Dancing Script', cursive" }}>{principalName}</p>
+                
+                <p className="text-center font-semibold mt-1 text-xs md:text-base text-black" style={{ fontFamily: "'Dancing Script', cursive" }}>PRINCIPAL</p>
+                <p className="text-xs md:text-sm text-black" style={{ fontFamily: "'Dancing Script', cursive" }}>{principalName}</p>
               </div>
               
               <div className="text-center">
                 {teacherSignature ? (
-                  <img src={teacherSignature} alt="Teacher Signature" className="h-12 mx-auto mb-1" />
+                  <img src={teacherSignature} alt="Teacher Signature" className="h-8 md:h-12 mx-auto mb-1" />
                 ) : (
-                  <div className="h-12 flex items-end justify-center">
-                    <FileSignature size={32} />
+                  <div className="h-8 md:h-12 flex items-end justify-center">
+                    <FileSignature size={24} className="md:w-8 md:h-8" />
                   </div>
                 )}
-                <div className="w-48 border-t border-black mx-auto"></div>
-                <p className="text-center font-semibold mt-1 text-black" style={{ fontFamily: "'Dancing Script', cursive" }}>CLASS TEACHER</p>
-                <p className="text-sm text-black" style={{ fontFamily: "'Dancing Script', cursive" }}>{teacherName}</p>
+                
+                <p className="text-center font-semibold mt-1 text-xs md:text-base text-black" style={{ fontFamily: "'Dancing Script', cursive" }}>CLASS TEACHER</p>
+                <p className="text-xs md:text-sm text-black" style={{ fontFamily: "'Dancing Script', cursive" }}>{teacherName}</p>
               </div>
             </div>
           </div>
