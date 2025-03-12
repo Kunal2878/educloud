@@ -161,11 +161,11 @@ const generatePDF = async () => {
     if (!selectedClass) return '';
     const classObj = classes.find(c => c._id === selectedClass);
     return classObj ? classObj.className : '';
-  };
+  };4
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
-      <div className="mb-8 bg-white rounded-xl shadow-lg p-6">
+    <div className="max-w-6xl mx-auto px-6 py-10">
+      <div className="mb-8 bg-white rounded-xl shadow-lg mt-6 p-6">
         <h1 className="text-2xl text-black-300 font-bold mb-6 flex items-center">
           <Award className="mr-2" /> Generate Certificate
         </h1>

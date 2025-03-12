@@ -434,7 +434,6 @@ const Nav = ({ children, path }) => {
         {path === "/all-subjects" && <AllSubjects />}
         {path === "/leaderboard" && <LeaderBoard />}
         {path === "/add-marks" && <LeaderBoard />}
-        {path === "/id-card" && <UnderMaintenance />}
         {path === "/teacher-attendance" && <UnderMaintenance />}
         {path === "/my-time-table" && <UnderMaintenance />}
         {path === "/finance" && <UnderMaintenance />}
