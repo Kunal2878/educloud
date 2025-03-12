@@ -3,34 +3,12 @@ import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../../../Store/slice";
-import PerformanceDashboard from "../AttendanceSystem/Performance";
-import AttendanceSystem from "../AttendanceSystem/MarkAttendanceByClass2";
-import { ProfilePage, TeacherDetails } from "../../Pages";
-import StudentDetails from "../Classes/AllStudents";
-// import TeacherDetails from "../../Pages/Teacher/AllTeacher";
-import AssignClassSub from "../../Pages/Teacher/AssignClassSub";
-import Events from "../../Pages/Events";
-import RegisterClass from "../../Pages/Classes/RegisterClass";
-import AddStudents from "../../Pages/Student/AddStudent";
-import RegisterSubjects from "../../Pages/Subjects/RegisterSubject";
-import AllSubjects from "../../Pages/Subjects/AllSubject";
-import UploadTimeTable from "../../Pages/TimeTable/UploadTimeTable";
-import AllExams from "../../Pages/Exam/AllExam";
-import MyAttendance from "../../Pages/Student/MyAttendance";
-import MyExams from "../../Pages/Student/MyExam";
-import MyResults from "../../Pages/Student/MyResult";
-import MySubjects from "../../Pages/Student/MySubject";
-import MyStudents from "../../Pages/Teacher/MyStudent";
-import AllClasses from "../../Pages/Classes/AllClass";
-import PaymentMethodSelector from "../../Pages/Payment/PaymentMode";
-import LeaderBoard from "../../Pages/Mark/LeaderBoard"; 
-import UnderMaintenance from "../../Pages/UnderMaintence"; 
-import AllComplaints from '../../Pages/Complaints/AllComplaint';
-import StudentComplaints from '../../Pages/Complaints/StudentComplaintDetails'
-import CertificateGenerator from '../Cards/Certificate'
-import IDCardGenerator from '../Cards/IDCard'
-import TeacherAttendanceSystem from "../AttendanceSystem/MarkAttendanceTeacher"
-// import AddMark from "../../Pages/Mark/AddMark";  
+import{PerformanceDashboard,Events,StudentAttendanceSystem,ProfilePage,
+  TeacherDetails,StudentDetails,AssignClassSub,RegisterClass,AddStudents,
+  RegisterSubjects,UploadTimeTable,AllExams,MyAttendance,MyExams,MyResults,MySubjects,
+    MyStudents,AllClasses,PaymentMethodSelector,LeaderBoard,UnderMaintenance,AllComplaints,StudentComplaints,
+    CertificateGenerator,IDCardGenerator,TeacherAttendanceSystem,AllSubjects
+  } from "../../Pages/index" 
  
 import {
   Home,
@@ -426,7 +404,7 @@ const Nav = ({ children, path }) => {
       <NavBar User={User} onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
       <div className={`w-full min-h-screen absolute top-0 mt-5`}>
         {path === "/dashboard" && <PerformanceDashboard />}
-        {path === "/mark-attendance" && <AttendanceSystem />}
+        {path === "/mark-attendance" && <StudentAttendanceSystem />}
         {path === "/profile" && <ProfilePage />}
         {path === "/all-students" && <StudentDetails />}
         {path === "/all-teachers" && <TeacherDetails />}

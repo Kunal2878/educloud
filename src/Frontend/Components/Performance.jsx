@@ -19,7 +19,7 @@ import {
 } from "recharts";
 import { PieChart, Pie, Cell } from "recharts";
 import { useSelector, useDispatch } from "react-redux";
-import { setUser } from "../../../Store/slice";
+import { setUser } from "../../Store/slice";
 
 const CustomCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());

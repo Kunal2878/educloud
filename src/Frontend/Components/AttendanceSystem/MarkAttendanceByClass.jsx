@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Calendar, Save, CheckCircle, XCircle } from "lucide-react";
 import { GetAllClass } from "../../Route";
-const AttendanceSystem = () => {
+const StudentAttendanceSystem = () => {
   const [classes, setClasses] = useState([]);
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedDate, setSelectedDate] = useState(
@@ -367,4 +367,4 @@ const AttendanceSystem = () => {
   );
 };
 
-export default AttendanceSystem;
+export default StudentAttendanceSystem;
