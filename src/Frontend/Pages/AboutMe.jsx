@@ -24,9 +24,9 @@ const ProfilePage = () => {
       <div className="max-w-4xl mx-auto main">
 
         {/* Profile Card */}
-        <div className="flex flex-row  overflow-hidden mb-6 gap-4 p-2">
+        <div className="flex flex-col md:flex-row  overflow-hidden mb-6 gap-4 p-2">
 
-          <div className="w-1/2 p-6 flex md:flex-col flex-col gap-6 bg-blue-100">
+          <div className="w-full md:w-1/2 p-6 flex md:flex-col flex-col gap-6 bg-blue-100">
 
             {/* Avatar and Basic Info */}
             <div className="w-full flex items-center md:items-start gap-6">
@@ -64,30 +64,28 @@ const ProfilePage = () => {
 
 
 
-          <div className="w-full p-6 flex md:flex-row flex-col gap-6 bg-blue-100">
+          <div className="w-full p-6 flex md:flex-row flex-col gap-6 ">
             {/* Stats */}
             <div className="md:ml-auto flex flex-col justify-center w-full">
-              <div className="w-full grid grid-cols-2 gap-4">
-                <div className="flex items-center gap-2 w-1/2 bg">
-                  <IndianRupee  className="size-6 text-black" />
+              <div className="w-full grid grid-cols-2 gap-2 md:gap-4">
+                <div className="flex items-center gap-2 w-full md:w-1/2 ">
+                  <IndianRupee  className="size-4 md:size-6 text-black" />
                   <div>
-                    <span className="text-md font-medium text-black-300">70000</span>
+                    <span className="text-sm md:text-md font-medium text-black-300">{user.salary||70000}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 w-1/2">
-                  <Calendar  className="size-6 font-black text-black" />
+                <div className="flex items-center gap-2 w-full md:w-1/2">
+                  <Calendar  className="size-4 md:size-6 font-black text-black" />
                   <div>
-                    <span className="text-md font-medium text-black-300">13+ years</span>
+                    <span className="text-sm md:text-md font-medium text-black-300">{user.exp || "13+ years"}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 w-full ">
-                  <Phone className="size-6 font-black text-black" />
+                  <Phone className="size-4 md:size-6 font-black text-black" />
                   <div>
-                    <span className="text-md font-medium text-black-300">{user.contact || "+91 123456789"}</span>
+                    <span className="text-sm md:text-md font-medium text-black-300">{user.contact || "+91 123456789"}</span>
                   </div>
-                </div>
-                <div className="flex items-center gap-2 w-1/2">
-                </div>
+                </div>               
               </div>
             </div>
           </div>
@@ -96,7 +94,7 @@ const ProfilePage = () => {
 
 
             {/* Stats Section */}
-            <div className="w-1/2 flex flex-wrap gap-4 mb-6">
+            <div className="w-full md:w-1/2 flex flex-wrap gap-4 mb-6">
             
               <div className="bg-white p-4 rounded-lg shadow-md flex items-center gap-4 w-[calc(50%-8px)]">
                 <div className="flex items-center gap-2">
@@ -104,8 +102,8 @@ const ProfilePage = () => {
                     <Calendar className="w-5 h-5 text-blue-500" />
                   </div>
                   <div>
-                    <p className="text-lg font-black text-black ">90%</p>
-                    <p className="text-sm text-black-200">Attendance</p>
+                    <p className="text-md md:text-lg font-black text-black ">90%</p>
+                    <p className="text-xs md:text-sm text-black-200">Attendance</p>
                   </div>
                 </div>
               </div>
@@ -116,8 +114,8 @@ const ProfilePage = () => {
                     <Hash className="w-5 h-5 text-blue-500" />
                   </div>
                   <div>
-                    <p className="text-lg font-black text-black">8</p>
-                    <p className="text-sm text-black-200">Subjects</p>
+                    <p className="text-md md:text-lg font-black text-black">8</p>
+                    <p className="text-xs md:text-sm text-black-200">Subjects</p>
                   </div>
                 </div>
               </div>
@@ -127,8 +125,8 @@ const ProfilePage = () => {
                     <User className="w-5 h-5 text-blue-500" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-black text-black">Class 10 B</h3>
-                    <p className="text-sm text-black-200">Class Teacher</p>
+                    <h3 className="text-md md:text-lg font-black text-black">Class 10 B</h3>
+                    <p className="text-xs md:text-sm text-black-200">Class Teacher</p>
                   </div>
                 </div>
               </div>

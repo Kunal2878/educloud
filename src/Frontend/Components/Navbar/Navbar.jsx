@@ -98,12 +98,21 @@ const NavBar = ({ User, onMenuClick }) => {
           <div className="relative">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="rounded-full size-8 flex items-center justify-center text-purpleColor border-2 border-purpleColor"
+              className="rounded-full md:hidden size-8 flex items-center justify-center text-purpleColor border-2 border-purpleColor"
             >
               <span>
                 <User size={24} />
               </span>
             </button>
+
+            <Link
+              to="/profile"
+              className="rounded-full hidden md:flex size-8  items-center justify-center text-purpleColor border-2 border-purpleColor"
+            >
+              <span>
+                <User size={24} />
+              </span>
+            </Link>
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 md:hidden">
                 <Link
