@@ -159,6 +159,14 @@ function App() {
       path:'/my-complaints',
       element:<Nav path={"/my-complaints"}/>
     },
+    {
+      path:'/certificate',
+      element:<Nav path={"/certificate"}/>
+    },
+    {
+      path:'/id-card',
+      element:<Nav path={"/id-card"}/>
+    },
     
     {
       path:'/under-maintenance',

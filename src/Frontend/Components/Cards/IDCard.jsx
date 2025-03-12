@@ -58,7 +58,7 @@ const IDCardGenerator = () => {
 const fetchStudents = async (classId) => {
     setLoading(true);
     try {
-      const response = await axios.get(`${url}student/getstudentbyclassid/:${classId}`);
+      const response = await axios.get(`${url}student/getstudentbyclassid/${classId}`);
       setStudents(response.data.data.students);
     } catch (error) {
       console.error("Error fetching students:", error);
@@ -75,10 +75,13 @@ const fetchStudents = async (classId) => {
   const fetchStudentById = async (studentId) => {
     setLoading(true);
     try {
+      console.log(studentId)
       const response = await axios.get(
         `https://school-backend-ocze.onrender.com/api/v1/student/getstudentbyid/${studentId}`
       );
-      setStudent([response.data.student]);
+   
+      setStudent(response.data.data.student);
+      
     } catch (error) {
       console.error("Error fetching student:", error);
       setMessage("Failed to fetch student");
@@ -116,7 +119,6 @@ const fetchStudents = async (classId) => {
           transformOrigin: 'top left'
         }
       });
-      console.log(dataUrl)
       
       const MyDocument = () => (
         <Document>
@@ -258,10 +260,10 @@ const fetchStudents = async (classId) => {
   <div className="border rounded-md p-4 bg-gray-50 flex justify-center">
     <div
       ref={idCardRef}
-      className="relative w-full max-w-md aspect-[9/16] bg-white text-black"
+      className="relative w-full max-w-sm aspect-[9/13] bg-white text-black"
       style={{
         backgroundImage: "url('/IDCard.png')",
-        backgroundSize: 'contain',
+        backgroundSize: '100% 100%',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         fontFamily: "'Roboto', sans-serif"
@@ -273,36 +275,36 @@ const fetchStudents = async (classId) => {
       </div>
       
       {/* Profile Photo */}
-      <div className="absolute" style={{ top: '20%', left: '50%', transform: 'translateX(-50%)' }}>
+      <div className="absolute" style={{ top: '22%', left: '50%', transform: 'translateX(-50%)' }}>
         {userPhoto ? (
           <img 
             src={userPhoto} 
             alt="Profile Photo" 
-            className="rounded-full w-32 h-32 object-cover border-4 border-blue-600" 
+            className="rounded-full w-20 h-20 object-cover border-4 border-blue-600" 
           />
         ) : (
-          <div className="rounded-full w-32 h-32 bg-gray-200 flex items-center justify-center">
-            <User size={48} />
+          <div className="rounded-full w-20 h-20 bg-gray-200 flex items-center justify-center">
+            <User size={32} />
           </div>
         )}
       </div>
       
       {/* Name and Position */}
-      <div className="absolute w-full text-center" style={{ top: '50%' }}>
-        <h2 className="text-3xl font-bold text-black">{student.name || 'FULL NAME'}</h2>
+      <div className="absolute w-full text-center" style={{ top: '45%' }}>
+        <h2 className="text-xl font-bold text-black">{student.name || 'FULL NAME'}</h2>
       </div>
       
       {/* User Details */}
-      <div className="absolute w-full px-8" style={{ top: '65%' }}>
-        <div className="flex justify-between mb-2">
+      <div className="absolute w-full px-4" style={{ top: '55%' }}>
+        <div className="flex justify-between mb-1">
           <span className="font-medium">Admission No</span>
-          {/* <span>: {userAdmissionNo || '1234567890'}</span> */}
+          <span>: {student.admissionNo || '1234567890'}</span>
         </div>
-        <div className="flex justify-between mb-2">
+        <div className="flex justify-between mb-1">
           <span className="font-medium">E-mail</span>
           <span>: {student.email || 'user@example.com'}</span>
         </div>
-        <div className="flex justify-between mb-2">
+        <div className="flex justify-between mb-1">
           <span className="font-medium">Phone</span>
           <span>: {student.parentContact || '+123-456-7890'}</span>
         </div>
@@ -314,10 +316,7 @@ const fetchStudents = async (classId) => {
       </div>
     </div>
   </div>
-</div>
-      </div>
-    </div>
-  );
-};
+</div>      </div>
+    </div>  );};
 
 export default IDCardGenerator;

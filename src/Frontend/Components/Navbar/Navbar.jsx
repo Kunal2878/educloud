@@ -28,6 +28,7 @@ import LeaderBoard from "../../Pages/Mark/LeaderBoard";
 import UnderMaintenance from "../../Pages/UnderMaintence"; 
 import AllComplaints from '../../Pages/Complaints/AllComplaint';
 import StudentComplaints from '../../Pages/Complaints/StudentComplaintDetails'
+import CertificateGenerator from '../Cards/Certificate'
 // import AddMark from "../../Pages/Mark/AddMark";  
  
 import {
@@ -140,6 +141,7 @@ const Sidebar = ({ isOpen, role, onMenuClick }) => {
           { label: "All Students", id: "all-students", path: "/all-students" },
           { label: "Add Marks", id: "add-marks", path: "/add-marks" },
           { label: "ID Card", id: "id-card", path: "/id-card" },
+          { label: "Certificate", id: "certificate", path: "/certificate" },
         ],
       },
       {
@@ -437,6 +439,7 @@ const Nav = ({ children, path }) => {
         {path === "/finance" && <UnderMaintenance />}
         {path === "/complaints" && <AllComplaints/>}
         {path === "/my-complaints" && <StudentComplaints/>}
+        {path === "/certificate" && <CertificateGenerator/>}
       </div>
 
       <main
