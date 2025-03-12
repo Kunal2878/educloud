@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 // Main Landing Page Component
 const SchoolLandingPage = () => {
+const token= Cookies.get("token")
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-gradient-to-b from-blue-50 via-white to-blue-50">
       {/* Enhanced Particle Background - higher z-index but still behind content */}
@@ -24,7 +26,7 @@ const SchoolLandingPage = () => {
           </div>
           <div className="flex items-center space-x-4">
             <Link
-              to="/user-options"
+             to={token ? "/dashboard" : "/user-options"}
               className="border-2 border-purpleColor text-purpleColor px-6 py-2 rounded-full font-medium transition-all  hover:shadow-md"
             >
               Login
