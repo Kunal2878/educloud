@@ -185,8 +185,8 @@ const fetchStudents = async (classId) => {
       )}
 
       <div className="bg-white p-4 rounded-lg shadow-lg m-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="max-w-xs">
+          <label className="text-left block text-sm font-medium text-gray-700 mb-1">
             Class <span className="text-red-500">*</span>
           </label>
           <select
