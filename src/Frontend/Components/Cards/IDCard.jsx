@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { GetAllClass } from "../../Route";
-import { toPng } from "dom-to-image";
-import { jsPDF } from "jspdf";
 import {User} from 'lucide-react'
-import { Document, Page, Image, pdf } from '@react-pdf/renderer';
+import { Document, Page, Image, pdf, StyleSheet } from '@react-pdf/renderer';
 import domToImage from 'dom-to-image';
 
 const IDCardGenerator = () => {
@@ -69,9 +67,6 @@ const fetchStudents = async (classId) => {
     }
   };
 
-
-
-
   const fetchStudentById = async (studentId) => {
     setLoading(true);
     try {
@@ -90,6 +85,7 @@ const fetchStudents = async (classId) => {
       setLoading(false);
     }
   };
+
   const handleClassChange = (e) => {
     setSelectedClass(e.target.value);
   };
@@ -104,13 +100,32 @@ const fetchStudents = async (classId) => {
       }
     });
   };
+
+  const styles = StyleSheet.create({
+    page: {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    idCard: {
+      width: '400px',  // Adjust these dimensions to maintain 9:13 ratio
+      height: '580px', // while keeping the card at a reasonable size
+      alignSelf: 'center',
+    }
+  });
   
   const generateIDCard = async (student) => {
-    await fetchStudentById(student._id);
-    
-    if (!idCardRef.current) return;
     setIsLoading(true);
     try {
+      await fetchStudentById(student._id);
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      if (!idCardRef.current) return;
+      
       const dataUrl = await domToImage.toPng(idCardRef.current, {
         quality: 1.0,
         width: idCardRef.current.offsetWidth,
@@ -122,8 +137,8 @@ const fetchStudents = async (classId) => {
       
       const MyDocument = () => (
         <Document>
-          <Page size="A3" orientation="landscape" style={{ position: 'relative' }}>
-            <Image src={dataUrl} style={{ width: '100%', height: '100%' }} />
+          <Page size="A4" style={styles.page}>
+            <Image src={dataUrl} style={styles.idCard} />
           </Page>
         </Document>
       );
@@ -134,9 +149,9 @@ const fetchStudents = async (classId) => {
       window.open(blobUrl, '_blank');
       
       setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
-      setIsLoading(false);
     } catch (error) {
       console.error('Error generating PDF:', error);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -145,7 +160,7 @@ const fetchStudents = async (classId) => {
     <div className="sm:px-16 px-6 sm:py-16 py-10 min-h-screen">
       <div className="flex flex-col md:flex-row text-black justify-between items-start md:items-center mb-6 p-2">
         <div className="mb-4 md:mb-0">
-          <h2 className="h2 text-2xl font-semibold mb-2">ID Card Generator</h2>
+          <h2 className="h2 text-2xl font-semibold mb-2">Generate ID Card</h2>
           <div className="flex items-center text-sm subtitle-2">
             <span className="mr-2">Students /</span>
             <span>ID Cards</span>
@@ -243,8 +258,9 @@ const fetchStudents = async (classId) => {
                           <button 
                             className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition-colors"
                             onClick={() => generateIDCard(student)}
+                            disabled={isLoading}
                           >
-                            Generate
+                            {isLoading ? 'Generating...' : 'Generate'}
                           </button>
                         </td>
                       </tr>

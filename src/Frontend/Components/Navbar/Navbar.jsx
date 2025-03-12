@@ -29,6 +29,7 @@ import UnderMaintenance from "../../Pages/UnderMaintence";
 import AllComplaints from '../../Pages/Complaints/AllComplaint';
 import StudentComplaints from '../../Pages/Complaints/StudentComplaintDetails'
 import CertificateGenerator from '../Cards/Certificate'
+import IDCardGenerator from '../Cards/IDCard'
 // import AddMark from "../../Pages/Mark/AddMark";  
  
 import {
@@ -440,6 +441,7 @@ const Nav = ({ children, path }) => {
         {path === "/complaints" && <AllComplaints/>}
         {path === "/my-complaints" && <StudentComplaints/>}
         {path === "/certificate" && <CertificateGenerator/>}
+        {path === "/id-card" && <IDCardGenerator/>}
       </div>
 
       <main
