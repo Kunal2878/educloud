@@ -12,250 +12,26 @@ import {
   Edit,
   Link,
   DollarSign,
+  IndianRupee
 } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.userData.user);
 
-  const renderRoleSpecificStats = () => {
-    if (user.role === "teacher") {
-      return (
-        <div className="flex flex-col space-y-4">
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-blue-100 rounded-full flex justify-center items-center">
-              <Calendar className="w-4 h-4 text-blue-500" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Attendance</p>
-              <p className="text-lg font-medium">90%</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-green-100 rounded-full flex justify-center items-center">
-              <Hash className="w-4 h-4 text-green-500" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Subjects</p>
-              <p className="text-lg font-medium">8</p>
-            </div>
-          </div>
-        </div>
-      );
-    } else if (user.role === "student") {
-      return (
-        <div className="flex flex-col space-y-4">
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-blue-100 rounded-full flex justify-center items-center">
-              <Calendar className="w-4 h-4 text-blue-500" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Attendance</p>
-              <p className="text-lg font-medium">85%</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-purple-100 rounded-full flex justify-center items-center">
-              <Hash className="w-4 h-4 text-purple-500" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Grade</p>
-              <p className="text-lg font-medium">A</p>
-            </div>
-          </div>
-        </div>
-      );
-    } else if (user.role === "principal") {
-      return (
-        <div className="flex flex-col space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4">
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-orange-100 rounded-full flex justify-center items-center">
-              <Briefcase className="w-4 h-4 text-orange-500" />
-            </div>
-            <div className="p-3 rounded-lg">
-              <p className="text-sm text-gray-500">Experience</p>
-              <p className="text-lg font-black text-black">15+ years</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-green-100 rounded-full flex justify-center items-center">
-              <Hash className="w-4 h-4 text-green-500" />
-            </div>
-            <div className="p-3 rounded-lg">
-              <p className="text-sm text-gray-500">Teachers</p>
-              <p className="text-lg font-black text-black">45</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-blue-100 rounded-full flex justify-center items-center">
-              <DollarSign className="w-4 h-4 text-blue-500" />
-            </div>
-            <div className="p-3 rounded-lg">
-              <p className="text-sm text-gray-500">Salary</p>
-              <p className="text-lg font-black text-black">$85,000</p>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
-
-  const renderClassInfo = () => {
-    if (user.role === "teacher") {
-      return (
-        <div className="bg-white p-4 rounded-lg shadow-md">
-          <h3 className="text-lg font-medium mb-2">Class 10 B</h3>
-          <p className="text-sm text-gray-500">Class Teacher</p>
-        </div>
-      );
-    } else if (user.role === "student") {
-      return (
-        <div className="bg-white p-4 rounded-lg shadow-md">
-          <h3 className="text-lg font-medium mb-2">Class 10 B</h3>
-          <p className="text-sm text-gray-500">Student</p>
-        </div>
-      );
-    }
-    return null;
-  };
-
-  const renderPerformanceSection = () => {
-    if (user.role === "teacher" || user.role === "principal") {
-      return (
-        <div className="mt-8">
-          <h2 className="h2 text-xl font-bold mb-4 text-black text-left">
-            Performance
-          </h2>
-          <p className="text-sm text-gray-500 mb-4">
-            criteria: student feedback
-          </p>
-          <div className="flex justify-center items-center">
-            <div className="relative w-40 h-40">
-              <svg viewBox="0 0 100 100" className="w-full h-full">
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="45"
-                  fill="none"
-                  stroke="#f0f0f0"
-                  strokeWidth="10"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="45"
-                  fill="none"
-                  stroke="#3B82F6"
-                  strokeWidth="10"
-                  strokeDasharray="283"
-                  strokeDashoffset="28"
-                  transform="rotate(-90 50 50)"
-                />
-                <text
-                  x="50"
-                  y="55"
-                  fontSize="16"
-                  textAnchor="middle"
-                  fill="#111827"
-                  fontWeight="bold"
-                >
-                  9.2
-                </text>
-              </svg>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
-
-  const renderImportantLinks = () => {
-    if (user.role === "teacher") {
-      return (
-        <div className="mt-6">
-          <h2 className="text-xl font-bold text-left text-black mb-6">
-            Important Links
-          </h2>
-
-          <div className="flex flex-wrap gap-2">
-            <span className="px-3 py-1 bg-lamaPurpleLight text-gray-600 rounded-full text-sm">
-              Teacher's Courses
-            </span>
-            <span className="px-3 py-1 bg-lamaYellowLight text-gray-600 rounded-full text-sm">
-              Teacher's Students
-            </span>
-            <span className="px-3 py-1 bg-lamaSky text-gray-600 rounded-full text-sm">
-              Teacher's Payment Status
-            </span>
-            <span className="px-3 py-1 bg-primaryBlue-400 text-gray-600 rounded-full text-sm">
-              Teacher's Salary Details
-            </span>
-            <span className="px-3 py-1 bg-lamaPurpleLight text-gray-600 rounded-full text-sm">
-              Teacher's Qualifications
-            </span>
-          </div>
-        </div>
-      );
-    } else if (user.role === "student") {
-      return (
-        <div className="mt-6">
-          <h2 className="text-xl font-bold text-left text-black mb-6">
-            Important Links
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            <span className="px-3 py-1 bg-lamaPurpleLight text-gray-600 rounded-full text-sm">
-              Student's Courses
-            </span>
-            <span className="px-3 py-1 bg-lamaYellowLight text-gray-600 rounded-full text-sm">
-              Attendance Records
-            </span>
-            <span className="px-3 py-1 bg-lamaSky text-gray-600 rounded-full text-sm">
-              Payment Status
-            </span>
-            <span className="px-3 py-1 bg-primaryBlue-400 text-gray-600 rounded-full text-sm">
-              Academic Records
-            </span>
-          </div>
-        </div>
-      );
-    } else if (user.role === "principal") {
-      return (
-        <div className="mt-6">
-          <h2 className="text-xl font-bold text-left text-black mb-6">
-            Important Links
-          </h2>
-
-          <div className="flex flex-wrap gap-2">
-            <span className="px-3 py-1 bg-lamaPurpleLight text-gray-600 rounded-full text-sm">
-              School Dashboard
-            </span>
-            <span className="px-3 py-1 bg-lamaYellowLight text-gray-600 rounded-full text-sm">
-              Staff Records
-            </span>
-            <span className="px-3 py-1 bg-lamaSky text-gray-600 rounded-full text-sm">
-              Financial Reports
-            </span>
-            <span className="px-3 py-1 bg-primaryBlue-400 text-gray-600 rounded-full text-sm">
-              School Performance
-            </span>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
-
   return (
-    <div className="min-h-screen bg-cyan-50 sm:px-16 px-6 sm:py-16 py-10">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen  sm:px-16 px-6 sm:py-16 py-10">
+      <div className="max-w-4xl mx-auto main">
+
         {/* Profile Card */}
-        <div className="bg-cyan-200 rounded-lg shadow-md overflow-hidden mb-6">
-          <div className="p-6 flex md:flex-row flex-col gap-6">
+        <div className="flex flex-row  overflow-hidden mb-6 gap-4 p-2">
+
+          <div className="w-1/2 p-6 flex md:flex-col flex-col gap-6 bg-blue-100">
+
             {/* Avatar and Basic Info */}
-            <div className="flex items-center md:items-start gap-4">
-              <div className="w-20 h-20 rounded-full bg-white border-2 border-blue-200 overflow-hidden flex justify-center items-center relative">
+            <div className="w-full flex items-center md:items-start gap-6">
+            <div className="w-1/5 flex flex-col gap-2 ">
+              <div className="size-16 rounded-full bg-white border-2 border-blue-200 overflow-hidden flex justify-center items-center relative">
                 {user?.avatar ? (
                   <img
                     src={user.avatar}
@@ -263,64 +39,201 @@ const ProfilePage = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <User className="w-12 h-12 text-blue-300" />
+                  <User className=" size-full text-blue-300" />
                 )}
                 <div className="absolute bottom-0 right-0 bg-yellow-400 p-1 rounded-full">
                   <Edit className="w-3 h-3 text-white" />
                 </div>
               </div>
-              <div>
+              </div>
+
+
+              <div className="w-4/5">
                 <div className="flex items-center gap-2">
                   <h1 className="text-xl font-bold text-gray-800">
-                    {user.name}
+                    {user?.name || "Nishant Raj"}
                   </h1>
                   <Edit className="w-4 h-4 text-yellow-500" />
                 </div>
-                <p className="text-gray-600 mb-1">
-                  {user.role === "teacher" &&
-                    "Teacher details go here, example: Joined on 1st Jan 2023. Major in Computer Science. Currently teaching Algorithms."}
-                </p>
-                <p className="text-gray-500 text-sm">
-                  Institution: {user.institution || "EduCloud"}
-                </p>
-              </div>
-            </div>
+                <div className="flex justify-start text-left gap-2">
+                  <p className="text-gray-600 text-sm mb-1">
+                    {user.description || "Teacher details goes here, example: Joined on 1st Jan 2023, Major in Computer Science. Currently pursuing PHD from xyz university."}
+                  </p>
+                </div>
+              </div>            </div>
 
+
+
+          <div className="w-full p-6 flex md:flex-row flex-col gap-6 bg-blue-100">
             {/* Stats */}
-            <div className="md:ml-auto flex flex-col justify-center">
-              {renderRoleSpecificStats()}
+            <div className="md:ml-auto flex flex-col justify-center w-full">
+              <div className="w-full grid grid-cols-2 gap-4">
+                <div className="flex items-center gap-2 w-1/2 bg">
+                  <IndianRupee  className="size-6 text-black" />
+                  <div>
+                    <span className="text-md font-medium text-black-300">70000</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 w-1/2">
+                  <Calendar  className="size-6 font-black text-black" />
+                  <div>
+                    <span className="text-md font-medium text-black-300">13+ years</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 w-full ">
+                  <Phone className="size-6 font-black text-black" />
+                  <div>
+                    <span className="text-md font-medium text-black-300">{user.contact || "+91 123456789"}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 w-1/2">
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Contact Info */}
-          <div className="bg-white p-4 border-t border-gray-200">
-            <div className="flex flex-wrap gap-4 justify-around">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-primaryBlue" />
-                <span className="text-sm text-primaryBlue">
-                  {user.location || "Location"}
-                </span>
+          </div>
+
+
+            {/* Stats Section */}
+            <div className="w-1/2 flex flex-wrap gap-4 mb-6">
+            
+              <div className="bg-white p-4 rounded-lg shadow-md flex items-center gap-4 w-[calc(50%-8px)]">
+                <div className="flex items-center gap-2">
+                  <div className="w-14 h-8 bg-blue-100 rounded-full flex justify-center items-center">
+                    <Calendar className="w-5 h-5 text-blue-500" />
+                  </div>
+                  <div>
+                    <p className="text-lg font-black text-black ">90%</p>
+                    <p className="text-sm text-black-200">Attendance</p>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-purpleColor" />
-                <span className="text-sm text-purpleColor">
-                  {user.phone || "+91 12345678"}
-                </span>
+              
+              <div className="bg-white p-4 rounded-lg shadow-md flex items-center gap-4 w-[calc(50%-8px)]">
+                <div className="flex items-center gap-2">
+                  <div className="w-14 h-8 bg-blue-100 rounded-full flex justify-center items-center">
+                    <Hash className="w-5 h-5 text-blue-500" />
+                  </div>
+                  <div>
+                    <p className="text-lg font-black text-black">8</p>
+                    <p className="text-sm text-black-200">Subjects</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-md flex items-center gap-4 w-[calc(50%-8px)]">
+                <div className="flex items-center gap-2">
+                  <div className="w-14 h-8 bg-blue-100 rounded-full flex justify-center items-center">
+                    <User className="w-5 h-5 text-blue-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-black text-black">Class 10 B</h3>
+                    <p className="text-sm text-black-200">Class Teacher</p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+
         </div>
-
         {/* Grid Layout for Bottom Sections */}
         <div className="grid md:grid-cols-3 gap-6">
-          {/* Important Links Section */}
+          {/* Left and Middle Sections */}
           <div className="md:col-span-2">
-            {renderImportantLinks()}
-            {renderPerformanceSection()}
+
+            {/* Important Links Section */}
+            <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+              <h2 className="text-xl text-left font-bold text-black mb-2">
+                Important Links
+              </h2>
+              <p className="text-sm text-left  text-black-300 mb-4">
+                Here you can add important links
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-3 py-1 bg-blue-100 text-gray-600 rounded-full text-sm">
+                  Teacher's Classes
+                </span>
+                <span className="px-3 py-1 bg-blue-100 text-gray-600 rounded-full text-sm">
+                  Teacher's Subjects
+                </span>
+                <span className="px-3 py-1 bg-yellow-100 text-gray-600 rounded-full text-sm">
+                  Teacher's Payment Status
+                </span>
+                <span className="px-3 py-1 bg-purple-100 text-gray-600 rounded-full text-sm">
+                  Teacher's Salary Details
+                </span>
+                <span className="px-3 py-1 bg-green-100 text-gray-600 rounded-full text-sm">
+                  Teacher's Qualification
+                </span>
+              </div>
+            </div>
+
+            {/* Performance Section */}
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="text-xl font-bold text-black">
+                  Performance
+                </h2>
+                <div className="text-gray-400">
+                  {/* Three dots menu */}
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
+                  </svg>
+                </div>
+              </div>
+              <p className="text-left text-sm text-black-300 mb-6">
+                criteria: student feedback
+              </p>
+              <div className="flex justify-center items-center">
+                <div className="relative w-40 h-40">
+                  <svg viewBox="0 0 100 100" className="w-full h-full">
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="45"
+                      fill="none"
+                      stroke="#e6f7ff"
+                      strokeWidth="10"
+                    />
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="45"
+                      fill="none"
+                      stroke="#3B82F6"
+                      strokeWidth="10"
+                      strokeDasharray="283"
+                      strokeDashoffset="28"
+                      transform="rotate(-90 50 50)"
+                    />
+                    <text
+                      x="50"
+                      y="50"
+                      fontSize="20"
+                      textAnchor="middle"
+                      fill="#111827"
+                      fontWeight="bold"
+                    >
+                      9.2
+                    </text>
+                    <text
+                      x="50"
+                      y="65"
+                      fontSize="8"
+                      textAnchor="middle"
+                      fill="#9CA3AF"
+                    >
+                      out of 10 marks
+                    </text>
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Class Information */}
-          <div>{renderClassInfo()}</div>
+          {/* Right Column - Class Information */}
+          <div>
+           
+          </div>
         </div>
       </div>
     </div>
@@ -328,20 +241,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-
-// Add these styles to your global CSS or Tailwind config
-const styles = `
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
-}
-
-.animate-fade-in-delayed {
-  animation: fadeIn 0.5s ease-out 0.2s forwards;
-  opacity: 0;
-}
-`;
