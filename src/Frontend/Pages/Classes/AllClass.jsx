@@ -12,41 +12,41 @@ import {
   Eye,
 } from "lucide-react";
 import RegisterClass from "./RegisterClass";
-import axios from "axios";
-import { GetAllClass } from "../../Route";
+import { useSelector, useDispatch } from "react-redux";
+import { setClassData } from "../../../Store/slice";
+import { GetClasses } from '../../../service/api';
 const AllClasses = () => {
   const url = import.meta.env.VITE_API_BASE_URL;
-  const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showAddTeacher, setShowAddTeacher] = useState(false);
-
   const classesPerPage = 10;
+  const classes = useSelector((state) => state.userData.ClassData);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+      document.title = "All Classes";
+  }, []);
 
   useEffect(() => {
     const fetchClasses = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`${url}${GetAllClass}`);
-
-        if (response.data.statusCode === 200) {
-          setClasses(response.data.data.classes);
-        } else {
-          setError("Failed to fetch classes");
-        }
-      } catch (err) {
-        setError("Error connecting to the server");
-      } finally {
-        setLoading(false);
+      const response = await GetClasses(url);
+      if (response.status === 200 || response.status === 204 || response.status === 201) {
+        dispatch(setClassData(response.data.classes));
+      } else {
+        setError(response.message);
       }
+      setLoading(false);
     };
 
-    fetchClasses();
+    if(classes?.length === 0) {
+      fetchClasses();
+    }
   }, []);
 
-  const filteredClasses = classes.filter(
+  const filteredClasses = classes?.filter(
     (classItem) =>
       classItem.className.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (classItem.classTeacher?.name || "")
@@ -56,7 +56,7 @@ const AllClasses = () => {
 
   const indexOfLastClass = currentPage * classesPerPage;
   const indexOfFirstClass = indexOfLastClass - classesPerPage;
-  const currentClasses = filteredClasses.slice(
+  const currentClasses = filteredClasses?.slice(
     indexOfFirstClass,
     indexOfLastClass
   );
@@ -221,7 +221,7 @@ const AllClasses = () => {
               </tr>
             </thead>
             <tbody>
-              {currentClasses.map((classItem) => (
+              {currentClasses?.map((classItem) => (
                 <tr
                   key={classItem._id}
                   className="border-b hover:bg-gray-50 transition-colors duration-150 animate-fade-in"

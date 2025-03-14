@@ -30,7 +30,9 @@ const AllSubjects = () => {
   const [showAddSubject, setShowAddSubject] = useState(false);
 
   const subjectsPerPage = 10;
-
+  useEffect(() => {
+      document.title = "Subject Details";
+  }, []);
   // Fetch all classes
   useEffect(() => {
     const fetchClasses = async () => {

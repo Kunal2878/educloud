@@ -168,23 +168,7 @@ const token= Cookies.get("token")
                 Technology-first education for a brilliant future.
               </p>
             </div>
-            {/* <div>
-              <h4 className="text-lg font-semibold mb-3">Programs</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>Digital Learning Tools</li>
-                <li>Mental Maths</li>
-                <li>Creativity Development</li>
-                <li>Self Awareness</li>
-              </ul>
-            </div> */}
-            {/* <div>
-              <h4 className="text-lg font-semibold mb-3">Resources</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>Student Portal</li>
-                <li>Learning Materials</li>
-                <li>Digital Assesment</li>
-              </ul>
-            </div> */}
+        
             <div>
               <h4 className="text-lg font-semibold mb-3">Contact</h4>
               <ul className="space-y-2 text-gray-400">

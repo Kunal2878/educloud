@@ -11,43 +11,48 @@ import {
   X,
 } from "lucide-react";
 import AddStudents from "../../Pages/Student/AddStudent";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import { GetAllStudent } from "../../Route";
+import { useSelector, useDispatch } from "react-redux";
+import { setStudentData } from "../../../Store/slice";
+import { GetStudents } from '../../../service/api';
 const StudentDetails = () => {
-  const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [timeFilter, setTimeFilter] = useState("");
   const [showAddStudent, setShowAddStudent] = useState(false);
-
+  const students = useSelector((state) => state.userData.StudentData);
   const studentsPerPage = 6;
   const url = import.meta.env.VITE_API_BASE_URL;
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`${url}${GetAllStudent}`);
-
-        if (response.data.statusCode === 200) {
-          setStudents(response.data.data.students);
-        } else {
-          setError("Failed to fetch students");
-        }
-      } catch (err) {
-        setError("Error connecting to the server");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStudents();
+  const dispatch = useDispatch(); 
+    useEffect(() => {
+      document.title = "Student Details";
   }, []);
 
+  useEffect(() => {
+   
+    const fetchStudents = async () => {
+const response = await GetStudents(url)
+{
+  if (response.status === 200 || response.status === 204 || response.status === 201) {
+dispatch(setStudentData(response.data.students));
+// console.log(response.data.pagination)
+  } 
+  else {
+    setError(response.message);
+  }
+  setLoading(false);
+};
+
+}
+
+    if(students?.length === 0) {
+       fetchStudents();
+    }
+    }, []);
+
   // Filter students based on search and class
-  const filteredStudents = students.filter((student) => {
+  const filteredStudents = students?.filter((student) => {
     const nameMatch = student.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
@@ -59,11 +64,11 @@ const StudentDetails = () => {
   // Pagination
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-  const currentStudents = filteredStudents.slice(
+  const currentStudents = filteredStudents?.slice(
     indexOfFirstStudent,
     indexOfLastStudent
   );
-  const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
+  const totalPages = Math.ceil(filteredStudents?.length / studentsPerPage);
 
   const renderPaginationButtons = () => {
     const buttons = [];
@@ -326,7 +331,7 @@ const StudentDetails = () => {
               </tr>
             </thead>
             <tbody>
-              {currentStudents.map((student) => (
+              {currentStudents?.map((student) => (
                 <tr
                   key={student._id}
                   className="border-b hover:bg-gray-50 transition-colors duration-150 animate-fade-in"

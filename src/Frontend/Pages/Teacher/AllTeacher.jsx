@@ -13,29 +13,36 @@ import {
 import { Link } from "react-router-dom";
 import AddTeachers from "../../Pages/Teacher/AddTeacher";
 import { GetAllTeacher } from "../../Route";
+import { useSelector, useDispatch } from "react-redux";
+import { setTeacherData } from "../../../Store/slice";
+import { GetTeachers } from '../../../service/api';
 import axios from "axios";
 
 const TeacherDetails = () => {
-  const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [timeFilter, setTimeFilter] = useState("Last 30 days");
   const [selectedClass, setSelectedClass] = useState("all");
   const [showAddTeacher, setShowAddTeacher] = useState(false);
   const teachersPerPage = 10;
   const url = import.meta.env.VITE_API_BASE_URL;
+  const teachers = useSelector((state) => state.userData.TeacherData);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    document.title = "Teacher Details";
+  }, []);
+
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${url}${GetAllTeacher}`);
-
-        if (response.data.statusCode === 200) {
-          setTeachers(response.data.data.teachers);
+        const response = await GetTeachers(url);
+        if (response.status === 200 || response.status === 204 || response.status === 201) {
+          dispatch(setTeacherData(response.data.teachers));
         } else {
-          setError("Failed to fetch teachers");
+          setError(response.message);
         }
       } catch (err) {
         setError("Error connecting to the server");
@@ -44,11 +51,13 @@ const TeacherDetails = () => {
       }
     };
 
-    fetchTeachers();
+    if (teachers?.length === 0) {
+      fetchTeachers();
+    }
   }, []);
 
   // Filter teachers based on search and class
-  const filteredTeachers = teachers.filter(
+  const filteredTeachers = teachers?.filter(
     (teacher) =>
       teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
       (selectedClass === "all" ||
@@ -58,11 +67,11 @@ const TeacherDetails = () => {
   // Pagination
   const indexOfLastTeacher = currentPage * teachersPerPage;
   const indexOfFirstTeacher = indexOfLastTeacher - teachersPerPage;
-  const currentTeachers = filteredTeachers.slice(
+  const currentTeachers = filteredTeachers?.slice(
     indexOfFirstTeacher,
     indexOfLastTeacher
   );
-  const totalPages = Math.ceil(filteredTeachers.length / teachersPerPage);
+  const totalPages = Math.ceil(filteredTeachers?.length / teachersPerPage);
 
   const renderPaginationButtons = () => {
     const buttons = [];
@@ -307,7 +316,7 @@ const TeacherDetails = () => {
               </tr>
             </thead>
             <tbody>
-              {currentTeachers.map((teacher) => (
+              {currentTeachers?.map((teacher) => (
                 <tr
                   key={teacher._id}
                   className="border-b hover:bg-gray-50 transition-colors duration-150 animate-fade-in"

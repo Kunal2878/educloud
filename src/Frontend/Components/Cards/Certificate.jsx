@@ -22,6 +22,10 @@ const CertificateGenerator = () => {
   const certificateRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const url = import.meta.env.VITE_API_BASE_URL;
+  useEffect(() => {
+      document.title = "Generate Certificate";
+  }, []);
+
 
   useEffect(() => {
     fetchClasses();

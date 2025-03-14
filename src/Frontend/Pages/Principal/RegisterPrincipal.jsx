@@ -6,10 +6,15 @@ import Toast from "../../Components/Toast";
 import { education, educloud, onboarding } from "../../../assets";
 import axios from "axios";
 import {SignupPrincipal} from '../../Route'
+import Input from '../../Components/Elements/Input';
+import PasswordInput from '../../Components/Elements/PasswordInput';
+import { RegisterPrincipalAccount } from '../../../service/api';
+
 const RegisterPrincipal = () => {
   const {
     register,
     handleSubmit,
+    reset,
     watch,
     formState: { errors },
   } = useForm();
@@ -21,24 +26,33 @@ const RegisterPrincipal = () => {
   const [toastIcon, setToastIcon] = useState("");
   const url = import.meta.env.VITE_API_BASE_URL;
 
+  useEffect(() => {
+    document.title = "Create Your Account";
+}, []);
+
+
   const onSubmit = async (data) => {
     setLoading(true);
-    try {
-      const response = await axios.post(`${url}${SignupPrincipal}`, data);
-      if (response.status === 200||response.status === 204||response.status === 200||response.status === 201) {
-        setToastMessage("Registration successful");
+
+    const response = await RegisterPrincipalAccount(url, data);
+
+
+ 
+      if (response.status === 200 || response.status === 204 || response.status === 201) {
+        setToastMessage(response.message);
         setToastIcon("right");
         setShowToast(true);
-      } else {
-        setToastMessage("Registration failed, User may exist");
-        setToastIcon("wrong");
-        setShowToast(true);
-      }
-    } catch (error) {
-      setToastMessage("An error occurred during registration");
+        setTimeout(() => {
+                  window.location.href = "/login";
+                }, 2000);
+        
+      } 
+    else {
+      setToastMessage(response.message);
       setToastIcon("wrong");
       setShowToast(true);
-      console.error(error);
+      reset();
+     
     }
     setLoading(false);
   };
@@ -75,172 +89,83 @@ const RegisterPrincipal = () => {
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-10">
-                <div className="relative mb-7">
-                  <input
-                    id="fullName"
-                    type="text"
-                    className="h-11 w-full px-3 py-2 bg-transparent border-2 border-black-200 text-gray-600  rounded-md focus:outline   peer placeholder-transparent"
-                    placeholder="Full Name"
-                    {...register("name", { required: "Name is required" })}
-                  />
-                  <label
-                    htmlFor="fullName"
-                    className="absolute left-2 -top-6 flex items-center gap-2 text-base font-medium text-black transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-base"
-                  >
-                    <span className="text-danger">
-                      <User size={20} />
-                    </span>
-                    Full Name
-                  </label>
-                  {errors.name && (
-                    <p className="text-danger text-base mt-1">
-                      {errors.name.message}
-                    </p>
-                  )}
-                </div>
+                <Input
+                  id="fullName"
+                  type="text"
+                  label="Full Name"
+                  icon={User}
+                  register={register}
+                  name="name"
+                  errors={errors}
+                  validation={{
+                    required: "Name is required"
+                  }}
+                />
 
-                <div className="relative mb-7">
-                  <input
-                    id="email"
-                    type="email"
-                    className="h-11 w-full px-3 py-2 bg-transparent border-2 border-black-200 text-gray-600  rounded-md focus:outline   peer placeholder-transparent"
-                    placeholder="Email address"
-                    {...register("email", {
-                      required: "Email is required",
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "Invalid email address",
-                      },
-                    })}
-                  />
-                  <label
-                    htmlFor="email"
-                    className="absolute left-2 -top-6 flex items-center gap-2 text-base font-medium text-black transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-base"
-                  >
-                    <span className="text-danger">
-                      <Mail size={20} />
-                    </span>
-                    Email address
-                  </label>
-                  {errors.email && (
-                    <p className="text-danger text-base mt-1">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
+                <Input
+                  id="email"
+                  type="email"
+                  label="Email address"
+                  icon={Mail}
+                  register={register}
+                  name="email"
+                  errors={errors}
+                  validation={{
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  }}
+                />
 
-                <div className="relative mb-7">
-                  <input
-                    id="experience"
-                    type="number"
-                    className="h-11 w-full px-3 py-2 bg-transparent border-2 border-black-200 text-gray-600  rounded-md focus:outline   peer placeholder-transparent"
-                    placeholder="Experience"
-                    {...register("experience", {
-                      required: "Experience is required",
-                      min: {
-                        value: 0,
-                        message: "Experience cannot be negative",
-                      },
-                    })}
-                  />
-                  <label
-                    htmlFor="experience"
-                    className="absolute left-2 -top-6 flex items-center gap-2 text-base font-medium text-black transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-base"
-                  >
-                    <span className="text-danger">
-                      <CalendarDays size={20} />
-                    </span>
-                    Experience (in years)
-                  </label>
-                  {errors.experience && (
-                    <p className="text-danger text-base mt-1">
-                      {errors.experience.message}
-                    </p>
-                  )}
-                </div>
+                <Input
+                  id="experience"
+                  type="number"
+                  label="Experience (in years)"
+                  icon={CalendarDays}
+                  register={register}
+                  name="experience"
+                  errors={errors}
+                  validation={{
+                    required: "Experience is required",
+                    min: {
+                      value: 0,
+                      message: "Experience cannot be negative",
+                    },
+                  }}
+                />
 
-                <div className="relative mb-7">
-                  <input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    className="h-11 w-full px-3 py-2 bg-transparent border-2 border-black-200 text-gray-600  rounded-md focus:outline   peer placeholder-transparent"
-                    placeholder="Password"
-                    {...register("password", {
-                      required: "Password is required",
-                      minLength: {
-                        value: 8,
-                        message: "Password must be at least 8 characters",
-                      },
-                    })}
-                  />
-                  <label
-                    htmlFor="password"
-                    className="absolute left-3 -top-6 text-base flex items-center gap-2 font-medium text-black transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-base"
-                  >
-                    <span className="text-danger">
-                      <Lock size={20} />
-                    </span>
-                    Password
-                  </label>
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5 text-black" />
-                    ) : (
-                      <Eye className="h-5 w-5 text-black" />
-                    )}
-                  </button>
-                  {errors.password && (
-                    <p className="text-danger text-base mt-1">
-                      {errors.password.message}
-                    </p>
-                  )}
-                </div>
+                <PasswordInput
+                  id="password"
+                  label="Password"
+                  register={register}
+                  name="password"
+                  errors={errors}
+                  validation={{
+                    required: "Password is required",
+                    minLength: {
+                      value: 8,
+                      message: "Password must be at least 8 characters",
+                    },
+                  }}
+                />
 
-                <div className="relative mb-7">
-                  <input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    className="h-11 w-full px-3 py-2 bg-transparent border-2 border-black-200 text-gray-600  rounded-md focus:outline   peer placeholder-transparent"
-                    placeholder="Confirm Password"
-                    {...register("confirmPassword", {
-                      required: "Please confirm your password",
-                      validate: (val) => {
-                        if (watch("password") != val) {
-                          return "Passwords do not match";
-                        }
-                      },
-                    })}
-                  />
-                  <label
-                    htmlFor="confirmPassword"
-                    className="absolute left-3 -top-6 text-base flex items-center gap-2 font-medium text-black transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-base"
-                  >
-                    <span className="text-danger">
-                      <Lock size={20} />
-                    </span>
-                    Confirm Password
-                  </label>
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-5 w-5 text-black" />
-                    ) : (
-                      <Eye className="h-5 w-5 text-black" />
-                    )}
-                  </button>
-                  {errors.confirmPassword && (
-                    <p className="text-danger text-base mt-1">
-                      {errors.confirmPassword.message}
-                    </p>
-                  )}
-                </div>
+                <PasswordInput
+                  id="confirmPassword"
+                  label="Confirm Password"
+                  register={register}
+                  name="confirmPassword"
+                  errors={errors}
+                  validation={{
+                    required: "Please confirm your password",
+                    validate: (val) => {
+                      if (watch("password") != val) {
+                        return "Passwords do not match";
+                      }
+                    },
+                  }}
+                />
               </div>
 
               <div className="mt-8">
@@ -284,5 +209,4 @@ const RegisterPrincipal = () => {
     </div>
   );
 };
-
 export default RegisterPrincipal;

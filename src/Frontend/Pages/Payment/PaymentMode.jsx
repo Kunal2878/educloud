@@ -21,6 +21,9 @@ const PaymentMethodSelector = () => {
       label: 'Wallet' 
     }
   ];
+  useEffect(() => {
+      document.title = "Make Your Payments";
+  }, []);
 
   const renderPaymentForm = () => {
     switch(activeTab) {

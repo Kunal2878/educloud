@@ -4,9 +4,12 @@ import { UserCircle2, GraduationCap, Users } from "lucide-react";
 import { useSelector, useDispatch } from 'react-redux'
 import { setRole } from '../../Store/slice'
 
-const UserOption = () => {
-  const navigate = useNavigate();
+const UserOption = () => {;
   const dispatch = useDispatch()
+  useEffect(() => {
+      document.title = "Choose Your Option";
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex flex-col items-center justify-center p-4">
       <div className="text-center mb-12">

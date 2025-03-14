@@ -26,6 +26,7 @@ const AllExams = () => {
 
   useEffect(() => {
     fetchExams();
+    document.title = "Exam Details";
   }, []);
 
   const fetchExams = async () => {

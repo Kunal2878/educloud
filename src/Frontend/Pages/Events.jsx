@@ -39,6 +39,7 @@ const Events = () => {
   useEffect(() => {
     fetchEvents();
     fetchAnnouncements();
+    document.title = "Events and Announcements";
   }, []);
 
   useEffect(() => {

@@ -6,6 +6,7 @@ import Toast from "../../Components/Toast";
 import axios from 'axios';
 import {GetAllClass} from '../../Route'
 import {Upload,School} from 'lucide-react'
+
 const UploadTimeTable = () => {
   const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm()
   const [loading, setLoading] = useState(false)
@@ -16,6 +17,10 @@ const UploadTimeTable = () => {
   const user =  useSelector((state) => state.userData.user);
   const url=  import.meta.env.VITE_API_BASE_URL
   const token = Cookies.get('token')
+
+  useEffect(() => {
+      document.title = "Upload TimeTable";
+  }, []);
 
   useEffect(() => {
     const fetchClasses = async () => {

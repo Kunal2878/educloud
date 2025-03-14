@@ -248,6 +248,9 @@ const PerformanceDashboard = () => {
   const classes = ["Class A", "Class B", "Class C", "Class D"];
 
   useEffect(() => {
+    document.title = "Dashboard";
+}, []);
+  useEffect(() => {
     setIsLoading(true);
     setShowCharts(false);
 

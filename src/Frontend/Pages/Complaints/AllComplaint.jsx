@@ -11,7 +11,9 @@
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const url = import.meta.env.VITE_API_BASE_URL;
-
+    useEffect(() => {
+      document.title = "View Complaints";
+  }, []);
     useEffect(() => {
       fetchComplaints();
     }, [currentPage, searchQuery, statusFilter]);

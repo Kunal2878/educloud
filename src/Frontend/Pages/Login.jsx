@@ -1,14 +1,15 @@
-import { useState } from "react";
-import { Eye, EyeOff, LogIn, Mail, Lock } from "lucide-react";
-import CryptoJS from "crypto-js";
+
+import { useState, useEffect} from "react";
+import { LogIn, Mail, Lock } from "lucide-react";
 import Cookies from "js-cookie";
 import { useForm } from "react-hook-form";
 import Toast from "../Components/Toast";
 import { useSelector, useDispatch } from "react-redux";
 import { education, educloud, onboarding } from "../../assets";
-import axios from "axios";
-import {Link} from 'react-router-dom'
-import {LoginPrincipal,LoginStudent, LoginTeacher} from '../Route'
+import { Link } from 'react-router-dom';
+import { LoginUser } from '../../service/api';
+import Input from '../Components/Elements/Input';
+import PasswordInput from '../Components/Elements/PasswordInput';
 
 const Login = () => {
   const role = useSelector((state) => state.userData.role);
@@ -16,75 +17,54 @@ const Login = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastIcon, setToastIcon] = useState("");
   const url = import.meta.env.VITE_API_BASE_URL;
+  useEffect(() => {
+    document.title = "Login to EduCloud";
+}, []);
 
   const onSubmit = async (data) => {
     setLoading(true);
     setError("");
 
-    console.log(data);
-
-    try {
-      let endpoint = `${url}${LoginPrincipal}`;
-      if (role === "student") {
-        console.log("clicked here student");
-        endpoint = `${url}${LoginStudent}`;
-      } else if (role === "teacher") {
-        console.log("clicked here teacher");
-        endpoint = `${url}${LoginTeacher}`;
-      }
-
-      const response = await axios.post(endpoint, {
-        email: data.email,
-        password: data.password,
-      });
-
-      const responseData = response.data;
-      console.log("responseData", responseData);
-      if (response.status === 200) {
-        Cookies.set(
-          "token",
-          role === "student"
-            ? responseData.data.accessToken
-            : responseData.token,
-          { expires: 7 }
-        );
-        Cookies.set(
-          "user",
-          JSON.stringify(
-            role === "student"
-              ? responseData.data.student
-              : role === "teacher"
-              ? responseData.teacher
-              : responseData.user
-          ),
-          { expires: 7 }
-        );
-        setToastMessage("Login successful!"), setToastIcon("right");
-        setShowToast(true);
-        window.location.href = "/dashboard";
-      } else {
-        setToastMessage({
-          message: responseData.message || "Login failed",
-          iconName: "wrong",
-        });
-        setShowToast(true);
-      }
-    } catch (err) {
-      setToastMessage("Email or password is incorrect. Please try again."),
-        setToastIcon("wrong");
-      setShowToast(true);
-    } finally {
-      setLoading(false);
+    const payload = {
+      email: data.email,
+      password: data.password
     }
+
+    const response = await LoginUser(url, payload, role)
+    console.log(response.status)
+    if (response.status === 200 || response.status === 201 || response.status === 204) {
+      Cookies.set(
+        "token", response.data.token
+      );
+      Cookies.set(
+        "user",
+        JSON.stringify(
+          response.data.user
+        ),
+        { expires: 7 }
+      );
+      console.log(response.message)
+      setToastMessage(response.message), setToastIcon("right");
+      setShowToast(true);
+      window.location.href = "/dashboard";
+    }
+    else {
+      console.log(response.message)
+      setToastMessage(response.message),
+      setToastIcon("wrong");
+      setShowToast(true);
+      reset();
+    }
+    setLoading(false);
   };
 
   return (
@@ -111,63 +91,40 @@ const Login = () => {
               </h2>
               {role !== "principal" && (
                 <span className="text-purpleColor">
-                  Use the same paasword which was sent to your email before
+                  Use the same password which was sent to your email before
                 </span>
               )}
             </div>
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-10">
-              <div className="relative mb-7">
-                <input
-                  id="email"
-                  type="email"
-                  className="h-11 w-full px-3 py-2 bg-transparent border-2  border-black-200 text-black-300  rounded-md focus:outline   peer placeholder-transparent"
-                  placeholder="Email address"
-                  {...register("email", {
-                    required: true,
-                    pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  })}
-                />
-                <label
-                  htmlFor="email"
-                  className="absolute left-2 -top-6 flex items-center gap-2 text-base font-medium text-black transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-base"
-                >
-                  <span className="text-danger">
-                    <Mail size={20} />
-                  </span>
-                  Email address
-                </label>
-              </div>
-              <div className="relative mb-7">
-                <input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  className="h-11 w-full px-3 py-2 bg-transparent border-2  border-black-200 text-black-300 rounded-md shadow-sm focus:outline   peer placeholder-transparent"
-                  placeholder="Password"
-                  {...register("password", { required: true })}
-                />
-                <label
-                  htmlFor="password"
-                  className="absolute left-2 -top-6 text-base flex items-center gap-2 font-medium text-black transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-6 peer-focus:text-base"
-                >
-                  <span className="text-danger">
-                    <Lock size={20} />
-                  </span>
-                  Password
-                </label>
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-black" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-black" />
-                  )}
-                </button>
-              </div>
+              <Input
+                id="email"
+                type="email"
+                label="Email address"
+                icon={Mail}
+                register={register}
+                name="email"
+                errors={errors}
+                validation={{
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address"
+                  }
+                }}
+              />
+              
+              <PasswordInput
+                id="password"
+                label="Password"
+                register={register}
+                name="password"
+                errors={errors}
+                validation={{
+                  required: "Password is required"
+                }}
+              />
             </div>
 
             {error && (

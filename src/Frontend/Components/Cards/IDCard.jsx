@@ -17,9 +17,10 @@ const IDCardGenerator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const idCardRef = useRef(null);
   const url = import.meta.env.VITE_API_BASE_URL;
-
-  // Background image path - replace with actual path to your ID card template
   const bgImagePath = "/IDCard.png"; // Update this path
+  useEffect(() => {
+      document.title = "Generate ID Card";
+  }, []);
 
   useEffect(() => {
     fetchClasses();

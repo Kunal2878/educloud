@@ -12,7 +12,6 @@ import{PerformanceDashboard,Events,StudentAttendanceSystem,ProfilePage,
  
 import {
   Home,
-  AlignLeft,
   User,
   Users,
   BookOpen,
@@ -24,15 +23,12 @@ import {
   Clock,
   School,
   GraduationCap,
-  Pen,
-  Trophy,
   LogOut,
   ChevronRight,
   IndianRupee,
   ShieldAlert,
 } from "lucide-react";
-import { educloud, onboarding } from "../../../assets";
-// import { path } from 'framer-motion/client';
+
 
 const themeColors = {
   admin: "bg-purpleColor",

@@ -1,12 +1,18 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Toast from '../../Components/Toast'
 import axios from 'axios';
+
+
 
 const CreateExam = () => {
   const [examData, setExamData] = useState({
     name: "",
     date: "",
   });
+
+  useEffect(() => {
+    document.title = "Upload Exam TimeTable";
+}, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
