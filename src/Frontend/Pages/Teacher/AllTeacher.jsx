@@ -1,31 +1,29 @@
 import React, { useState, useEffect } from "react";
 import {
   Search,
-  Trash2,
-  PenSquare,
   GraduationCap,
   Plus,
   Loader,
   X,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 import AddTeachers from "../../Pages/Teacher/AddTeacher";
-import { GetAllTeacher } from "../../Route";
 import { useSelector, useDispatch } from "react-redux";
 import { setTeacherData } from "../../../Store/slice";
 import { GetTeachers } from '../../../service/api';
-import axios from "axios";
+import Table from "../../Components/Elements/Table";
+import Pagination from "../../Components/Elements/Pagination";
 
 const TeacherDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedClass, setSelectedClass] = useState("all");
   const [showAddTeacher, setShowAddTeacher] = useState(false);
-  const teachersPerPage = 10;
+  const [paginationData, setPaginationData] = useState({
+    currentPage: 1,
+    totalItems: 0,
+    totalPages: 0
+  });
   const url = import.meta.env.VITE_API_BASE_URL;
   const teachers = useSelector((state) => state.userData.TeacherData);
   const dispatch = useDispatch();
@@ -41,6 +39,11 @@ const TeacherDetails = () => {
         const response = await GetTeachers(url);
         if (response.status === 200 || response.status === 204 || response.status === 201) {
           dispatch(setTeacherData(response.data.teachers));
+          setPaginationData({
+            currentPage: response.data.pagination.currentPage,
+            totalItems: response.data.pagination.totalItems,
+            totalPages: response.data.pagination.totalPages
+          });
         } else {
           setError(response.message);
         }
@@ -51,135 +54,48 @@ const TeacherDetails = () => {
       }
     };
 
-    if (teachers?.length === 0) {
-      fetchTeachers();
-    }
+    fetchTeachers();
   }, []);
 
-  // Filter teachers based on search and class
-  const filteredTeachers = teachers?.filter(
-    (teacher) =>
-      teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      (selectedClass === "all" ||
-        teacher.assignedClasses.includes(selectedClass))
-  );
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
-  // Pagination
-  const indexOfLastTeacher = currentPage * teachersPerPage;
-  const indexOfFirstTeacher = indexOfLastTeacher - teachersPerPage;
-  const currentTeachers = filteredTeachers?.slice(
-    indexOfFirstTeacher,
-    indexOfLastTeacher
-  );
-  const totalPages = Math.ceil(filteredTeachers?.length / teachersPerPage);
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
 
-  const renderPaginationButtons = () => {
-    const buttons = [];
+  const columns = [
+    {
+      field: 'name',
+      headerName: "Teacher's Name",
+      renderCell: (row) => (
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-purple-100 rounded-full overflow-hidden flex flex-row justify-center items-center">
+            <GraduationCap size={20} />
+          </div>
+          <span>{row.name}</span>
+        </div>
+      ),
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+    },
+    {
+      field: 'salary',
+      headerName: 'Salary',
+      renderCell: (row) => row.salary || "-",
+    },
+  ];
 
-    buttons.push(
-      <button
-        key="prev"
-        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-        disabled={currentPage === 1}
-        className="px-3 py-1 rounded-lg bg-purple-100 text-purple-600 disabled:opacity-50"
-      >
-        <ChevronLeft size={20} />
-      </button>
-    );
+  const handleEditTeacher = (teacher) => {
+    console.log("Edit teacher:", teacher);
+  };
 
-    // Always show first page
-    buttons.push(
-      <button
-        key={1}
-        onClick={() => setCurrentPage(1)}
-        className={`px-3 py-1 rounded-lg ${
-          currentPage === 1
-            ? "bg-purpleColor text-white"
-            : "bg-purple-100 text-purpleColor"
-        }`}
-      >
-        1
-      </button>
-    );
-
-    // Show dots or numbers
-    if (currentPage > 3) {
-      buttons.push(
-        <button
-          key={2}
-          onClick={() => setCurrentPage(2)}
-          className="px-3 py-1 rounded-lg bg-lamaPurpleLight text-purpleColor"
-        >
-          2
-        </button>
-      );
-      buttons.push(
-        <span key="dots1" className="px-2">
-          ...
-        </span>
-      );
-    }
-
-    // Current page and surrounding pages
-    if (currentPage !== 1 && currentPage !== totalPages) {
-      buttons.push(
-        <button
-          key={currentPage}
-          onClick={() => setCurrentPage(currentPage)}
-          className="px-3 py-1 rounded-lg bg-purpleColor text-white"
-        >
-          {currentPage}
-        </button>
-      );
-    }
-
-    // Show dots before last page
-    if (currentPage < totalPages - 2) {
-      buttons.push(
-        <span key="dots2" className="px-2">
-          ...
-        </span>
-      );
-      buttons.push(
-        <button
-          key={totalPages - 1}
-          onClick={() => setCurrentPage(totalPages - 1)}
-          className="px-3 py-1 rounded-lg bg-lamaPurpleLight text-purpleColor"
-        >
-          {totalPages - 1}
-        </button>
-      );
-    }
-
-    // Always show last page
-    if (totalPages !== 1) {
-      buttons.push(
-        <button
-          key={totalPages}
-          onClick={() => setCurrentPage(totalPages)}
-          className={`px-3 py-1 rounded-lg ${
-            currentPage === totalPages
-              ? "bg-purpleColor text-white"
-              : "bg-lamaPurpleLight text-purpleColor"
-          }`}
-        >
-          {totalPages}
-        </button>
-      );
-    }
-
-    buttons.push(
-      <button
-        key="next"
-        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-        disabled={currentPage === totalPages}
-        className="px-3 py-1 rounded-lg bg-lamaPurpleLight text-purpleColor disabled:opacity-50"
-      >
-        <ChevronRight size={20} />
-      </button>
-    );
-
-    return buttons;
+  const handleDeleteTeacher = (teacher) => {
+    console.log("Delete teacher:", teacher);
   };
 
   if (loading) {
@@ -225,11 +141,7 @@ const TeacherDetails = () => {
         className={`
           fixed inset-0 flex items-center justify-center 
           bg-black bg-opacity-50 z-50 
-          ${
-            showAddTeacher
-              ? "opacity-100 visible"
-              : "opacity-0 invisible pointer-events-none"
-          }
+          ${showAddTeacher ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"}
           transition-all duration-300 ease-in-out
         `}
         onClick={(e) => {
@@ -239,127 +151,63 @@ const TeacherDetails = () => {
         }}
       >
         {showAddTeacher && (
-          <div
-            className={`
-        relative rounded-xl w-auto max-h-[90vh] overflow-y-auto 
-        bg-white 
-        [&::-webkit-scrollbar]:w-2 
-        [&::-webkit-scrollbar-track]:bg-transparent 
-        [&::-webkit-scrollbar-thumb]:bg-slate-200 
-        [&::-webkit-scrollbar-thumb]:rounded-full
-        ${
-          showAddTeacher
-            ? "opacity-100 scale-100 translate-y-0"
-            : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
-        }
-        transition-all duration-300 ease-in-out
-        transform origin-center
-      `}
-          >
+          <div className={`
+            relative rounded-xl w-auto max-h-[90vh] overflow-y-auto 
+            bg-white 
+            custom-scrollbar
+            ${showAddTeacher ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-4 pointer-events-none"}
+            transition-all duration-300 ease-in-out
+            transform origin-center
+          `}>
             <button
               onClick={() => setShowAddTeacher(false)}
-              className="absolute top-6 right-4 p-2 bg-white rounded-full text-black-300 hover:text-gray-800 transition-colors duration-200 transform hover:scale-110 "
+              className="absolute top-6 right-4 p-2 bg-white rounded-full text-black-300 hover:text-gray-800 transition-colors duration-200 transform hover:scale-110"
             >
               <X size={24} />
             </button>
             <AddTeachers onClose={() => setShowAddTeacher(false)} />
           </div>
-        )}{" "}
+        )}
       </div>
 
       <div className="bg-white rounded-lg shadow-lg p-4">
         {/* Filters */}
-        <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 mb-6 ">
+        <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 mb-6">
           <div className="relative flex-1 max-w-md bg-slate-100 text-gray-600">
             <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2  "
+              className="absolute left-3 top-1/2 transform -translate-y-1/2"
               size={20}
             />
             <input
               type="text"
               placeholder="Search by name"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearch}
               className="w-full pl-10 pr-4 py-2 border rounded-lg outline-none bg-primary-300 text-black-300 border-lamaSkyLight transition-all duration-200"
             />
           </div>
-
-          {/* <div className="flex gap-4">
-            <select
-              value={selectedClass}
-              onChange={(e) => setSelectedClass(e.target.value)}
-              className="p-2 mr-4 outline-none border rounded-lg bg-primary-300 text-black-300 border-lamaSkyLight transition-all duration-200"
-            >
-              <option value="all">All Classes</option>
-              <option value="class1">Class 1</option>
-              <option value="class2">Class 2</option>
-              <option value="class3">Class 3</option>
-            </select>
-          </div> */}
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto text-black-300 text-base">
-          <table className="w-full min-w-[768px] pb-10">
-            <thead className="bg-lamaPurpleLight">
-              <tr className="border-b">
-                <th className="p-4">
-                  <input
-                    type="checkbox"
-                    className="rounded w-4 h-4 bg-white accent-purpleColor"
-                  />
-                </th>
-                <th className="p-4 text-left">Teacher's Name</th>
-                <th className="p-4 text-left">Email</th>
-                <th className="p-4 text-left">Salary</th>
-                <th className="p-4 text-left">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentTeachers?.map((teacher) => (
-                <tr
-                  key={teacher._id}
-                  className="border-b hover:bg-gray-50 transition-colors duration-150 animate-fade-in"
-                >
-                  <td className="p-4">
-                    <input
-                      type="checkbox"
-                      className="rounded w-4 h-4 bg-white accent-purple-500"
-                    />
-                  </td>
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-purple-100 rounded-full overflow-hidden flex flex-row justify-center items-center">
-                        <GraduationCap size={20} />
-                      </div>
-                      <span className="">{teacher.name}</span>
-                    </div>
-                  </td>
-                  <td className="p-4 text-left">{teacher.email}</td>
-                  <td className="p-4 text-left">{teacher.salary || "-"}</td>
-                  <td className="p-4">
-                    <div className="flex justify-start gap-2">
-                      <button className="p-1 hover:text-danger transition-colors duration-200 transform hover:scale-110">
-                        <Trash2 size={18} />
-                      </button>
-                      <button className="p-1 hover:text-purpleColor transition-colors duration-200 transform hover:scale-110">
-                        <PenSquare size={18} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {/* Table Component */}
+        <Table
+          columns={columns}
+          data={teachers || []}
+          checkboxSelection={true}
+          actions={true}
+          onEdit={handleEditTeacher}
+          onDelete={handleDeleteTeacher}
+          extraClasses="m-4"
+        />
       </div>
 
-      {/* Pagination */}
-      <div className="bottom-0 max-w-screen-xl border-t p-4 flex justify-between items-center">
-        <div className="w-full flex justify-center items-center gap-2">
-          {renderPaginationButtons()}
-        </div>
-      </div>
+      {/* Pagination Component */}
+      {paginationData.totalPages > 0 && (
+        <Pagination
+          currentPage={paginationData.currentPage}
+          totalPages={paginationData.totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 };

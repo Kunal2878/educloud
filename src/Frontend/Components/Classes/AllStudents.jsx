@@ -1,19 +1,19 @@
+
 import React, { useState, useEffect } from "react";
 import {
   Search,
   Loader,
-  Trash2,
-  PenSquare,
   GraduationCap,
   Plus,
-  ChevronLeft,
-  ChevronRight,
   X,
 } from "lucide-react";
 import AddStudents from "../../Pages/Student/AddStudent";
 import { useSelector, useDispatch } from "react-redux";
 import { setStudentData } from "../../../Store/slice";
 import { GetStudents } from '../../../service/api';
+import Table from "../Elements/Table";
+import Pagination from "../Elements/Pagination";
+
 const StudentDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,162 +21,102 @@ const StudentDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [timeFilter, setTimeFilter] = useState("");
   const [showAddStudent, setShowAddStudent] = useState(false);
+  const [paginationData, setPaginationData] = useState({
+    currentPage: 1,
+    totalItems: 0,
+    totalPages: 0
+  });
   const students = useSelector((state) => state.userData.StudentData);
-  const studentsPerPage = 6;
   const url = import.meta.env.VITE_API_BASE_URL;
-  const dispatch = useDispatch(); 
-    useEffect(() => {
-      document.title = "Student Details";
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    document.title = "Student Details";
   }, []);
 
   useEffect(() => {
-   
     const fetchStudents = async () => {
-const response = await GetStudents(url)
-{
-  if (response.status === 200 || response.status === 204 || response.status === 201) {
-dispatch(setStudentData(response.data.students));
-// console.log(response.data.pagination)
-  } 
-  else {
-    setError(response.message);
-  }
-  setLoading(false);
-};
+      try {
+        const response = await GetStudents(url, currentPage, timeFilter, searchQuery);
+        if (response.status === 200 || response.status === 204 || response.status === 201) {
+          dispatch(setStudentData(response.data.students));
+          // Update pagination data from API response
+          setPaginationData({
+            currentPage: response.data.pagination.currentPage,
+            totalItems: response.data.pagination.totalItems,
+            totalPages: response.data.pagination.totalPages
+          });
+        } else {
+          setError(response.message);
+        }
+      } catch (err) {
+        setError(err.message || "Failed to fetch students");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-}
+    fetchStudents();
+  }, []);
 
-    if(students?.length === 0) {
-       fetchStudents();
-    }
-    }, []);
+  // Handle page change
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
-  // Filter students based on search and class
-  const filteredStudents = students?.filter((student) => {
-    const nameMatch = student.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const classMatch =
-      timeFilter === "" || student.studentClass?.className === timeFilter;
-    return nameMatch && classMatch;
-  });
+  // Handle search
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset to first page when searching
+  };
 
-  // Pagination
-  const indexOfLastStudent = currentPage * studentsPerPage;
-  const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-  const currentStudents = filteredStudents?.slice(
-    indexOfFirstStudent,
-    indexOfLastStudent
-  );
-  const totalPages = Math.ceil(filteredStudents?.length / studentsPerPage);
+  // Handle class filter
+  const handleClassFilter = (e) => {
+    setTimeFilter(e.target.value);
+    setCurrentPage(1); // Reset to first page when filtering
+  };
 
-  const renderPaginationButtons = () => {
-    const buttons = [];
+  // Table columns definition
+  const columns = [
+    {
+      field: 'name',
+      headerName: "Student's Name",
+      renderCell: (row) => (
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-lamaPurpleLight rounded-full overflow-hidden flex flex-row justify-center items-center">
+            <GraduationCap size={20} />
+          </div>
+          <span>{row.name}</span>
+        </div>
+      ),
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+    },
+    {
+      field: 'studentClass',
+      headerName: 'Class',
+      renderCell: (row) => row.studentClass?.className || "-",
+    },
+    {
+      field: 'parentName',
+      headerName: 'Parent Name',
+    },
+    {
+      field: 'parentContact',
+      headerName: 'Parent Contact',
+    },
+  ];
 
-    buttons.push(
-      <button
-        key="prev"
-        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-        disabled={currentPage === 1}
-        className="px-3 py-1 rounded-lg bg-lamaPurpleLight text-purpleColor disabled:opacity-50"
-      >
-        <ChevronLeft size={20} />
-      </button>
-    );
+  const handleEditStudent = (student) => {
+    // Implement edit functionality
+    console.log("Edit student:", student);
+  };
 
-    // Always show first page
-    buttons.push(
-      <button
-        key={1}
-        onClick={() => setCurrentPage(1)}
-        className={`px-3 py-1 rounded-lg ${
-          currentPage === 1
-            ? "bg-purpleColor text-white"
-            : "bg-lamaPurpleLight text-purpleColor"
-        }`}
-      >
-        1
-      </button>
-    );
-
-    // Show dots or numbers
-    if (currentPage > 3) {
-      buttons.push(
-        <button
-          key={2}
-          onClick={() => setCurrentPage(2)}
-          className="px-3 py-1 rounded-lg bg-lamaPurpleLight text-purpleColor"
-        >
-          2
-        </button>
-      );
-      buttons.push(
-        <span key="dots1" className="px-2">
-          ...
-        </span>
-      );
-    }
-
-    // Current page and surrounding pages
-    if (currentPage !== 1 && currentPage !== totalPages) {
-      buttons.push(
-        <button
-          key={currentPage}
-          onClick={() => setCurrentPage(currentPage)}
-          className="px-3 py-1 rounded-lg bg-purple-600 text-white"
-        >
-          {currentPage}
-        </button>
-      );
-    }
-
-    // Show dots before last page
-    if (currentPage < totalPages - 2) {
-      buttons.push(
-        <span key="dots2" className="px-2">
-          ...
-        </span>
-      );
-      buttons.push(
-        <button
-          key={totalPages - 1}
-          onClick={() => setCurrentPage(totalPages - 1)}
-          className="px-3 py-1 rounded-lg bg-purple-100 text-purple-600"
-        >
-          {totalPages - 1}
-        </button>
-      );
-    }
-
-    // Always show last page
-    if (totalPages !== 1) {
-      buttons.push(
-        <button
-          key={totalPages}
-          onClick={() => setCurrentPage(totalPages)}
-          className={`px-3 py-1 rounded-lg ${
-            currentPage === totalPages
-              ? "bg-purpleColor text-white"
-              : "bg-lamaPurpleLight text-purpleColor"
-          }`}
-        >
-          {totalPages}
-        </button>
-      );
-    }
-
-    buttons.push(
-      <button
-        key="next"
-        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-        disabled={currentPage === totalPages}
-        className="px-3 py-1 rounded-lg bg-lamaPurpleLight text-purpleColor disabled:opacity-50"
-      >
-        <ChevronRight size={20} />
-      </button>
-    );
-
-    return buttons;
+  const handleDeleteStudent = (student) => {
+    // Implement delete functionality
+    console.log("Delete student:", student);
   };
 
   if (loading) {
@@ -219,24 +159,21 @@ dispatch(setStudentData(response.data.students));
         {showAddStudent && (
           <div
             className={`
-        relative rounded-xl w-auto max-h-[90vh] overflow-y-auto 
-        bg-white
-        [&::-webkit-scrollbar]:w-2 
-        [&::-webkit-scrollbar-track]:bg-transparent 
-        [&::-webkit-scrollbar-thumb]:bg-slate-200 
-        [&::-webkit-scrollbar-thumb]:rounded-full
-        ${
-          showAddStudent
-            ? "opacity-100 scale-100 translate-y-0"
-            : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
-        }
-        transition-all duration-300 ease-in-out
-        transform origin-center
-      `}
+              relative rounded-xl w-auto max-h-[90vh] overflow-y-auto 
+              bg-white
+            custom-scrollbar
+              ${
+                showAddStudent
+                  ? "opacity-100 scale-100 translate-y-0"
+                  : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
+              }
+              transition-all duration-300 ease-in-out
+              transform origin-center
+            `}
           >
             <button
               onClick={() => setShowAddStudent(false)}
-              className="absolute top-6 right-4 p-2 bg-white rounded-full text-black-300  transition-colors duration-200 transform hover:scale-110 "
+              className="absolute top-6 right-4 p-2 bg-white rounded-full text-black-300 transition-colors duration-200 transform hover:scale-110"
             >
               <X size={24} />
             </button>
@@ -244,6 +181,7 @@ dispatch(setStudentData(response.data.students));
           </div>
         )}
       </div>
+      
       {/* Header */}
       <div className="flex flex-col md:flex-row text-black justify-between items-start md:items-center mb-[32px] p-2">
         <div className="mb-4 md:mb-0">
@@ -275,7 +213,7 @@ dispatch(setStudentData(response.data.students));
               type="text"
               placeholder="Search by name"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearch}
               className="h-11 w-full pl-10 pr-4 py-2 border rounded-lg bg-lamaSkyLight text-black-300 transition-all duration-200"
             />
           </div>
@@ -283,7 +221,7 @@ dispatch(setStudentData(response.data.students));
           <div className="flex gap-4 mr-4">
             <select
               value={timeFilter}
-              onChange={(e) => setTimeFilter(e.target.value)}
+              onChange={handleClassFilter}
               className="p-2 border rounded-lg bg-primary-300 text-black-300 border-lamaSkyLight transition-all duration-200"
             >
               <option value="">All Classes</option>
@@ -306,84 +244,32 @@ dispatch(setStudentData(response.data.students));
               <option value="Class 9A">Class 9A</option>
               <option value="Class 9B">Class 9B</option>
               <option value="Class 10A">Class 10A</option>
-              <option value="Class 10B">Class 10B</option>{" "}
+              <option value="Class 10B">Class 10B</option>
             </select>
           </div>
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto text-black-300 text-base bg-white m-4">
-          <table className="w-full min-w-[768px] pb-10">
-            <thead className="">
-              <tr className="border-b bg-lamaPurpleLight">
-                <th className="px-6 py-4">
-                  <input
-                    type="checkbox"
-                    className="rounded h-4 w-4 bg-white border-gray-300 text-purpleColor checked:bg-purple-500 checked:border-transparent"
-                  />
-                </th>
-                <th className="px-6 py-4 text-left ">Student's Name</th>
-                <th className="px-6 py-4 text-left">Email</th>
-                <th className="px-6 py-4 text-left">Class</th>
-                <th className="px-6 py-4 text-left">Parent Name</th>
-                <th className="px-6 py-4 text-left">Parent Contact</th>
-                <th className="px-6 py-4 text-left">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentStudents?.map((student) => (
-                <tr
-                  key={student._id}
-                  className="border-b hover:bg-gray-50 transition-colors duration-150 animate-fade-in"
-                >
-                  <td className="px-6 py-4">
-                    <input
-                      type="checkbox"
-                      className="rounded h-4 w-4 bg-white checked:border-transparent"
-                    />
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-lamaPurpleLight rounded-full overflow-hidden flex flex-row justify-center items-center">
-                        <GraduationCap size={20} />
-                      </div>
-                      <span className="">{student.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-left">{student.email}</td>
-                  <td className="px-6 py-4 text-left">
-                    {student.studentClass?.className || "-"}
-                  </td>
-                  <td className="px-6 py-4 text-left">
-                    {student.parentName || "-"}
-                  </td>
-                  <td className="px-6 py-4 text-left">
-                    {student.parentContact || "-"}
-                  </td>
-
-                  <td className="px-6 py-4">
-                    <div className="flex justify-start gap-2">
-                      <button className="p-1 hover:text-danger transition-colors duration-200 transform hover:scale-110">
-                        <Trash2 size={18} />
-                      </button>
-                      <button className="p-1 hover:text-purpleColor transition-colors duration-200 transform hover:scale-110">
-                        <PenSquare size={18} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {/* Table Component */}
+        <Table
+          columns={columns}
+          data={students || []}
+          checkboxSelection={true}
+          actions={true}
+          onEdit={handleEditStudent}
+          onDelete={handleDeleteStudent}
+          extraClasses="m-4"
+        />
+      
       </div>
 
-      {/* Pagination */}
-      <div className="bottom-0 left-0 right-0 flex justify-center items-center py-4">
-        <div className="flex items-center justify-center space-x-2">
-          {renderPaginationButtons()}
-        </div>
-      </div>
+      {/* Pagination Component */}
+      {paginationData.totalPages > 0 && (
+        <Pagination
+          currentPage={paginationData.currentPage}
+          totalPages={paginationData.totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 };

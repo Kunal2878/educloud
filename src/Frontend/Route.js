@@ -33,11 +33,12 @@ export const UploadExamTimeTable = 'principal/upload-exam-timetable'
 // Events
 export const CreateEvent = 'event/create-event'
 export const DeleteEvent = 'event/delete-events'
+export const GetAllEvents = 'event/getallevents'
 
 // Announcements
 export const CreateAnnouncement = 'announcement/create-announcement'
 export const DeleteAnnouncement = 'announcement/delete-announcement'
-
+export const GetAllAnnouncements = 'announcement/getallannouncements'
 //Complaints
 export const CreateComplaint = 'student-complain/create-complaint'
 export const GetAllComplaints= 'student-complain/getallcomplaints'

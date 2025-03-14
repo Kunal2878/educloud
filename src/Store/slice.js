@@ -9,7 +9,9 @@ const dataSlice = createSlice({
     ClassData:[],
     StudentData:[],
     TeacherData:[],
-    SubjectData:[]
+    SubjectData:[],
+    EventData:[],
+    AnnouncementData:[],
 
   },
   reducers: {
@@ -35,10 +37,16 @@ const dataSlice = createSlice({
     },
     setSubjectData:(state,action) => {
       state.SubjectData=action.payload
+    },
+    setEventData:(state,action) => {
+      state.EventData=action.payload
+    },
+    setAnnouncementData:(state,action) => {
+      state.AnnouncementData=action.payload
     }
    
   },
 })
 
-export const {setRole,setUser,setLoginData,setClassData,setStudentData,setTeacherData,setSubjectData} = dataSlice.actions
+export const {setRole,setUser,setLoginData,setClassData,setStudentData,setTeacherData,setSubjectData,setEventData,setAnnouncementData     } = dataSlice.actions
 export default dataSlice.reducer

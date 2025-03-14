@@ -1,21 +1,20 @@
+
 import { useState, useEffect } from "react";
 import Toast from "../Components/Toast";
 import Cookies from "js-cookie";
-import {
-  CreateEvent,
-  DeleteEvent,
-  CreateAnnouncement,
-  DeleteAnnouncement,
-} from "../../Frontend/Route";
-import axios from "axios";
-import { X, Plus } from "lucide-react"; // Make sure to import these icons
+import { X, Plus } from "lucide-react";
+import { useSelector, useDispatch } from "react-redux";
+import { setEventData, setAnnouncementData } from "../../Store/slice";
+import { CreateEventAPI, CreateAnnouncementAPI, DeleteEventAPI, DeleteAnnouncementAPI, GetAllEventsAPI, GetAllAnnouncementsAPI } from '../../service/api';
 
 const Events = () => {
   const token = Cookies.get("token");
   const url = import.meta.env.VITE_API_BASE_URL;
+  const dispatch = useDispatch(); // Added missing dispatch declaration
 
-  const [events, setEvents] = useState([]);
-  const [announcements, setAnnouncements] = useState([]);
+  const events = useSelector((state) => state.userData.EventData);
+  const announcements = useSelector((state) => state.userData.AnnouncementData);
+  
   const [selectedEvents, setSelectedEvents] = useState([]);
   const [selectedAnnouncements, setSelectedAnnouncements] = useState([]);
   const [activeTab, setActiveTab] = useState("events");
@@ -53,73 +52,80 @@ const Events = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get(`${url}event/getallevents`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("events: ", response.data.data.events);
-      setEvents(response.data.data.events || []);
+      setIsLoading(true);
+      const response = await GetAllEventsAPI(url, token);
+      if (response.status === 200 || response.status === 204 || response.status === 201) {
+        dispatch(setEventData(response.data.events));
+      } else {
+        setToastMessage(response.message);
+        setToastIcon("wrong");
+        setShowToast(true);
+      }
     } catch (error) {
-      setToastMessage("Error fetching events");
+      setToastMessage("Failed to fetch events");
       setToastIcon("wrong");
       setShowToast(true);
-      setEvents([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const fetchAnnouncements = async () => {
     try {
-      const response = await axios.get(
-        `${url}announcement/getallannouncements`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setAnnouncements(response.data || []);
+      setIsLoading(true);
+      const response = await GetAllAnnouncementsAPI(url, token);
+      if (response.status === 200 || response.status === 204 || response.status === 201) {
+        dispatch(setAnnouncementData(response.data));
+      } else {
+        setToastMessage(response.message);
+        setToastIcon("wrong");
+        setShowToast(true);
+      }
     } catch (error) {
-      setToastMessage("Error fetching announcements");
+      setToastMessage("Failed to fetch announcements");
       setToastIcon("wrong");
       setShowToast(true);
-      setAnnouncements([]);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleEventChange = (e) => {
+    const { name, value } = e.target;
+    setNewEvent(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleAnnouncementChange = (e) => {
+    const { name, value } = e.target;
+    setNewAnnouncement(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleEventSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        `${url}event/create-event`,
-        newEvent,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (
-        response.status === 200 ||
-        response.status === 201 ||
-        response.status === 204
-      ) {
+      const response = await CreateEventAPI(url, newEvent, token);
+      if (response.status === 200 || response.status === 201 || response.status === 204) {
         await fetchEvents();
         setNewEvent({ title: "", content: "", eventDate: "", venue: "" });
         setToastMessage("Event created successfully");
         setToastIcon("right");
-        setShowToast(true);
-        setShowEventForm(false); // Close the form after successful submission
+        setShowEventForm(false);
       } else {
-        throw new Error("Failed to create event");
+        setToastMessage(response.message);
+        setToastIcon("wrong");
       }
     } catch (error) {
-      console.log(error);
-      setToastMessage("Error creating event");
+      setToastMessage("Failed to create event");
       setToastIcon("wrong");
-      setShowToast(true);
     } finally {
+      setShowToast(true);
       setIsLoading(false);
     }
   };
@@ -128,36 +134,22 @@ const Events = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        `${url}announcement/create-announcement`,
-        newAnnouncement,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (
-        response.status === 200 ||
-        response.status === 201 ||
-        response.status === 204
-      ) {
+      const response = await CreateAnnouncementAPI(url, newAnnouncement, token);
+      if (response.status === 200 || response.status === 201 || response.status === 204) {
         await fetchAnnouncements();
         setNewAnnouncement({ title: "", description: "" });
         setToastMessage("Announcement created successfully");
         setToastIcon("right");
-        setShowToast(true);
-        setShowAnnouncementForm(false); // Close the form after successful submission
+        setShowAnnouncementForm(false);
       } else {
-        throw new Error("Failed to create announcement");
+        setToastMessage(response.message);
+        setToastIcon("wrong");
       }
     } catch (error) {
-      console.log(error);
-      setToastMessage("Error creating announcement");
+      setToastMessage("Failed to create announcement");
       setToastIcon("wrong");
-      setShowToast(true);
     } finally {
+      setShowToast(true);
       setIsLoading(false);
     }
   };
@@ -182,28 +174,21 @@ const Events = () => {
     if (selectedEvents.length === 0) return;
     setIsLoading(true);
     try {
-      const response = await axios.delete(`${url}event/delete-events`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        data: { eventIds: selectedEvents },
-      });
-      if (
-        response.status === 200 ||
-        response.status === 201 ||
-        response.status === 204
-      ) {
+      const response = await DeleteEventAPI(url, { eventIds: selectedEvents }, token);
+      if (response.status === 200 || response.status === 201 || response.status === 204) {
         await fetchEvents();
         setSelectedEvents([]);
         setToastMessage("Events deleted successfully");
         setToastIcon("right");
-        setShowToast(true);
+      } else {
+        setToastMessage(response.message);
+        setToastIcon("wrong");
       }
     } catch (error) {
-      setToastMessage("Error deleting events");
+      setToastMessage("Failed to delete events");
       setToastIcon("wrong");
-      setShowToast(true);
     } finally {
+      setShowToast(true);
       setIsLoading(false);
     }
   };
@@ -212,31 +197,21 @@ const Events = () => {
     if (selectedAnnouncements.length === 0) return;
     setIsLoading(true);
     try {
-      const response = await axios.delete(
-        `${url}announcement/delete-announcement`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          data: { announcementIds: selectedAnnouncements },
-        }
-      );
-      if (
-        response.status === 200 ||
-        response.status === 201 ||
-        response.status === 204
-      ) {
+      const response = await DeleteAnnouncementAPI(url, { announcementIds: selectedAnnouncements }, token);
+      if (response.status === 200 || response.status === 201 || response.status === 204) {
         await fetchAnnouncements();
         setSelectedAnnouncements([]);
         setToastMessage("Announcements deleted successfully");
         setToastIcon("right");
-        setShowToast(true);
+      } else {
+        setToastMessage(response.message);
+        setToastIcon("wrong");
       }
     } catch (error) {
-      setToastMessage("Error deleting announcements");
+      setToastMessage("Failed to delete announcements");
       setToastIcon("wrong");
-      setShowToast(true);
     } finally {
+      setShowToast(true);
       setIsLoading(false);
     }
   };
@@ -264,10 +239,7 @@ const Events = () => {
         className={`
           relative rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto 
           bg-white p-6
-          [&::-webkit-scrollbar]:w-2 
-          [&::-webkit-scrollbar-track]:bg-transparent 
-          [&::-webkit-scrollbar-thumb]:bg-slate-200 
-          [&::-webkit-scrollbar-thumb]:rounded-full
+      .custom-scrollbar
           ${
             showEventForm
               ? "opacity-100 scale-100 translate-y-0"
@@ -279,7 +251,7 @@ const Events = () => {
       >
         <button
           onClick={() => setShowEventForm(false)}
-          className="absolute top-6 right-6 p-2 bg-white rounded-full text-black hover:scale-110"
+          className="absolute top-6 right-6 p-2 bg-white rounded-full text-black-300 hover:scale-110"
         >
           <X size={24} />
         </button>
@@ -289,38 +261,34 @@ const Events = () => {
         <form onSubmit={handleEventSubmit} className="mb-[16px]">
           <input
             type="text"
+            name="title"
             placeholder="Event Title"
-            className="w-full mb-4 p-2 border-2 rounded bg-transparent border-black-100 focus:outline focus:outline-2 focus:outline-primaryBlue text-gray-600"
+            className="w-full mb-4 p-2 rounded bg-transparent border-2 border-black-200 text-black-300 focus:outline"
             value={newEvent.title}
-            onChange={(e) =>
-              setNewEvent({ ...newEvent, title: e.target.value })
-            }
+            onChange={handleEventChange}
           />
           <textarea
+            name="content"
             placeholder="Event Description"
-            className="w-full h-32 mb-4 p-2 border-2 rounded bg-transparent border-black-100 focus:outline focus:outline-2 focus:outline-primaryBlue text-gray-600 resize-none"
+            className="w-full h-32 mb-4 p-2 border-2 rounded bg-transparent border-black-200 text-black-300 focus:outline resize-none"
             value={newEvent.content}
-            onChange={(e) =>
-              setNewEvent({ ...newEvent, content: e.target.value })
-            }
+            onChange={handleEventChange}
           />
           <input
             type="text"
+            name="eventDate"
             placeholder="Date"
-            className="w-full mb-4 p-2 border-2 rounded bg-transparent border-black-100 focus:outline focus:outline-2 focus:outline-primaryBlue text-gray-600"
+            className="w-full mb-4 p-2 border-2 rounded bg-transparent border-black-200 text-black-300 focus:outline"
             value={newEvent.eventDate}
-            onChange={(e) =>
-              setNewEvent({ ...newEvent, eventDate: e.target.value })
-            }
+            onChange={handleEventChange}
           />
           <input
             type="text"
+            name="venue"
             placeholder="Location"
-            className="w-full mb-4 p-2 border-2 rounded bg-transparent border-black-100 focus:outline focus:outline-2 focus:outline-primaryBlue text-gray-600"
+            className="w-full mb-4 p-2 border-2 rounded bg-transparent border-black-200 text-black-300 focus:outline"
             value={newEvent.venue}
-            onChange={(e) =>
-              setNewEvent({ ...newEvent, venue: e.target.value })
-            }
+            onChange={handleEventChange}
           />
           <button
             type="submit"
@@ -361,10 +329,7 @@ const Events = () => {
         className={`
           relative rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto 
           bg-white p-6
-          [&::-webkit-scrollbar]:w-2 
-          [&::-webkit-scrollbar-track]:bg-transparent 
-          [&::-webkit-scrollbar-thumb]:bg-slate-200 
-          [&::-webkit-scrollbar-thumb]:rounded-full
+       .custom-scrollbar
           ${
             showAnnouncementForm
               ? "opacity-100 scale-100 translate-y-0"
@@ -376,7 +341,7 @@ const Events = () => {
       >
         <button
           onClick={() => setShowAnnouncementForm(false)}
-          className="absolute top-6 right-6 p-2 bg-white rounded-full text-black hover:scale-110"
+          className="absolute top-6 right-6 p-2 bg-white rounded-full text-black-300 hover:scale-110"
         >
           <X size={24} />
         </button>
@@ -385,39 +350,33 @@ const Events = () => {
         {/* Announcement Form */}
         <form onSubmit={handleAnnouncementSubmit} className="space-y-[16px]">
           <div className="text-left space-y-2">
-            <label htmlFor="announcementTitle" className="h3 cursor-pointer">
+            <label htmlFor="title" className="h3 cursor-pointer">
               Title
             </label>
             <input
               type="text"
+              id="title"
+              name="title"
               placeholder="Announcement Title"
-              className="w-full mb-4 p-2 border-2 rounded bg-transparent border-black-100 focus:outline focus:outline-2 focus:outline-black-200 text-black"
+              className="w-full mb-4 p-2 border-2 rounded bg-transparent border-black-100 focus:outline focus:outline-2 focus:outline-black-200 text-black-300"
               value={newAnnouncement.title}
-              onChange={(e) =>
-                setNewAnnouncement({
-                  ...newAnnouncement,
-                  title: e.target.value,
-                })
-              }
+              onChange={handleAnnouncementChange}
             />
           </div>
           <div className="text-left space-y-2">
             <label
-              htmlFor="announcementDescription"
+              htmlFor="description"
               className="h3 cursor-pointer"
             >
               Description
             </label>
             <textarea
+              id="description"
+              name="description"
               placeholder="Announcement Description"
-              className="w-full h-32 mb-4 p-2 border-2 rounded bg-transparent border-black-100 focus:outline focus:outline-2 focus:outline-black-200 text-black resize-none"
+              className="w-full h-32 mb-4 p-2 border-2 rounded bg-transparent border-black-100 focus:outline focus:outline-2 focus:outline-black-200 text-black-300 resize-none"
               value={newAnnouncement.description}
-              onChange={(e) =>
-                setNewAnnouncement({
-                  ...newAnnouncement,
-                  description: e.target.value,
-                })
-              }
+              onChange={handleAnnouncementChange}
             />
           </div>
           <button
@@ -443,14 +402,13 @@ const Events = () => {
       {/* Modals */}
       <EventFormModal />
       <AnnouncementFormModal />
-
-      {/* Tabs */}
-      <div className="flex mb-4 border-b">
-        <button
+        {/* Tabs */}
+     <div className="flex mb-4 border-b">
+       <button
           className={`px-4 py-2 subtitle-1 transition-all duration-300 ${
             activeTab === "events"
               ? "border-b-2 border-purpleColor text-purpleColor"
-              : "hover:text-purpleColor"
+              : "hover:text-purpleColor text-black-300"
           }`}
           onClick={() => setActiveTab("events")}
         >
@@ -460,7 +418,7 @@ const Events = () => {
           className={`px-4 py-2 subtitle-1 ml-4 transition-all duration-300 ${
             activeTab === "announcements"
               ? "border-b-2 border-purpleColor text-purpleColor"
-              : "hover:text-purpleColor"
+              : "hover:text-purpleColor  text-black-300"
           }`}
           onClick={() => setActiveTab("announcements")}
         >
@@ -508,7 +466,7 @@ const Events = () => {
           <div className="bg-white rounded-lg p-4 w-full">
             <div className="space-y-4">
               {Array.isArray(events) && events.length > 0 ? (
-                events.map((event, index) => (
+                events?.map((event, index) => (
                   <div
                     key={event._id}
                     className={`p-4 rounded-lg flex items-start ${
@@ -526,11 +484,11 @@ const Events = () => {
                       onChange={() => handleEventSelection(event._id)}
                     />
                     <div className="flex-1 text-left">
-                      <h3 className="text-lg font-bold text-black">
+                      <h3 className="text-lg font-bold text-black-300">
                         {event.title}
                       </h3>
-                      <p className="text-sm text-black mt-1">{event.content}</p>
-                      <div className="flex justify-between mt-2 text-sm text-black">
+                      <p className="text-sm text-black-300 mt-1">{event.content}</p>
+                      <div className="flex justify-between mt-2 text-sm text-black-300">
                         <span>{event.eventDate}</span>
                         <span>{event.venue}</span>
                       </div>
@@ -584,7 +542,7 @@ const Events = () => {
           <div className="bg-white rounded-lg p-4 w-full">
             <div className="space-y-4">
               {Array.isArray(announcements) && announcements.length > 0 ? (
-                announcements.map((announcement) => (
+                announcements?.map((announcement) => (
                   <div
                     key={announcement._id}
                     className="border p-4 rounded-lg shadow-sm"
@@ -601,10 +559,10 @@ const Events = () => {
                         checked={selectedAnnouncements.includes(
                           announcement._id
                         )}
-                        className="h-5 w-5 focus:outline focus:outline-2 focus:outline-primaryBlue"
+                        className="h-5 w-5 focus:outline focus:outline-2 focus:outline-black-200"
                       />
                     </div>
-                    <p className="mt-2 text-gray-600">
+                    <p className="mt-2 text-black-300">
                       {announcement.description}
                     </p>
                   </div>

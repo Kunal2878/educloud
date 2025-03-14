@@ -6,15 +6,15 @@ import {
   GraduationCap,
   Plus,
   Loader,
-  X,
-  ChevronLeft,
-  ChevronRight,
-  Eye,
+  X,Eye,
 } from "lucide-react";
 import RegisterClass from "./RegisterClass";
 import { useSelector, useDispatch } from "react-redux";
 import { setClassData } from "../../../Store/slice";
 import { GetClasses } from '../../../service/api';
+import Table from "../../Components/Elements/Table";
+import Pagination from "../../Components/Elements/Pagination";
+
 const AllClasses = () => {
   const url = import.meta.env.VITE_API_BASE_URL;
   const [loading, setLoading] = useState(true);
@@ -22,12 +22,16 @@ const AllClasses = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showAddTeacher, setShowAddTeacher] = useState(false);
-  const classesPerPage = 10;
+  const [paginationData, setPaginationData] = useState({
+    currentPage: 1,
+    totalItems: 0,
+    totalPages: 0
+  });
   const classes = useSelector((state) => state.userData.ClassData);
   const dispatch = useDispatch();
 
   useEffect(() => {
-      document.title = "All Classes";
+    document.title = "All Classes";
   }, []);
 
   useEffect(() => {
@@ -35,6 +39,11 @@ const AllClasses = () => {
       const response = await GetClasses(url);
       if (response.status === 200 || response.status === 204 || response.status === 201) {
         dispatch(setClassData(response.data.classes));
+        setPaginationData({
+          currentPage: 1,
+          totalItems: response.data.classes.length,
+          totalPages: Math.ceil(response.data.classes.length / 10)
+        });
       } else {
         setError(response.message);
       }
@@ -46,60 +55,59 @@ const AllClasses = () => {
     }
   }, []);
 
-  const filteredClasses = classes?.filter(
-    (classItem) =>
-      classItem.className.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (classItem.classTeacher?.name || "")
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
-  );
-
-  const indexOfLastClass = currentPage * classesPerPage;
-  const indexOfFirstClass = indexOfLastClass - classesPerPage;
-  const currentClasses = filteredClasses?.slice(
-    indexOfFirstClass,
-    indexOfLastClass
-  );
-  const totalPages = Math.ceil(filteredClasses.length / classesPerPage);
-
   const handleTimeTableClick = (url) => {
     if (url) {
       window.open(url, "_blank");
     }
   };
 
-  const renderPaginationButtons = () => {
-    const buttons = [];
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
-    buttons.push(
-      <button
-        key="prev"
-        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-        disabled={currentPage === 1}
-        className="px-3 py-1 rounded-lg bg-purple-100 text-purple-600 disabled:opacity-50"
-      >
-        <ChevronLeft size={20} />
-      </button>
-    );
+  const columns = [
+    {
+      field: 'classTeacher',
+      headerName: 'Class Teacher',
+      renderCell: (row) => (
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-purple-100 rounded-full overflow-hidden flex flex-row justify-center items-center">
+            <GraduationCap size={20} />
+          </div>
+          <span>{row.classTeacher?.name || "-"}</span>
+        </div>
+      ),
+    },
+    {
+      field: 'className',
+      headerName: 'Class',
+    },
+    {
+      field: 'section',
+      headerName: 'Section',
+    },
+    {
+      field: 'timeTable',
+      headerName: 'Time Table',
+      renderCell: (row) => (
+        row.timeTable && (
+          <button
+            onClick={() => handleTimeTableClick(row.timeTable)}
+            className="p-1 hover:text-purpleColor transition-colors duration-200 transform hover:scale-110"
+          >
+            <Eye size={18} />
+          </button>
+        )
+      ),
+    },
+  ];
 
-    buttons.push(
-      <span key="current" className="px-3 py-1">
-        {currentPage} of {totalPages || 1}
-      </span>
-    );
+  const handleEditClass = (classItem) => {
+    console.log("Edit class:", classItem);
+  };
 
-    buttons.push(
-      <button
-        key="next"
-        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-        disabled={currentPage === totalPages}
-        className="px-3 py-1 rounded-lg bg-lamaPurpleLight text-purpleColor disabled:opacity-50"
-      >
-        <ChevronRight size={20} />
-      </button>
-    );
-
-    return buttons;
+  const handleDeleteClass = (classItem) => {
+    console.log("Delete class:", classItem);
   };
 
   if (loading) {
@@ -144,11 +152,7 @@ const AllClasses = () => {
         className={`
           fixed inset-0 flex items-center justify-center 
           bg-black bg-opacity-50 z-50 
-          ${
-            showAddTeacher
-              ? "opacity-100 visible"
-              : "opacity-0 invisible pointer-events-none"
-          }
+          ${showAddTeacher ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"}
           transition-all duration-300 ease-in-out
         `}
         onClick={(e) => {
@@ -158,23 +162,14 @@ const AllClasses = () => {
         }}
       >
         {showAddTeacher && (
-          <div
-            className={`
-        relative rounded-lg w-auto max-h-[90vh] overflow-y-auto 
-        bg-white 
-        [&::-webkit-scrollbar]:w-2 
-        [&::-webkit-scrollbar-track]:bg-transparent 
-        [&::-webkit-scrollbar-thumb]:bg-slate-200 
-        [&::-webkit-scrollbar-thumb]:rounded-full
-        ${
-          showAddTeacher
-            ? "opacity-100 scale-100 translate-y-0"
-            : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
-        }
-        transition-all duration-300 ease-in-out
-        transform origin-center
-      `}
-          >
+          <div className={`
+            relative rounded-lg w-auto max-h-[90vh] overflow-y-auto 
+            bg-white 
+            custom-scrollbar
+            ${showAddTeacher ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-4 pointer-events-none"}
+            transition-all duration-300 ease-in-out
+            transform origin-center
+          `}>
             <button
               onClick={() => setShowAddTeacher(false)}
               className="absolute top-6 lg:top-6 right-6 p-2 bg-white rounded-full text-black-300 hover:text-gray-800 transition-colors duration-200 transform hover:scale-110"
@@ -203,79 +198,24 @@ const AllClasses = () => {
           </div>
         </div>
 
-        <div className="overflow-x-auto text-black-300 text-base">
-          <table className="w-full min-w-[768px] pb-10">
-            <thead className="bg-lamaPurpleLight">
-              <tr className="border-b">
-                <th className="p-4">
-                  <input
-                    type="checkbox"
-                    className="rounded w-4 h-4 bg-white accent-purpleColor"
-                  />
-                </th>
-                <th className="p-4 text-left">Class Teacher</th>
-                <th className="p-4 text-left">Class</th>
-                <th className="p-4 text-left">Section</th>
-                <th className="p-4 text-left">Time Table</th>
-                <th className="p-4 text-left">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentClasses?.map((classItem) => (
-                <tr
-                  key={classItem._id}
-                  className="border-b hover:bg-gray-50 transition-colors duration-150 animate-fade-in"
-                >
-                  <td className="p-4">
-                    <input
-                      type="checkbox"
-                      className="rounded w-4 h-4 bg-white accent-purple-500"
-                    />
-                  </td>
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-purple-100 rounded-full overflow-hidden flex flex-row justify-center items-center">
-                        <GraduationCap size={20} />
-                      </div>
-                      <span>{classItem.classTeacher?.name || "-"}</span>
-                    </div>
-                  </td>
-                  <td className="p-4 text-left">{classItem.className}</td>
-                  <td className="p-4 text-left">{classItem.section}</td>
-                  <td className="p-4 text-left">
-                    {classItem.timeTable && (
-                      <button
-                        onClick={() =>
-                          handleTimeTableClick(classItem.timeTable)
-                        }
-                        className="p-1 hover:text-purpleColor transition-colors duration-200 transform hover:scale-110"
-                      >
-                        <Eye size={18} />
-                      </button>
-                    )}
-                  </td>
-                  <td className="p-4">
-                    <div className="flex justify-start gap-2">
-                      <button className="p-1 hover:text-danger transition-colors duration-200 transform hover:scale-110">
-                        <Trash2 size={18} />
-                      </button>
-                      <button className="p-1 hover:text-purpleColor transition-colors duration-200 transform hover:scale-110">
-                        <PenSquare size={18} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          columns={columns}
+          data={classes || []}
+          checkboxSelection={true}
+          actions={true}
+          onEdit={handleEditClass}
+          onDelete={handleDeleteClass}
+          extraClasses="m-4"
+        />
       </div>
 
-      <div className="bottom-0 max-w-screen-xl border-t p-4 flex justify-between items-center">
-        <div className="w-full flex justify-center items-center gap-2">
-          {renderPaginationButtons()}
-        </div>
-      </div>
+      {paginationData.totalPages > 0 && (
+        <Pagination
+          currentPage={paginationData.currentPage}
+          totalPages={paginationData.totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 };

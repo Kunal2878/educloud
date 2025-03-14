@@ -5,7 +5,7 @@ import {
     GetTeacherAttendance, SignupStudent,LoginStudent,GetAllStudent,CreateClass,
     GetAllClass, CreateSubject, GetAllSubject, CreateExam, GetAllExams, UploadExamTimeTable, CreateEvent, DeleteEvent,
     CreateAnnouncement,DeleteAnnouncement,CreateComplaint,GetAllComplaints,
-    DeleteComplaint
+    DeleteComplaint, GetAllEvents, GetAllAnnouncements
   } from '../Frontend/Route';
 
 export const LoginUser = async (url, payload, role) => {
@@ -258,18 +258,29 @@ export const GetStudents = async (url) => {
   }
 };
 
-export const CreateClassAPI = async (url, payload) => {
+export const CreateClassAPI = async (url, payload,token) => {
   try {
     const endpoint = `${url}${CreateClass}`;
-    const response = await axios.post(endpoint, payload);
-    
+      const response = await axios.post(endpoint, payload, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });    
     if (response.status === 200 || response.status === 201  || response.status === 204) {
       return {
         status: response.status,
         data: response.data,
         message: "Class created successfully!"
       };
-    } else {
+    } 
+    else if (response.status === 401) {
+      return {
+        status: response.status,
+        data: null,
+        message: "Invalid token"
+      };
+    }
+    else {
       return {
         status: response.status,
         data: null,
@@ -454,16 +465,25 @@ export const UploadExamTimeTableAPI = async (url, payload) => {
   }
 };
 
-export const CreateEventAPI = async (url, payload) => {
+export const CreateEventAPI = async (url, payload,token) => {
   try {
     const endpoint = `${url}${CreateEvent}`;
-    const response = await axios.post(endpoint, payload);
-    
-    if (response.status === 200 || response.status === 201) {
+      const response = await axios.post(endpoint, payload, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });    
+    if (response.status === 200 || response.status === 201 || response.status === 204) {
       return {
         status: response.status,
         data: response.data,
         message: "Event created successfully!"
+      };
+    } else if (response.status === 401) {
+      return {
+        status: response.status,
+        data: null,
+        message: "Invalid token"
       };
     } else {
       return {
@@ -481,17 +501,63 @@ export const CreateEventAPI = async (url, payload) => {
     };
   }
 };
+export const GetAllEventsAPI = async (url,token) => {
+  try {
+    const endpoint = `${url}${GetAllEvents}`;
+      const response = await axios.get(endpoint, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });    
+    if (response.status === 200 || response.status === 201 || response.status === 204) {
+      return {
+        status: response.status,
+        data: response.data,
+        message: "Events retrieved successfully!"
+      };
+    } else if (response.status === 401) {
+      return {
+        status: response.status,
+        data: null,
+        message: "Invalid token"
+      };
+    } else {
+      return {
+        status: response.status,
+        data: null,
+        message: "Failed to retrieve events."
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      status: 400,
+      data: null,
+      message: "Failed to retrieve events."
+    };
+  }
+};
 
-export const DeleteEventAPI = async (url, eventId) => {
+export const DeleteEventAPI = async (url, eventId,token) => {
   try {
     const endpoint = `${url}${DeleteEvent}/${eventId}`;
-    const response = await axios.delete(endpoint);
+    const response = await axios.delete(endpoint, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     
-    if (response.status === 200) {
+    if (response.status === 200 || response.status === 201 || response.status === 204) {
       return {
         status: response.status,
         data: response.data,
         message: "Event deleted successfully!"
+      };
+    } else if (response.status === 401) {
+      return {
+        status: response.status,
+        data: null,
+        message: "Invalid token"
       };
     } else {
       return {
@@ -510,16 +576,26 @@ export const DeleteEventAPI = async (url, eventId) => {
   }
 };
 
-export const CreateAnnouncementAPI = async (url, payload) => {
+export const CreateAnnouncementAPI = async (url, payload, token) => {
   try {
     const endpoint = `${url}${CreateAnnouncement}`;
-    const response = await axios.post(endpoint, payload);
+    const response = await axios.post(endpoint, payload, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     
-    if (response.status === 200 || response.status === 201) {
+    if (response.status === 200 || response.status === 201 || response.status === 204) {
       return {
         status: response.status,
         data: response.data,
         message: "Announcement created successfully!"
+      };
+    } else if (response.status === 401) {
+      return {
+        status: response.status,
+        data: null,
+        message: "Invalid token"
       };
     } else {
       return {
@@ -537,17 +613,64 @@ export const CreateAnnouncementAPI = async (url, payload) => {
     };
   }
 };
+export const GetAllAnnouncementsAPI = async (url, token) => {
+  try {
+    const endpoint = `${url}${GetAllAnnouncements}`;
+    const response = await axios.get(endpoint, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (response.status === 200 || response.status === 201 || response.status === 204) {
+      return {
+        status: response.status,
+        data: response.data,
+        message: "Announcements retrieved successfully!"
+      };
+    } else if (response.status === 401) {
+      return {
+        status: response.status,
+        data: null,
+        message: "Invalid token"
+      };
+    } else {
+      return {
+        status: response.status,
+        data: null,
+        message: "Failed to retrieve announcements."
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      status: 400,
+      data: null,
+      message: "Failed to retrieve announcements."
+    };
+  }
+};
 
-export const DeleteAnnouncementAPI = async (url, announcementId) => {
+export const DeleteAnnouncementAPI = async (url, announcementId, token) => {
   try {
     const endpoint = `${url}${DeleteAnnouncement}/${announcementId}`;
-    const response = await axios.delete(endpoint);
+    const response = await axios.delete(endpoint, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     
-    if (response.status === 200) {
+    if (response.status === 200 || response.status === 201 || response.status === 204) {
       return {
         status: response.status,
         data: response.data,
         message: "Announcement deleted successfully!"
+      };
+    } else if (response.status === 401) {
+      return {
+        status: response.status,
+        data: null,
+        message: "Invalid token"
       };
     } else {
       return {
@@ -560,14 +683,8 @@ export const DeleteAnnouncementAPI = async (url, announcementId) => {
   catch (err) {
     console.log(err);
     return {
-      status: 400,catch (err) {
-        console.log(err);
-        return {
-          status: 400,
-          data: null,
-          message: "Failed to create announcement."
-        };
-      }
-    }
-  }
-}
+      status: 400,
+      data: null,
+      message: "Failed to delete announcement."
+    };
+  }}

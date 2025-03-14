@@ -385,20 +385,21 @@ const Nav = ({ children, path }) => {
    
   }
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [userType, setUserType] = useState("admin");
-  const name = useSelector((state) => state.userData.name);
-  const email = useSelector((state) => state.userData.email);
-  const role = useSelector((state) => state.userData.role);
-
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col overflow-auto custom-scrollbar">
       <Sidebar
         isOpen={sidebarOpen}
         role={user.role}
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
       />
       <NavBar User={User} onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
-      <div className={`w-full min-h-screen absolute top-0 mt-5`}>
+      {/* <div className={`w-full min-h-screen absolute top-0 mt-5`}> */}
+
+      <div className={`
+        w-full min-h-screen mt-5 pt-16
+        transition-all duration-300 ease-in-out
+        ${sidebarOpen ? 'lg:ml-72' : 'ml-0'}
+      `}>
         {path === "/dashboard" && <PerformanceDashboard />}
         {path === "/mark-attendance" && <StudentAttendanceSystem />}
         {path === "/profile" && <ProfilePage />}
