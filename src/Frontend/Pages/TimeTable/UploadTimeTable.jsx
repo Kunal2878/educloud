@@ -245,7 +245,7 @@ const UploadTimeTable = () => {
         />
       )}
       
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl mx-auto bg-white rounded-lg p-8 transition-all duration-300">
+      <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl mx-auto bg-white rounded-lg p-8 transition-all duration-300 ">
         <h2 className="h2 text-xl md:text-2xl text-left font-bold mb-8 md:mb-12 mt-4 text-black-300">
           Upload Time Table
         </h2>

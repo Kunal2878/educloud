@@ -13,10 +13,12 @@
     export const SignupStudent = 'student/register'
     export const LoginStudent = 'student/login'
     export const GetAllStudent = 'student/getallstudents'
+    export const GetStudentByID = "student/getstudentbyid"
 
     // Class endpoints
     export const CreateClass = 'class/register'
     export const GetAllClass = 'class/all-classes'
+    export const GetStudentByClass = "student/getstudentbyclassid"
 
 
 

@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
-import { GetAllClass } from "../../Route";
-import {User} from 'lucide-react'
+import { User } from 'lucide-react';
 import { Document, Page, Image, pdf, StyleSheet } from '@react-pdf/renderer';
 import domToImage from 'dom-to-image';
+import { useSelector, useDispatch } from "react-redux";
+import { setClassData } from "../../../Store/slice";
+import { GetClasses, GetStudentByClassAPI, GetStudentByIDAPI } from '../../../service/api';
+import Table from "../../Components/Elements/Table";
 
 const IDCardGenerator = () => {
-  const [classes, setClasses] = useState([]);
+  const classes = useSelector((state) => state.userData.ClassData);
   const [selectedClass, setSelectedClass] = useState("");
   const [students, setStudents] = useState([]);
   const [student, setStudent] = useState([]);
@@ -17,9 +19,15 @@ const IDCardGenerator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const idCardRef = useRef(null);
   const url = import.meta.env.VITE_API_BASE_URL;
-  const bgImagePath = "/IDCard.png"; // Update this path
+  const dispatch = useDispatch();
+  const [paginationData, setPaginationData] = useState({
+    currentPage: 1,
+    totalItems: 0,
+    totalPages: 0
+  });
+
   useEffect(() => {
-      document.title = "Generate ID Card";
+    document.title = "Generate ID Card";
   }, []);
 
   useEffect(() => {
@@ -43,48 +51,42 @@ const IDCardGenerator = () => {
 
   const fetchClasses = async () => {
     setLoading(true);
-    try {
-      const response = await axios.get(`${url}${GetAllClass}`);
-      setClasses(response.data.data.classes);
-    } catch (error) {
-      console.error("Error fetching classes:", error);
-      setMessage("Failed to fetch classes");
-    } finally {
-      setLoading(false);
+    const response = await GetClasses(url);
+    if (response.status === 200 || response.status === 204 || response.status === 201) {
+      dispatch(setClassData(response.data.classes));
+      setPaginationData({
+        currentPage: 1,
+        totalItems: response.data.classes.length,
+        totalPages: Math.ceil(response.data.classes.length / 10)
+      });
+    } else {
+      setMessage(response.message);
     }
+    setLoading(false);
   };
 
-const fetchStudents = async (classId) => {
+  const fetchStudents = async (classId) => {
     setLoading(true);
-    try {
-      const response = await axios.get(`${url}student/getstudentbyclassid/${classId}`);
-      setStudents(response.data.data.students);
-    } catch (error) {
-      console.error("Error fetching students:", error);
-      setMessage("Failed to fetch students");
+    const response = await GetStudentByClassAPI(url, classId);
+    if (response.status === 200 || response.status === 204 || response.status === 201) {
+      setStudents(response.data.students);
+    } else {
+      setMessage(response.message);
       setStudents([]);
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const fetchStudentById = async (studentId) => {
     setLoading(true);
-    try {
-      console.log(studentId)
-      const response = await axios.get(
-        `https://school-backend-ocze.onrender.com/api/v1/student/getstudentbyid/${studentId}`
-      );
-   
-      setStudent(response.data.data.student);
-      
-    } catch (error) {
-      console.error("Error fetching student:", error);
-      setMessage("Failed to fetch student");
+    const response = await GetStudentByIDAPI(url, studentId);
+    if (response.status === 200 || response.status === 204 || response.status === 201) {
+      setStudent(response.data.student);
+    } else {
+      setMessage(response.message);
       setStudents([]);
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const handleClassChange = (e) => {
@@ -112,8 +114,8 @@ const fetchStudents = async (classId) => {
       justifyContent: 'center',
     },
     idCard: {
-      width: '400px',  // Adjust these dimensions to maintain 9:13 ratio
-      height: '580px', // while keeping the card at a reasonable size
+      width: '800px',
+      height: '1160px',
       alignSelf: 'center',
     }
   });
@@ -121,6 +123,7 @@ const fetchStudents = async (classId) => {
   const generateIDCard = async (student) => {
     setIsLoading(true);
     try {
+      console.log(student._id)
       await fetchStudentById(student._id);
       
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -157,6 +160,58 @@ const fetchStudents = async (classId) => {
     }
   };
 
+ 
+  // Define columns for the Table component
+  const columns = [
+    {
+      field: 'index',
+      headerName: '#',
+      renderCell: (row, index) => index + 1
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+    },
+    {
+      field: 'rollNumber',
+      headerName: 'Roll Number',
+    },
+    {
+      field: 'name',
+      headerName: 'Name',
+    }
+  ];
+
+  // Custom row render function that includes our checkbox logic
+  const customRowRender = (student, index) => (
+    <tr
+      key={student._id}
+      className="border-b hover:bg-gray-50 transition-colors duration-150 animate-fade-in"
+    >
+      <td className="px-6 py-4">
+        <input
+          type="checkbox"
+          className="w-4 h-4 rounded border-gray-300"
+          checked={selectedStudents.some(s => s._id === student._id)}
+          onChange={() => handleCheckboxChange(student)}
+        />
+      </td>
+      <td className="px-6 py-4 text-left">{index + 1}</td>
+      <td className="px-6 py-4 text-left">{student.email || "-"}</td>
+      <td className="px-6 py-4 text-left">{student.rollNumber || "-"}</td>
+      <td className="px-6 py-4 text-left">{student.name}</td>
+      <td className="px-6 py-4 text-left">
+        <button 
+          className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition-colors"
+          onClick={() => generateIDCard(student)}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Generating...' : 'Generate'}
+        </button>
+      </td>
+    </tr>
+  );
+
   return (
     <div className="sm:px-16 px-6 sm:py-16 py-10 min-h-screen">
       <div className="flex flex-col md:flex-row text-black justify-between items-start md:items-center mb-6 p-2">
@@ -168,14 +223,6 @@ const fetchStudents = async (classId) => {
           </div>
         </div>
         <div>
-          {selectedStudents.length > 0 && (
-            <button
-              onClick={generateMultipleIDCards}
-              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Generate Selected ({selectedStudents.length})
-            </button>
-          )}
         </div>
       </div>
 
@@ -208,132 +255,141 @@ const fetchStudents = async (classId) => {
           <div className="mt-4">
             <h2 className="text-lg font-medium mb-4">Student List</h2>
 
-            <div className="overflow-x-auto text-black-300 text-base bg-white m-4">
-              <table className="w-full min-w-[768px] pb-10">
-                <thead className="">
-                  <tr className="border-b bg-lamaPurpleLight">
-                    <th className="px-6 py-4 text-left">Select</th>
-                    <th className="px-6 py-4 text-left">#</th>
-                    <th className="px-6 py-4 text-left">Email</th>
-                    <th className="px-6 py-4 text-left">Roll Number</th>
-                    <th className="px-6 py-4 text-left">Name</th>
-                    <th className="px-6 py-4 text-left">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td colSpan="6" className="px-6 py-4 text-center">
-                        Loading...
-                      </td>
-                    </tr>
-                  ) : students.length === 0 ? (
-                    <tr>
-                      <td colSpan="6" className="px-6 py-4 text-left">
-                        No students found
-                      </td>
-                    </tr>
-                  ) : (
-                    students.map((student, index) => (
-                      <tr
-                        key={student._id}
-                        className="border-b hover:bg-gray-50 transition-colors duration-150 animate-fade-in"
-                      >
-                        <td className="px-6 py-4 text-left">
-                          <input
-                            type="checkbox"
-                            className="w-4 h-4 rounded border-gray-300"
-                            checked={selectedStudents.some(s => s._id === student._id)}
-                            onChange={() => handleCheckboxChange(student)}
-                          />
-                        </td>
-                        <td className="px-6 py-4 text-left">{index + 1}</td>
-                        <td className="px-6 py-4 text-left">
-                          {student.email || "-"}
-                        </td>
-                        <td className="px-6 py-4 text-left">
-                          {student.rollNumber || "-"}
-                        </td>
-                        <td className="px-6 py-4 text-left">{student.name}</td>
-                        <td className="px-6 py-4 text-left">
-                          <button 
-                            className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition-colors"
-                            onClick={() => generateIDCard(student)}
-                            disabled={isLoading}
-                          >
-                            {isLoading ? 'Generating...' : 'Generate'}
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+            {loading ? (
+              <div className="text-center py-4 text-black-200">Loading...</div>
+            ) : students.length === 0 ? (
+              <div className="px-6 py-4 text-left text-black-200">No students found</div>
+            ) : (
+              <Table
+                columns={columns}
+                data={students}
+                checkboxSelection={true}
+                actions={true}
+                customRowRender={customRowRender}
+                extraClasses="m-4"
+              />
+            )}
           </div>
         )}
+
         <div className="mb-8">
-  <h2 className="text-xl font-semibold mb-4">ID Card Preview</h2>
-  <div className="border rounded-md p-4 bg-gray-50 flex justify-center">
-    <div
-      ref={idCardRef}
-      className="relative w-full max-w-sm aspect-[9/13] bg-white text-black"
-      style={{
-        backgroundImage: "url('/IDCard.png')",
-        backgroundSize: '100% 100%',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        fontFamily: "'Roboto', sans-serif"
-      }}
-    >
-      {/* Organization Logo */}
-      <div className="absolute" style={{ top: '5%', left: '5%' }}>
-        {/* Logo will be part of the background image */}
-      </div>
-      
-      {/* Profile Photo */}
-      <div className="absolute" style={{ top: '22%', left: '50%', transform: 'translateX(-50%)' }}>
-        {userPhoto ? (
-          <img 
-            src={userPhoto} 
-            alt="Profile Photo" 
-            className="rounded-full w-20 h-20 object-cover border-4 border-blue-600" 
-          />
-        ) : (
-          <div className="rounded-full w-20 h-20 bg-gray-200 flex items-center justify-center">
-            <User size={32} />
+          <h2 className="text-xl font-semibold mb-4">ID Card Preview</h2>
+          <div 
+          ref={idCardRef}
+          className="border rounded-md p-4 bg-gray-50 flex flex-col justify-center items-center gap-8">
+            
+
+            <div
+            
+              className="relative w-full max-w-sm aspect-[9/13] bg-white text-black"
+              style={{
+                backgroundImage: "url('/IDCard.png')",
+                backgroundSize: '100% 100%',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                fontFamily: "'Roboto', sans-serif"
+              }}
+              >
+              {/* Organization Logo */}
+              <div className="absolute" style={{ top: '5%', left: '5%' }}>
+                {/* Logo will be part of the background image */}
+              </div>
+              
+              {/* Profile Photo */}
+              <div className="absolute" style={{ top: '22%', left: '50%', transform: 'translateX(-50%)' }}>
+                {userPhoto ? (
+                  <img 
+                    src={userPhoto} 
+                    alt="Profile Photo" 
+                    className="rounded-full w-20 h-20 object-cover border-4 border-blue-600" 
+                  />
+                ) : (
+                  <div className="rounded-full w-20 h-20 bg-gray-200 flex items-center justify-center">
+                    <User size={32} />
+                  </div>
+                )}
+              </div>
+              
+              {/* Name and Position */}
+              <div className="absolute w-full text-center" style={{ top: '45%' }}>
+                <h2 className="text-xl font-bold text-black">{student.name || 'FULL NAME'}</h2>
+              </div>
+              
+              {/* User Details */}
+              <div className="absolute w-full px-4" style={{ top: '55%' }}>
+                <div className="flex justify-between mb-1">
+                  <span className="font-medium">Admission No</span>
+                  <span>: {student.admissionNo || '1234567890'}</span>
+                </div>
+                <div className="flex justify-between mb-1">
+                  <span className="font-medium">Class</span>
+                  <span> {student.studentClass?.className || 'eg-1A'}</span>
+                </div>
+                <div className="flex justify-between mb-1">
+                  <span className="font-medium">Parent</span>
+                  <span> {student.parentName || 'Parent'}</span>
+                </div>
+                <div className="flex justify-between mb-1">
+                  <span className="font-medium"> Parent Phone No.</span>
+                  <span> {student.parentContact || '+123-456-7890'}</span>
+                </div>
+              </div>
+              
+              {/* Footer Elements */}
+              <div className="absolute w-full bottom-20 right-0 flex flex-row justify-end">
+                <span className="right-0 mr-8 font-bold"> Sign. of Principal</span>
+              </div>
+
+
+              </div>
+        
+
+              {/* Backside */}
+
+
+              <div
+    
+              className="relative w-full max-w-sm aspect-[9/13] bg-white text-black"
+              style={{
+                backgroundImage: "url('/IDCard.png')",
+                backgroundSize: '100% 100%',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                fontFamily: "'Roboto', sans-serif"
+              }}
+              >
+              {/* Organization Logo */}
+              <div className="absolute" style={{ top: '5%', left: '5%' }}>
+                {/* Logo will be part of the background image */}
+              </div>
+              
+          
+              {/* Name and Position */}
+            
+              <div className="mt-6 absolute "style={{ top: '45%', left: '20%' }}>
+                <p className="text-sm">EduCloud School, School Road, City</p>
+                <p className="text-sm">Phone: +1-234-567-8900</p>
+                <p className="text-sm">Email: info@educloud.com</p>
+              </div>
+              
+           
+
+
+              </div>
+
+
+
+
+              <div>
+
+              
+              </div>
+
           </div>
-        )}
-      </div>
-      
-      {/* Name and Position */}
-      <div className="absolute w-full text-center" style={{ top: '45%' }}>
-        <h2 className="text-xl font-bold text-black">{student.name || 'FULL NAME'}</h2>
-      </div>
-      
-      {/* User Details */}
-      <div className="absolute w-full px-4" style={{ top: '55%' }}>
-        <div className="flex justify-between mb-1">
-          <span className="font-medium">Admission No</span>
-          <span>: {student.admissionNo || '1234567890'}</span>
         </div>
-        <div className="flex justify-between mb-1">
-          <span className="font-medium">E-mail</span>
-          <span>: {student.email || 'user@example.com'}</span>
-        </div>
-        <div className="flex justify-between mb-1">
-          <span className="font-medium">Phone</span>
-          <span>: {student.parentContact || '+123-456-7890'}</span>
-        </div>
-      </div>
-      
-      {/* Footer Elements */}
-      <div className="absolute w-full bottom-0">
-        {/* Wave design will be part of the background image */}
       </div>
     </div>
-  </div>
-</div>      </div>
-    </div>  );};
+  );
+};
 
 export default IDCardGenerator;

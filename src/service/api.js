@@ -5,7 +5,7 @@ import {
     GetTeacherAttendance, SignupStudent,LoginStudent,GetAllStudent,CreateClass,
     GetAllClass, CreateSubject, GetAllSubject, CreateExam, GetAllExams, UploadExamTimeTable, CreateEvent, DeleteEvent,
     CreateAnnouncement,DeleteAnnouncement,CreateComplaint,GetAllComplaints,
-    DeleteComplaint, GetAllEvents, GetAllAnnouncements
+    DeleteComplaint, GetAllEvents, GetAllAnnouncements,GetStudentByClass,GetStudentByID
   } from '../Frontend/Route';
 
 export const LoginUser = async (url, payload, role) => {
@@ -257,6 +257,72 @@ export const GetStudents = async (url) => {
     };
   }
 };
+
+export const GetStudentByClassAPI = async (url,classId) => {
+  try {
+    const endpoint = `${url}${GetStudentByClass}/${classId}`;
+    const response = await axios.get(endpoint);
+    
+    if (response.status === 200 || response.status === 201 || response.status === 204) {
+     
+      return {
+        status: response.status,
+        data: response.data.data,
+        message: "Students fetched successfully!"
+      };
+    } else {
+      console.log(response.status)
+      return {
+        status: response.status,
+        data: null,
+        message: "Failed to fetch students."
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      status: 400,
+      data: null,
+      message: "Failed to fetch students."
+    };
+  }
+};
+export const GetStudentByIDAPI = async (url,studentID) => {
+  try {
+    const endpoint = `${url}${GetStudentByID}/${studentID}`;
+    const response = await axios.get(endpoint);
+    
+    if (response.status === 200 || response.status === 201 || response.status === 204) {
+     
+      return {
+        status: response.status,
+        data: response.data.data,
+        message: "Students fetched successfully!"
+      };
+    } else {
+      console.log(response.status)
+      return {
+        status: response.status,
+        data: null,
+        message: "Failed to fetch students."
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      status: 400,
+      data: null,
+      message: "Failed to fetch students."
+    };
+  }
+};
+
+
+
+
+
+
+
 
 export const CreateClassAPI = async (url, payload,token) => {
   try {
