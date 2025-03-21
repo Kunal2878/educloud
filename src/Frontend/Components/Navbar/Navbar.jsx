@@ -215,7 +215,7 @@ const Sidebar = ({ isOpen, role, onMenuClick }) => {
         id: "my-time-table",
         path: "/my-time-table",
       },
-      { icon: FileText, label: "My Exams", id: "my-exams", path: "/my-exams" },
+      // { icon: FileText, label: "My Exams", id: "my-exams", path: "/my-exams" },
       { icon: Award, label: "My Results", id: "results", path: "/my-results" },
       { icon: ShieldAlert, label: "My Complaints", id: "complaints", path: "/my-complaints" },
     ],
