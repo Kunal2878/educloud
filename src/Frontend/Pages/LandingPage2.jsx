@@ -34,7 +34,6 @@ const token= Cookies.get("token")
           </div>
         </div>
       </nav>
-
       {/* Hero Section */}
       <section className="container mx-auto sm:px-16 px-6 sm:py-16 py-10 relative z-10">
         <div className="flex flex-col md:flex-row items-center">

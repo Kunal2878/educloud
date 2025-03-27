@@ -57,9 +57,6 @@ const StudentDetails = () => {
         }
         setClassData(response.data.classes);
         setSelectedClass(response.data.classes[0]?._id);
-        setShowToast(true);
-        setToastMessage(response.message);
-        setToastType('success');
       }
       else {
         console.error("Error fetching classes:", error);
@@ -152,15 +149,7 @@ useEffect(() => {
         </div>
       ),
     },
-    {
-      field: 'email',
-      headerName: 'Email',
-    },
-    {
-      field: 'studentClass',
-      headerName: 'Class',
-      renderCell: (row) => row.studentClass?.className || "-",
-    },
+
     {
       field: 'parentName',
       headerName: 'Parent Name',
@@ -203,7 +192,6 @@ useEffect(() => {
   }
 
  
-console.log(isStudentUpdate)
   return (
     <div className="sm:px-16 px-6 sm:py-16 py-10 min-h-screen">
       {/* Add Student Modal */}
