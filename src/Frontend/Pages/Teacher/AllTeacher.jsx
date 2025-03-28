@@ -247,8 +247,6 @@ const TeacherDetails = () => {
       </div>
 
       <div className="bg-white rounded-lg shadow-lg p-4">
-        {/* Filters */}
-       
 
         {/* Table Component */}
         <Table
@@ -261,16 +259,31 @@ const TeacherDetails = () => {
           extraClasses="m-4"
         />
 
-        {showFailure && (
-          <div className="flex items-center justify-center mt-4">
-            <img
-              src={oops}
-              alt="Failure"
-              className="w-[300px] h-[200px] sm:w-[400px] sm:h-[250px] md:w-[500px] md:h-[300px] lg:w-[600px] lg:h-[350px] border-2 rounded-md"
-            />
-          </div>
-        )}
-      </div>
+{teachers.length === 0 && (
+
+<div className="flex flex-col items-center justify-center mt-4 p-4 ">
+  
+              <p className="text-gray-500 text-lg mb-6">No teachers available yet, be the first to create one</p>
+
+</div>       
+ )}
+
+</div>
+
+{teachers.length === 0 && (
+
+<div className="flex flex-col items-center justify-center mt-4 p-4 ">
+  
+           
+  
+  <img
+    src={oops}
+    alt="Failure"
+    className="w-[300px] h-[200px] sm:w-[400px] sm:h-[250px] md:w-[500px] md:h-[300px] lg:w-[600px] lg:h-[350px]  rounded-lg"
+  />
+</div>        
+)}
+
 
       {/* Pagination Component */}
       {paginationData.totalPages > 0 && (

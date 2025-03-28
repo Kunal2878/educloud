@@ -21,7 +21,7 @@ import {
 import { PieChart, Pie, Cell } from "recharts";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser,setStudentCount,setTeacherCount } from "../../Store/slice";
-import {   GetAllStudentCountAPI, GetAllTeacherCountAPI } from '../../service/api';
+import { GetAllStudentCountAPI, GetAllTeacherCountAPI } from '../../service/api';
 
 const PerformanceDashboard = () => {
   const url = import.meta.env.VITE_API_BASE_URL;
@@ -30,14 +30,14 @@ const PerformanceDashboard = () => {
   const StudentCount= useSelector((state) => state.userData.StudentCount);
   const TeacherCount= useSelector((state) => state.userData.TeacherCount);
   const StudentData = [
-    { name: "Performance", value: "85%", Icon: TrendingUp },
-    { name: "Days present", value: 2, Icon: Calendar },
-    { name: "feedback", value: "Excellent", Icon: GraduationCap },
+    { name: "Performance", value: "", Icon: TrendingUp },
+    { name: "Days present", value: "", Icon: Calendar },
+    { name: "feedback", value: "", Icon: GraduationCap },
   ];
   const TeachData = [
-    { name: "Performance", value: "95%", Icon: TrendingUp },
-    { name: "Leave records", value: "2 Days", Icon: Calendar },
-    { name: "feedback", value: "Excellent", Icon: GraduationCap },
+    { name: "Performance", value: "", Icon: TrendingUp },
+    { name: "Leave records", value: "", Icon: Calendar },
+    { name: "feedback", value: "", Icon: GraduationCap },
   ];
   const PrincipalData = [
     { name: "Students", value: `${StudentCount}`, Icon: GraduationCap },
@@ -45,8 +45,8 @@ const PerformanceDashboard = () => {
     { name: "Earnings", value: "Under Maintenance", Icon: IndianRupee },
   ];
   const [selectedClass, setSelectedClass] = useState("Class A");
-  const [selectedDate, setSelectedDate] = useState("2024-05-05");
-  const [isLoading, setIsLoading] = useState(true);
+  const [selectedDate,  setSelectedDate] = useState("2024-05-05");
+  const [isLoading,  setIsLoading] = useState(true);
   const [showCharts, setShowCharts] = useState(false);
 
   const MALE_COLOR = "#8B31FF";
@@ -70,15 +70,6 @@ const PerformanceDashboard = () => {
           { name: "Pending", value: 25 },
         ];
 
-  const financialData = [
-    { year: "2020", revenue: 1200000, expenses: 800000 },
-    { year: "2021", revenue: 1500000, expenses: 1000000 },
-    { year: "2022", revenue: 1800000, expenses: 1200000 },
-    { year: "2023", revenue: 2100000, expenses: 1400000 },
-    { year: "2024", revenue: 2300000, expenses: 1600000 },
-  ];
-
-  const classes = ["Class A", "Class B", "Class C", "Class D"];
 
   useEffect(() => {
     document.title = "Dashboard";
@@ -277,21 +268,6 @@ const PerformanceDashboard = () => {
         </div>
       </div>
 
-      {user.role === "principal" && (
-        <div
-          className="mt-12 bg-white p-4 rounded-lg shadow transform transition-all duration-500 ease-out"
-          style={{
-            opacity: showCharts ? 1 : 0,
-            transform: `translateY(${showCharts ? 0 : "20px"})`,
-            transitionDelay: "500ms",
-          }}
-        >
-
-
-          
-        
-        </div>
-      )}
     </div>
   );
 };

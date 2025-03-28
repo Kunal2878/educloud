@@ -310,7 +310,7 @@ const Sidebar = ({ isOpen, role, onMenuClick }) => {
         path: "/my-time-table",
       },
       // { icon: FileText, label: "My Exams", id: "my-exams", path: "/my-exams" },
-      { icon: Award, label: "My Results", id: "results", path: "/my-results" },
+      { icon: Award, label: "Exam Results", id: "results", path: "/my-results" },
       { icon: ShieldAlert, label: "My Complaints", id: "complaints", path: "/my-complaints" },
       { icon: IndianRupee, label: "My Dues", id: "my-dues", path: "/my-dues" },
     ],
