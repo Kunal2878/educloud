@@ -8,7 +8,9 @@ import {
     DeleteComplaint, GetAllEvents, GetAllAnnouncements,GetStudentByClass,
     GetStudentByID,GetAllStudentCount,GetAllTeacherCount, GetLeaderBoard,GetTeacherByID,
     GetSubjectByClass,AddMarkStudent, AddTransaction, GetTransactionsByTeacher,FilterTransaction,
-     UpdateStudent, GetStudentAttendanceByID, PasswordChange, AddStudentTransaction,GetClassFeeTransaction,GetStudentFeeTransaction,AddOtherExpense,GetOtherExpense,DeleteOtherExpenseByID,GetAllTeachers, GetAllClasses
+     UpdateStudent, GetStudentAttendanceByID, PasswordChange,
+      AddStudentTransaction,GetClassFeeTransaction,GetStudentFeeTransaction,
+      AddOtherExpense,GetOtherExpense,DeleteOtherExpenseByID,GetAllTeachers, GetAllClasses,GetGenderRatio
   } from '../Frontend/Route';
 
 export const LoginUser = async (url, payload, role) => {
@@ -500,6 +502,47 @@ export const GetStudentAttendanceByIDAPI = async (url, studentID) => {
     };
   }
 };
+
+export const GetGenderRatioAPI = async (url, token) => {
+  try {
+    const endpoint = `${url}${GetGenderRatio}`;
+
+      const response = await axios.get(endpoint, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    if (response.status === 200 || response.status === 201 || response.status === 204) {
+      return {
+        status: response.status,
+        data: response.data.data,
+        message: response.data.message || "Gender ratio retrieved successfully"
+      };
+    } 
+    
+    else {
+
+      return {
+        status: response.status,
+        data: null,
+        message: response.data.message || "Failed to retrieve gender ratio"
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      status: err.status,
+      data: null,
+      message: err.response.data.message || "Network error, try after sometime"
+    };
+  }
+};
+
+
+
+
+
+
 
 
 export const GetLeaderBoardAPI = async (url, classID) => {

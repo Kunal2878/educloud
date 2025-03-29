@@ -6,9 +6,9 @@ import {
   TrendingUp,
   Calendar,
   IndianRupee,
-  ChevronLeft,
-  ChevronRight,
+
 } from "lucide-react";
+import Cokkies from "js-cookie";
 import {
   BarChart,
   Bar,
@@ -20,15 +20,20 @@ import {
 } from "recharts";
 import { PieChart, Pie, Cell } from "recharts";
 import { useSelector, useDispatch } from "react-redux";
-import { setUser,setStudentCount,setTeacherCount } from "../../Store/slice";
-import { GetAllStudentCountAPI, GetAllTeacherCountAPI } from '../../service/api';
+import { setUser,setStudentCount,setTeacherCount,setGenderRatio } from "../../Store/slice";
+import { GetAllStudentCountAPI, GetAllTeacherCountAPI,GetGenderRatioAPI } from '../../service/api';
 
 const PerformanceDashboard = () => {
   const url = import.meta.env.VITE_API_BASE_URL;
+  const token = Cokkies.get("token")
   const user = useSelector((state) => state.userData.user);
+  const [error, setError] = useState('')
   const dispatch= useDispatch();
   const StudentCount= useSelector((state) => state.userData.StudentCount);
   const TeacherCount= useSelector((state) => state.userData.TeacherCount);
+  const GenderRatio = useSelector((state) => state.userData.GenderRatio);
+
+
   const StudentData = [
     { name: "Performance", value: "", Icon: TrendingUp },
     { name: "Days present", value: "", Icon: Calendar },
@@ -57,9 +62,11 @@ const PerformanceDashboard = () => {
   const pieData =
     user.role === "principal"
       ? [
-          { name: "Male Active", value: 55 },
-          { name: "Male Inactive", value: 45 },
-        ]
+          { name: "Male Active", value: GenderRatio?.ratioMale},
+          // { name: "Male Inactive", value: 100-GenderRatio?.ratioMale },
+          { name: "Female Active", value: GenderRatio?.ratioFemale},
+          // { name: "Female Inactive", value: 100-GenderRatio?.ratioFemale },
+                ]
       : user.role === "teacher"
       ? [
           { name: "Present", value: 85 },
@@ -97,7 +104,7 @@ const PerformanceDashboard = () => {
           dispatch(setStudentCount(response.data.data));
        
         } else {
-          setError(response.message);
+          // setError(response.message);
         }
      
     };
@@ -111,9 +118,19 @@ const PerformanceDashboard = () => {
           setError(response.message);
         }
     };
+    const fetchGenderRatio = async () => {
+
+        const response = await GetGenderRatioAPI(url,token);
+        if (response.status === 200 || response.status === 204 || response.status === 201) {
+          dispatch(setGenderRatio(response.data));
+        } else {
+          setError(response.message);
+        }
+    };
 
     fetchStudentsCount();
-    fetchTeachersCount()
+    fetchTeachersCount();
+    fetchGenderRatio();
   }, []);
 
   return (
@@ -233,19 +250,24 @@ const PerformanceDashboard = () => {
                 <div
                   className="w-3 h-3 rounded-full mr-1"
                   style={{ backgroundColor: MALE_COLOR }}
-                ></div>
-                <span className="text-sm " style={{ color: MALE_COLOR }}>
-                  Male
-                </span>
-              </div>
+                >
+                </div>
+                <div className="flex items-center">
+                  <span className="text-sm mr-2" style={{ color: MALE_COLOR }}>Male</span>
+                  <span className="text-sm" style={{ color: MALE_COLOR }}>{GenderRatio?.maleCount}</span>
+                </div> 
+
+                </div>
+                
               <div className="flex items-center">
                 <div
                   className="w-3 h-3 rounded-full mr-1"
                   style={{ backgroundColor: FEMALE_COLOR }}
                 ></div>
-                <span className="text-sm" style={{ color: FEMALE_COLOR }}>
-                  Female
-                </span>
+              <div className="flex items-center">
+                  <span className="text-sm mr-2" style={{ color: FEMALE_COLOR }}>Male</span>
+                  <span className="text-sm" style={{ color: FEMALE_COLOR }}>{GenderRatio?.femaleCount}</span>
+                </div> 
               </div>
             </div>
           </div>

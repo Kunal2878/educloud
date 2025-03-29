@@ -24,7 +24,8 @@ const dataSlice = createSlice({
     StudentFinanceData:[],
     OtherExpenseData:[],
     TeacherAttendanceData:[],
-    StudentAttendanceData:[]
+    StudentAttendanceData:[],
+    GenderRatio:[]
 
   },
   reducers: {
@@ -114,16 +115,19 @@ state.isLeaderboardUpdate= action.payload
           status 
         });
       }
-    }
+    },
+    
+    setGenderRatio:(state,action)=>{
+      state.GenderRatio = action.payload
+},
 
-
-  },
+}
 })
 
 export const {setRole,setUser,setLoginData,setClassData,setStudentData,setTeacherData,setSubjectData,
   setEventData,setAnnouncementData,setStudentCount,setTeacherCount,
   setLeaderBoard,setCurrentPage,setTransactionData,setStudentFinanceData,
   setOtherExpenseData,setStudentByClassData,setIsStudentUpdate,setTeacherAttendanceData,
-  setStudentAttendanceData ,updateStudentAttendance,setIsLeaderBoardUpdate}
+  setStudentAttendanceData ,updateStudentAttendance,setIsLeaderBoardUpdate,setGenderRatio}
  = dataSlice.actions
 export default dataSlice.reducer
