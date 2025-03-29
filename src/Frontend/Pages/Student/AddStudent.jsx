@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
-import { Mail,Lock,User,ArrowRight,Eye,EyeOff,Phone, VenusAndMars, School2
+import { Mail,Lock,User,ArrowRight,Eye,EyeOff,Phone, VenusAndMars, School2,Calendar, IdCard
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -77,7 +77,16 @@ const AddStudents = () => {
       email: data.email,
       password: data.password,
       parentContact: data.parentContact,
+      phoneNumber: data.phoneNumber,
       parentName: data.parentName,
+      dob:data.dob,
+      studentPan:data.studentPan,
+      aadharId:data.aadharId,
+      motherAadhar:data.motherAadhar,
+      fatherAadhar:data.fatherAadhar,
+      address:data.address,
+      phoneNumber:data.phoneNumber,
+      whatsappNumber:data.whatsappNumber,
       studentClass: selectedClass,
       gender: selectedGender
     };
@@ -166,7 +175,110 @@ const AddStudents = () => {
             }}
             className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto"
           />
-          
+          <Input
+            id="dob"
+            name="dob"
+            label="Date of Birth"
+            type= "date"
+            register={register}
+            errors={errors}
+            required="Date of Birth is required"
+            placeholder="eg. 2023-08-15"
+            icon={Calendar}
+            className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto"
+          />
+   <Input
+            id="studentPan"
+            name="studentPan"
+            label="Student Pan"
+            register={register}
+            errors={errors}
+            required="Pan is required"
+            placeholder="Student Pan"
+            icon={IdCard}
+            className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto"
+          />
+   <Input
+            id="aadharId"
+            name="aadharId"
+            label="Student Aadhaar ID"
+            register={register}
+            errors={errors}
+            required="Student Aadhaar is required"
+            placeholder="Student Aadhaar"
+            icon={IdCard}
+            className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto"
+          />
+   <Input
+            id="motherAadhar"
+            name="motherAadhar"
+            label="Aadhaar ID of Mother"
+            register={register}
+            errors={errors}
+            required="Aadhaar ID of Mother is required"
+            placeholder="Aadhaar ID of Mother"
+            icon={IdCard}
+            className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto"
+          />
+          <Input
+            id="fatherAadhar"
+            name="fatherAadhar"
+            label="Aadhaar ID of Father"
+            register={register}
+            errors={errors}
+            required="Aadhaar ID of Father is required"
+            placeholder="Aadhaar ID of Father"
+            icon={IdCard}
+            className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto"
+          />
+          <Input
+            id="address"
+            name="address"
+            label="Address"
+            register={register}
+            errors={errors}
+            required="Address is required"
+            placeholder="Address"
+            icon={IdCard}
+            className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto"
+          />
+    <Input
+            id="phoneNumber"
+            name="phoneNumber"
+            label="Phone No."
+            register={register}
+            errors={errors}
+            required="Phone No. is  required"
+            type="text"
+            placeholder="eg. 9876543210"
+            icon={Phone}
+            validation={{
+              pattern: {
+                value: /^[0-9]{10}$/,
+                message: "Invalid phone number",
+              },
+            }}
+            className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto"
+          />
+    <Input
+            id="whatsappNumber"
+            name="whatsappNumber"
+            label="Whatsapp No."
+            register={register}
+            errors={errors}
+            required="Whatsapp No. is required"
+            type="text"
+            placeholder="eg. 9876543210"
+            icon={Phone}
+            validation={{
+              pattern: {
+                value: /^[0-9]{10}$/,
+                message: "Invalid phone number",
+              },
+            }}
+            className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto"
+          />
+
           <Input
             id="parentName"
             name="parentName"
@@ -198,6 +310,12 @@ const AddStudents = () => {
             className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto"
           />
           
+
+
+
+
+
+
           <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto">
             <SelectDropdown
               options={classData || []}
