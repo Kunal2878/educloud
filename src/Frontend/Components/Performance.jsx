@@ -230,7 +230,7 @@ const PerformanceDashboard = () => {
                     dataKey="value"
                   >
                     <Cell key="active" fill={MALE_COLOR} strokeWidth={0} />
-                    <Cell key="inactive" fill={MALE_FADED} strokeWidth={0} />
+                    <Cell key="inactive" fill={FEMALE_COLOR} strokeWidth={0} />
                   </Pie>
                   <Pie
                     data={pieData}
@@ -243,8 +243,8 @@ const PerformanceDashboard = () => {
                     paddingAngle={0}
                     dataKey="value"
                   >
-                    <Cell key="active" fill={FEMALE_COLOR} strokeWidth={0} />
-                    <Cell key="inactive" fill={FEMALE_FADED} strokeWidth={0} />
+                    <Cell key="active" fill={MALE_COLOR} strokeWidth={0} />
+                    <Cell key="inactive" fill={FEMALE_COLOR} strokeWidth={0} />
                   </Pie>
                 </PieChart>
               </ResponsiveContainer>
