@@ -11,6 +11,10 @@ const dataSlice = createSlice({
     isStudentUpdate:false,
     isLeaderboardUpdate:false,
     showLogoutConfirm:false,
+    showConfirmationModel:false,
+   confirmRequest:false,
+    status:'',
+    addText:'',
     user:[],
     LoginData:[],
     ClassData:[],
@@ -124,7 +128,20 @@ state.isLeaderboardUpdate= action.payload
 
 setShowLogoutConfirm:(state,action) =>{
   state.showLogoutConfirm=action.payload
-}
+},
+setShowConfirmationModel:(state,action) =>{
+  state.showConfirmationModel=action.payload
+},
+setStatus:(state,action) =>{
+  state.status=action.payload
+},
+setAddText:(state,action) =>{
+  state.addText=action.payload
+},
+setConfirmRequest:(state,action) =>{
+  state.confirmRequest=action.payload
+},
+
 }
 })
 
@@ -132,6 +149,7 @@ export const {setRole,setUser,setLoginData,setClassData,setStudentData,setTeache
   setEventData,setAnnouncementData,setStudentCount,setTeacherCount,
   setLeaderBoard,setCurrentPage,setTransactionData,setStudentFinanceData,
   setOtherExpenseData,setStudentByClassData,setIsStudentUpdate,setTeacherAttendanceData,
-  setStudentAttendanceData ,updateStudentAttendance,setIsLeaderBoardUpdate,setGenderRatio,setShowLogoutConfirm}
+  setStudentAttendanceData ,updateStudentAttendance,setIsLeaderBoardUpdate,setGenderRatio,setShowLogoutConfirm,
+  setShowConfirmationModel,setStatus,setAddText,setConfirmRequest}
  = dataSlice.actions
 export default dataSlice.reducer

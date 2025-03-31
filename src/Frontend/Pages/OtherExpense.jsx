@@ -384,7 +384,6 @@ const OtherExpenses = () => {
           <div className="flex justify-between items-center mb-4">
      
               <h2 className=" text-md lg:text-2xl font-bold text-black-200">{currentYear} {selectedMonth}</h2>
-              <h1 className="text-center text-md lg:text-3xl font-bold text-black-300">{"Other Expenses"}</h1>
         
             <div className=" text-md lg:text-3xl text-black-300 font-bold">₹{totalFilteredExpenses.toFixed(2)}</div>
           </div>
@@ -395,7 +394,7 @@ const OtherExpenses = () => {
               {selectedExpenses.length > 0 && (
                 <button
                   onClick={handleDeleteExpenses}
-                  className="bg-danger text-white px-4 py-2 rounded flex items-center gap-2"
+                  className="bg-danger  text-white px-4 py-2 rounded-lg flex items-center gap-2"
                   disabled={isLoading}
                 >
                   {isLoading ? (

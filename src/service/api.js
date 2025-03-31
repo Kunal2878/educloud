@@ -10,7 +10,7 @@ import {
     GetSubjectByClass,AddMarkStudent, AddTransaction, GetTransactionsByTeacher,FilterTransaction,
      UpdateStudent, GetStudentAttendanceByID, PasswordChange,
       AddStudentTransaction,GetClassFeeTransaction,GetStudentFeeTransaction,
-      AddOtherExpense,GetOtherExpense,DeleteOtherExpenseByID,GetAllTeachers, GetAllClasses,GetGenderRatio
+      AddOtherExpense,GetOtherExpense,DeleteOtherExpenseByID,GetAllTeachers, GetAllClasses,GetGenderRatio,ImposeFine
   } from '../Frontend/Route';
 
 export const LoginUser = async (url, payload, role) => {
@@ -1376,6 +1376,44 @@ export const DeleteAnnouncementAPI = async (url, announcementIds, token) => {
       };
     }
   };
+  export const ImposeFineAPI = async (url,payload, token) => {
+    console.log(payload)
+    try {
+      const endpoint = `${url}${ImposeFine}`;
+      const response = await axios.post(endpoint, payload, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.status === 200 || response.status === 201 || response.status === 204) {  
+        return {
+          status: response.status,
+          data: response.data,
+          message: response.data.message
+        };
+      } else if (response.status === 401) {
+        return {
+          status: response.status,
+          data: null,
+          message: response.data.message
+        };
+      } else {
+        return {
+          status: response.status,
+          data: null,
+          message: response.data.message
+        };
+      }
+    } catch (err) {
+      console.log(err)
+      return {
+        status: err.status,
+        data: null,
+        message: err.response.data.message || "Network error, try after sometime"
+      };
+    }
+  };
 
   export const GetStudentFeeTransactionAPI = async (url,token,studentID) => {
     try {
@@ -1420,6 +1458,7 @@ export const DeleteAnnouncementAPI = async (url, announcementIds, token) => {
           'Authorization': `Bearer ${token}`
         }
       });
+ 
       if (response.status === 200 || response.status === 201 ||response.status === 204 ) {
         return {
           status: response.status,
