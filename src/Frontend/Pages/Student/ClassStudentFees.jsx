@@ -761,14 +761,14 @@ dispatch(setConfirmRequest(false))
       field: 'details',
       headerName: 'Impose Fine',
       renderCell: (row) => (
-        <div className="flex items-center justify-center bg-white">
+        <div className="flex items-center justify-start ">
           <input
             type="radio"
             checked={row?.details?.isLateFeeApplied || false}
             onChange={() => handleImposeFine(row)}
             disabled={row?.details?.isLateFeeApplied|| false}
-            className={`h-4 w-4 bg-white ${
-              row?.details?.isLateFeeApplied ? 'bg-red-500 text-red-500 border-red-500' : 'bg-white'
+            className={`h-4 w-4 appearance-none ${
+              row?.details?.isLateFeeApplied ? 'bg-red-500 text-black-3000 border-black-300' : 'bg-gray-200 border-black-300'
             } rounded focus:ring-blue-500`}
           />
         </div>
