@@ -262,21 +262,21 @@ const PerformanceDashboard = () => {
     {/* Male Column */}
     <div className="flex flex-col items-center">
       {/* Male Count */}
-      <div className="flex items-center mb-2">
+      <div className="flex items-center mb-2 font-bold">
               {user.role === 'principal' && (
                 <>
                 <div
                   className="w-3 h-3 rounded-full mr-1"
                   style={{ backgroundColor: MALE_COLOR }}
                 ></div>
-                  <span className="text-sm mr-2" style={{ color: MALE_COLOR }}>Male</span>
+                  <span className="text-sm mr-2 " style={{ color: MALE_COLOR }}>Male</span>
                   <span className="text-sm" style={{ color: MALE_COLOR }}>{GenderRatio?.maleCount}</span>
                 </>
               )}
       </div>
       
       {/* Male Ratio */}
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center font-bold">
         <div className="flex items-center">
                   {user.role === 'principal' && (
 <>
@@ -292,7 +292,7 @@ const PerformanceDashboard = () => {
                   
                   </div>
         {user.role === 'principal' && (
-          <span className="text-sm" style={{ color: MALE_COLOR }}>
+          <span className="text-sm font-bold" style={{ color: MALE_COLOR }}>
             {((GenderRatio?.maleCount / (GenderRatio?.maleCount + GenderRatio?.femaleCount)) * 100).toFixed(1)}%
           </span>
         )}
@@ -300,7 +300,7 @@ const PerformanceDashboard = () => {
     </div>
     
     {/* Female Column */}
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center font-bold">
       {/* Female Count */}
       <div className="flex items-center mb-2">
 
@@ -317,7 +317,7 @@ const PerformanceDashboard = () => {
         )}      </div>
       
       {/* Female Ratio */}
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center font-bold">
 
         <div className="flex items-center">
           {user.role === 'principal' && (
