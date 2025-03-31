@@ -55,8 +55,10 @@ const PerformanceDashboard = () => {
   const [isLoading,  setIsLoading] = useState(true);
   const [showCharts, setShowCharts] = useState(false);
 
-  const MALE_COLOR = "#8B31FF";
-  const FEMALE_COLOR = "#FF9839";
+  // const MALE_COLOR = "#8B31FF";
+  // const FEMALE_COLOR = "#FF9839";
+  const MALE_COLOR = "#8C86D9";
+  const FEMALE_COLOR = "#E9A7C9";
   const MALE_FADED = "#E9DFFF";
   const FEMALE_FADED = "#FFE9D5";
 
