@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import Cookies from "js-cookie"
-import { School2, ChevronDown, Check, School, BookOpen, User, FileText, Calendar } from 'lucide-react'
+import { School2, ChevronDown, Check, School, BookOpen, User, FileText, Calendar,IndianRupee } from 'lucide-react'
 import {setClassData} from '../../../Store/slice'
 import {GetClasses, GetAllClassesAPI,GetStudentByClassAPI, AddStudentTransactionAPI} from '../../../service/api'
 import {useSelector, useDispatch} from 'react-redux'
 import Toast from '../../Components/Toast'
-
+import Input from "../../Components/Elements/Input"; 
+import { toast } from 'react-toastify';
 const AddStudentFees = () => {
   const [loading, setLoading] = useState(false)
   const [students, setStudents] = useState([])
@@ -16,7 +17,7 @@ const AddStudentFees = () => {
   const [selectedStatus, setSelectedStatus] = useState('')
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
-  const [toastIcon, setToastIcon] = useState('')
+  const [toastType, setToastType] = useState('')
   const classes = useSelector((state) => state.userData.ClassData);
   const dispatch = useDispatch();
 
@@ -39,11 +40,26 @@ const AddStudentFees = () => {
 
   // Status options
   const statusOptions = ["paid", "not paid"]
+  // const lateFineOptions = [true, false]
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm()
+  const { register, handleSubmit, reset,watch, formState: { errors } } = useForm()
   const url = import.meta.env.VITE_API_BASE_URL
   const token = Cookies.get('token')
+  const lateFineChecked = watch("lateFine");
 
+
+   useEffect(() => {
+        if (showToast) {
+          toast[toastType](toastMessage, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+        }
+      }, [showToast, toastMessage, toastType]);
   useEffect(() => {
     fetchClasses()
   }, [])
@@ -59,8 +75,9 @@ const AddStudentFees = () => {
     if (response.status === 200 || response.status === 204 || response.status === 201) {
       dispatch(setClassData(response.data.classes));
     } else {
+      dispatch(setClassData([]));
       setToastMessage('Failed to fetch classes')
-      setToastIcon("wrong")
+      setToastType("error")
       setShowToast(true)
     }
   }
@@ -70,8 +87,9 @@ const AddStudentFees = () => {
     if (response.status === 200 || response.status === 201 || response.status === 204) {
       setStudents(response.data.students)
     } else {
+      setStudents([])
       setToastMessage('Failed to fetch students')
-      setToastIcon("wrong")
+      setToastType("error")
       setShowToast(true)
     }
   }
@@ -102,52 +120,56 @@ const AddStudentFees = () => {
   const validateForm = () => {
     if (!selectedClass) {
       setToastMessage('Please select a class')
-      setToastIcon("wrong")
+      setToastType("error")
       setShowToast(true)
       return false
     }
     if (!selectedStudent) {
       setToastMessage('Please select a student')
-      setToastIcon("wrong")
+      setToastType("error")
       setShowToast(true)
       return false
     }
     if (!selectedMonth) {
       setToastMessage('Please select a month')
-      setToastIcon("wrong")
+      setToastType("error")
       setShowToast(true)
       return false
     }
     if (!selectedStatus) {
       setToastMessage('Please select a payment status')
-      setToastIcon("wrong")
+      setToastType("error")
       setShowToast(true)
       return false
     }
     return true
   }
 
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
     if (!validateForm()) return
 
-    try {
+ 
       setLoading(true)
       
       const feeData = {
         student: selectedStudent,
         month: selectedMonth,
-        status: selectedStatus
+        status: selectedStatus,
+        baseAmount: data.baseAmount,
+        lateFine: data.lateFine === true,
+       lateFineAmount: data.lateFine ? data.lateFineAmount: 0
       }
       
-      console.log(feeData)
+     
       const response = await AddStudentTransactionAPI(url, feeData, token)
 
       if (response.status === 201 || response.status === 200 || response.status === 204) {
-        setToastMessage('Fee added successfully!')
-        setToastIcon("right")
+        setToastMessage(response.message || 'Fee added successfully!')
+        setToastType("success")
         setShowToast(true)
         
         // Reset form
+        reset()
         setSelectedClass('')
         setSelectedClassName('')
         setSelectedStudent('')
@@ -156,29 +178,31 @@ const AddStudentFees = () => {
         setSelectedStatus('')
         setSelectedStatusName('')
       } else {
+        reset()
         setToastMessage('Failed to add fee')
-        setToastIcon("wrong")
+        setToastType("error")
         setShowToast(true)
+      
+         if (response.status === 401) {  
+                Cookies.remove('user');
+                Cookies.remove('token');
+                window.location.href = '/user-options';                      
+                                  
+        }
       }
-    } catch (error) {
-      console.error('Error adding fee:', error)
-      setToastMessage('Failed to add fee')
-      setToastIcon("wrong")
-      setShowToast(true)
-    } finally {
+
       setLoading(false)
-    }
+  
   }
   return (
     <div className="min-h-screen p-4 w-full">
       <div className="min-h-full max-w-3xl flex items-center justify-center p-4">
-        {showToast && <div className="fixed"><Toast message={toastMessage} iconName={toastIcon} /></div>}
         <div className="h-full w-full space-y-8 bg-white">
           <div className="text-left">
             <h2 className="h2 text-black mt-5 flex flex-col items-start">Add Student Fee</h2>
           </div>
 
-          <div className="mt-[32px] space-y-6 mb-[16px]">
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-[32px] space-y-6 mb-[16px]">
             {/* Class Selection */}
             <div className="relative w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto">
               <div className="relative bg-transparent border-2 border-black-200 text-black-300 rounded-lg focus:outline">
@@ -353,6 +377,37 @@ const AddStudentFees = () => {
                 )}
               </div>
             </div>
+                    <Input
+                              id="baseAmount"
+                              name="baseAmount"
+                              label="Base Amount (eg. Rs.1000)"
+                              register={register}
+                              errors={errors}
+                              icon={IndianRupee}
+                            />
+          <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto flex items-center">
+            <input
+              type="checkbox"
+              id="lateFine"
+              {...register("lateFine")}
+              className="mr-2"
+            />
+            <label htmlFor="lateFine" className="text-black-300">Late Fine</label>
+          </div>
+
+             {lateFineChecked && (
+                        <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto">
+                          <Input
+                            id="lateFineAmount"
+                            name="lateFineAmount"
+                            type="number"
+                            label="Late Fine Amount (eg. Rs.100)"
+                            register={register}
+                            errors={errors}
+                            icon={IndianRupee}
+                          />
+                        </div>
+                      )}
 
             <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto mt-8">
               <button
@@ -370,7 +425,11 @@ const AddStudentFees = () => {
                 )}
               </button>
             </div>
-          </div>
+          </form>
+
+
+
+
         </div>
       </div>
     </div>

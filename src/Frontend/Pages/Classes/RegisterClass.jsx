@@ -7,6 +7,7 @@ import {
   School,
   School2,
   GraduationCap,
+  IndianRupee,
 } from "lucide-react";
 import Cookies from "js-cookie";
 import { toast } from 'react-toastify';
@@ -101,6 +102,8 @@ const RegisterClass = () => {
       classTeacher: selectedTeacherData._id,
       classTeacherEmail: selectedTeacherData.email,
       students: studentsData,
+      fee:data.fee,
+      lateFineAmount: data.lateFineAmount,
       subjects: [],
       timetable: [],
     };
@@ -145,7 +148,7 @@ const RegisterClass = () => {
           Register New Class
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-10 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-10 mb-8">
           <Input
             id="className"
             name="className"
@@ -163,6 +166,28 @@ const RegisterClass = () => {
             errors={errors}
             required={true}
             icon={School2}
+          />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-10 mb-6">
+          <Input
+            id="fee"
+            name="fee"
+            type = "number"
+            label="Class Fee (eg. Rs.1000)"
+            register={register}
+            errors={errors}
+            required={true}
+            icon={IndianRupee}
+          />
+          <Input
+            id="lateFineAmount"
+            name="lateFineAmount"
+            type = "number"
+            label="Late Fine Amount (eg. Rs.100)"
+            register={register}
+            errors={errors}
+            required={true}
+            icon={IndianRupee}
           />
         </div>
 

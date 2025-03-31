@@ -27,6 +27,7 @@
     export const GetStudentAttendanceByID = 'student-attendance//students'
     export const AddStudentTransaction = 'student/fee-payment/pay-fee'
     export const GetClassFeeTransaction='student/fee-payment/history/class'
+    // export const GetClassFeeTransaction='student/get-fee-by-class-id'
     export const GetStudentFeeTransaction ='student/fee-payment/history/student'
     export const GetGenderRatio = "student/gender-ratio"
     
