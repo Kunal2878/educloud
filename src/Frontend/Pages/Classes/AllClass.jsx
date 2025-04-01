@@ -44,7 +44,7 @@ const AllClasses = () => {
   const showConfirmation = useSelector((state) => state.userData.showConfirmationModel);
   const confirmRequest = useSelector((state) => state.userData.confirmRequest);
   const dispatch = useDispatch();
-console.log(confirmRequest)
+  
   useEffect(() => {
     document.title = "All Classes";
     dispatch(setCurrentPage(1));

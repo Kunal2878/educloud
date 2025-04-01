@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { useForm } from 'react-hook-form';
 import Cookies from "js-cookie";
-import { Calendar, Upload, ArrowRight, Eye } from "lucide-react";
+import { Calendar, Upload, ArrowRight, Eye,Trash } from "lucide-react";
 import axios from "axios";
 import {useSelector, useDispatch} from 'react-redux'
 import { toast } from 'react-toastify';
 import { oops } from "../../../assets/index";
 import { CreateExam, GetAllExams, UploadExamTimeTable } from "../../Route";
+import { DeleteExamAPI} from '../../../service/api';
+import Confirmation from "../../Components/Elements/ConfirmationModel"
+import { setClassData,setCurrentPage,setConfirmRequest,setShowConfirmationModel,setStatus, setAddText } from "../../../Store/slice";
 
 const AllExams = () => {
   const token = Cookies.get("token");
@@ -15,6 +18,7 @@ const AllExams = () => {
   const [timeTableFile, setTimeTableFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showFailure, setShowFailure] = useState(false);
+  const [selectedExam,setSelectedExam] = useState(null);
   const [showToast, setShowToast] = useState({
     show: false,
     message: "",
@@ -22,8 +26,10 @@ const AllExams = () => {
   });
   const [exams, setExams] = useState([]);
   const [isLoadingExams, setIsLoadingExams] = useState(false);
+  const dispatch = useDispatch()
   const user = useSelector((state) => state.userData.user);
-
+  const showConfirmation = useSelector((state) => state.userData.showConfirmationModel);
+  const confirmRequest = useSelector((state) => state.userData.confirmRequest);
   useEffect(() => {
     fetchExams();
     document.title = "Exam Details";
@@ -93,7 +99,6 @@ const AllExams = () => {
       await fetchExams();
       return true;
     } catch (error) {
-      console.error("Timetable upload error:", error);
       setShowToast({
         show: true,
         message: "Failed to upload timetable",
@@ -185,6 +190,50 @@ const AllExams = () => {
     };
     fileInput.click();
   };
+
+const handleDeleteExam =(exam)=>{
+setSelectedExam(exam)
+dispatch(setShowConfirmationModel(true));
+
+}
+
+const DeleteExam = async ()=>{
+ const response = await DeleteExamAPI(url, token, selectedExam?._id);
+      if (response.status ===200 ||response.status ===201 || response.status ===204 ) {
+        dispatch(setStatus("success"))
+        dispatch(setAddText(` ${selectedExam?.name} deleted successfully`))
+        setTimeout(() => {
+          dispatch(setStatus(''));
+          dispatch(setAddText(''));
+          dispatch(setShowConfirmationModel(false));
+        }, 3000);
+        fetchExams();
+      } else {
+        dispatch(setStatus("error"))
+        dispatch(setAddText(response.message))
+        setTimeout(() => {
+          dispatch(setStatus(''));
+          dispatch(setAddText(''));
+          dispatch(setShowConfirmationModel(false));
+        }, 3000);
+
+        if(response.status ===401)
+        {
+          Cookies.remove('token');
+          Cookies.remove('user');
+          window.location.href = '/user-options';
+          
+        }
+      }
+      dispatch(setConfirmRequest(false))
+  }
+
+useEffect( ()=>{
+  if(confirmRequest)
+    {
+    DeleteExam()
+    }
+},[confirmRequest])
 
   return (
     <div className="min-h-screen sm:px-16 px-6 sm:py-16 py-10">
@@ -300,6 +349,39 @@ const AllExams = () => {
       </div>
       )}
 
+{showConfirmation && (
+        <div
+          className={`
+            fixed inset-0 flex items-center justify-center 
+            bg-black bg-opacity-50 z-50 
+            ${
+              showConfirmation
+                ? "opacity-100 visible"
+                : "opacity-0 invisible pointer-events-none"
+            }
+            transition-all duration-300 ease-in-out
+          `}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              dispatch(setShowConfirmationModel(false))
+              setSelectedExam(null);
+            }
+          }}
+        >
+          <Confirmation 
+            message={`Are you sure you want to delete ${selectedExam?.name} exam? This action cannot be undone.`}
+            note=""/>
+        </div>
+      )}
+
+
+
+
+
+
+
+
+
       <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-4 md:p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="h2 text-black-300">Exam List</h2>
@@ -375,8 +457,12 @@ const AllExams = () => {
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="text-primaryBlue mr-3">View</button>
-                      <button className="text-danger">Delete</button>
+                      <button className="text-primaryBlue mr-3">
+                        <Eye size={20} className="cursor-pointer" />
+                      </button>
+                      <button className="text-danger" onClick={() => handleDeleteExam(exam)}>
+                        <Trash size={20} className="cursor-pointer" />
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -385,6 +471,7 @@ const AllExams = () => {
           </table>
         </div>
       </div>
+
     </div>
   );
 };

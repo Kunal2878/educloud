@@ -54,6 +54,7 @@
 export const CreateExam = 'principal/create-exam'
 export const GetAllExams = 'principal/getallexams'
 export const UploadExamTimeTable = 'principal/upload-exam-timetable'
+export const DeleteExam = 'principal/delete-exam'
 
 // Events
 export const CreateEvent = 'event/create-event'
