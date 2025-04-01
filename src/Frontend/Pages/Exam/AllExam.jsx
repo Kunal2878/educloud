@@ -435,9 +435,9 @@ useEffect( ()=>{
                       {new Date(exam.date).toLocaleDateString('en-GB')}
                     </td>
                     <td className="px-6 py-4 subtitle-2">
-                      {exam.timeTableUrl ? (
+                      {exam?.timeTableUrl&&(
                         <a
-                          href={exam.timeTableUrl}
+                          href={exam?.timeTableUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -446,7 +446,7 @@ useEffect( ()=>{
                             className="text-primaryBlue cursor-pointer"
                           />
                         </a>
-                      ) : (
+                      )  }
                         <button
                           onClick={() => handleFileUploadForExam(exam._id)}
                           className="text-primaryBlue hover:text-blue-700"
@@ -454,12 +454,9 @@ useEffect( ()=>{
                         >
                           <Upload className="h-5 w-5" />
                         </button>
-                      )}
+                     
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="text-primaryBlue mr-3">
-                        <Eye size={20} className="cursor-pointer" />
-                      </button>
                       <button className="text-danger" onClick={() => handleDeleteExam(exam)}>
                         <Trash size={20} className="cursor-pointer" />
                       </button>
