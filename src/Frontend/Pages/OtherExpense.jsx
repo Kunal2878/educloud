@@ -182,7 +182,7 @@ const OtherExpenses = () => {
   },[confirmRequest])
 
 
-  const handleMonthSelect = (month) => {
+  const handleMonthSelect = (month) => { 
     setSelectedMonth(month === selectedMonth ? "" : month);
     setShowMonthDropdown(false);
   };
