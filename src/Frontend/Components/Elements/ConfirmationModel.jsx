@@ -49,12 +49,6 @@ const Confirmation = ({ message, note }) => {
           </div>
 
           <div className="flex justify-end space-x-4">
-            {/* <button
-              onClick={() => dispatch(setShowConfirmationModel(false))}
-              className="px-4 py-2 text-gray-600 hover:text-gray-800"
-            >
-              Cancel
-            </button> */}
             
             <button
               onClick={async () => {
@@ -64,6 +58,7 @@ const Confirmation = ({ message, note }) => {
               }}
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center"
               disabled={loading}
+              style={{ display: status === '' ? 'flex' : 'none' }} 
             >
               {(confirmRequest && !status) ? (
                 <Loader className="animate-spin mr-2" size={16} />

@@ -9,7 +9,7 @@ import { oops } from "../../../assets/index";
 import { CreateExam, GetAllExams, UploadExamTimeTable } from "../../Route";
 import { DeleteExamAPI} from '../../../service/api';
 import Confirmation from "../../Components/Elements/ConfirmationModel"
-import { setClassData,setCurrentPage,setConfirmRequest,setShowConfirmationModel,setStatus, setAddText } from "../../../Store/slice";
+import { setConfirmRequest,setShowConfirmationModel,setStatus, setAddText } from "../../../Store/slice";
 
 const AllExams = () => {
   const token = Cookies.get("token");
@@ -26,8 +26,8 @@ const AllExams = () => {
   });
   const [exams, setExams] = useState([]);
   const [isLoadingExams, setIsLoadingExams] = useState(false);
-  const dispatch = useDispatch()
   const user = useSelector((state) => state.userData.user);
+  const dispatch = useDispatch()
   const showConfirmation = useSelector((state) => state.userData.showConfirmationModel);
   const confirmRequest = useSelector((state) => state.userData.confirmRequest);
   useEffect(() => {
@@ -373,14 +373,6 @@ useEffect( ()=>{
             note=""/>
         </div>
       )}
-
-
-
-
-
-
-
-
 
       <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-4 md:p-6">
         <div className="flex justify-between items-center mb-4">

@@ -4,18 +4,21 @@ import Toast from "../Components/Toast";
 import Cookies from "js-cookie";
 import { X, Plus, Loader, Search, ChevronDown,Calendar } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
-import { setOtherExpenseData } from "../../Store/slice";
+import { setOtherExpenseData,setConfirmRequest,setShowConfirmationModel,setStatus, setAddText } from "../../Store/slice";
 import { useForm } from "react-hook-form";
 import { AddOtherExpenseAPI, GetOtherExpenseAPI, DeleteOtherExpenseByIDAPI } from '../../service/api';
-
+import Confirmation from "../Components/Elements/ConfirmationModel"
 const OtherExpenses = () => {
   const token = Cookies.get("token");
   const url = import.meta.env.VITE_API_BASE_URL;
   const dispatch = useDispatch();
-
+  const showConfirmation = useSelector((state) => state.userData.showConfirmationModel);
+  const confirmRequest = useSelector((state) => state.userData.confirmRequest);
   const expenses = useSelector((state) => state.userData.OtherExpenseData);
+
   const [filteredExpenses, setFilteredExpenses] = useState([]);
   const [selectedExpenses, setSelectedExpenses] = useState([]);
+
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastIcon, setToastIcon] = useState("");
@@ -141,8 +144,11 @@ const OtherExpenses = () => {
 
   const handleDeleteExpenses = async () => {
     if (selectedExpenses.length === 0) return;
-    setIsLoading(true);
-    
+    dispatch(setShowConfirmationModel(true));
+  };
+
+
+  const DeleteExpenses = async () => {
     try {
       // Process one by one since API requires individual expense ID
       for (const expenseId of selectedExpenses) {
@@ -151,16 +157,30 @@ const OtherExpenses = () => {
       
       await fetchExpenses();
       setSelectedExpenses([]);
-      setToastMessage("Expenses deleted successfully");
-      setToastIcon("right");
+      dispatch(setStatus("success"))
+      dispatch(setAddText(`Expenses deleted successfully`))
+      
     } catch (error) {
-      setToastMessage("Failed to delete expenses");
-      setToastIcon("wrong");
+      dispatch(setStatus("success"))
+      dispatch(setAddText(`Failed to  delete Expenses`))
     } finally {
       setShowToast(true);
       setIsLoading(false);
+      setTimeout(() => {
+        dispatch(setStatus(''));
+        dispatch(setAddText(''));
+        dispatch(setShowConfirmationModel(false));
+      }, 3000);
     }
-  };
+  }
+
+  useEffect( ()=>{
+    if(confirmRequest)
+      {
+      DeleteExpenses()
+      }
+  },[confirmRequest])
+
 
   const handleMonthSelect = (month) => {
     setSelectedMonth(month === selectedMonth ? "" : month);
@@ -219,7 +239,7 @@ const OtherExpenses = () => {
         `}
       >
         <button
-          onClick={() => setShowExpenseForm(false)}
+          onClick={() => {setShowExpenseForm(false); resetExpense();}}
           className="absolute top-6 right-6 p-2 bg-white rounded-full text-black-300 hover:scale-110"
         >
           <X size={24} />
@@ -378,6 +398,38 @@ const OtherExpenses = () => {
           </div>
         </div>
 
+
+
+{
+showConfirmation && (
+        <div
+          className={`
+            fixed inset-0 flex items-center justify-center 
+            bg-black bg-opacity-50 z-50 
+            ${
+              showConfirmation
+                ? "opacity-100 visible"
+                : "opacity-0 invisible pointer-events-none"
+            }
+            transition-all duration-300 ease-in-out
+          `}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              dispatch(setShowConfirmationModel(false))
+              setSelectedExpenses(null);
+            }
+          }}
+        >
+          <Confirmation 
+            message={`Are you sure you want to delete the selected expenses? This action cannot be undone.`}
+            note=""/>
+        </div>
+      )}
+
+
+
+
+
         {/* Expenses Section */}
         <div className="transform transition-all duration-300 translate-x-0 opacity-100">
           {/* Header with Add Button and Delete Button */}
@@ -464,7 +516,7 @@ const OtherExpenses = () => {
                 ))
               ) : (
                 <div className="text-center text-gray-500 p-8">
-                  No expenses available for the selected filters
+                  No expenses available
                 </div>
               )}
             </div>
