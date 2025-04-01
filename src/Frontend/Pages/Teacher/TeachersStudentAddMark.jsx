@@ -192,7 +192,7 @@
 //     <div className="min-h-screen p-6 w-full">
 //       <div className="min-h-full max-w-3xl flex items-center justify-center p-4">
 //         {showToast && <div className="fixed"><Toast message={toastMessage} iconName={toastIcon} /></div>}
-//         <div className="h-full w-full space-y-8 bg-white p-4">
+//         <div className="h-full w-full space-y-10 bg-white p-4">
 //           <div className="text-left">
 //             <h2 className="h2 text-black mt-5 flex flex-col items-start">Add Student Marks</h2>
 //           </div>
@@ -687,7 +687,7 @@ const AddMark = () => {
       </div>
 {selectedClass ?(
       <div className="min-h-full w-full flex flex-col items-center justify-center p-4">
-        <div className="h-full max-w-4xl space-y-8 bg-white p-4">
+        <div className="h-full max-w-4xl space-y-10 bg-white p-4">
           <div className="text-left">
             <h2 className="h2 text-black mt-5 flex flex-col items-start">Upload Grades</h2>
           </div>

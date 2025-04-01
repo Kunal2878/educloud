@@ -197,7 +197,7 @@ const AddStudentFees = () => {
   return (
     <div className="min-h-screen p-4 w-full">
       <div className="min-h-full max-w-3xl flex items-center justify-center p-4">
-        <div className="h-full w-full space-y-8 bg-white">
+        <div className="h-full w-full space-y-10 bg-white">
           <div className="text-left">
             <h2 className="h2 text-black mt-5 flex flex-col items-start">Add Student Fee</h2>
           </div>

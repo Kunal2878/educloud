@@ -365,7 +365,7 @@ const AddMark = () => {
       </div>
 
       <div className="min-h-full w-full flex flex-col items-center justify-center p-4">
-        <div className="h-full max-w-4xl space-y-8 bg-white p-4">
+        <div className="h-full max-w-4xl space-y-10 bg-white p-4">
           <div className="text-left">
             <h2 className="h2 text-black mt-5 flex flex-col items-start">Upload Grades</h2>
           </div>

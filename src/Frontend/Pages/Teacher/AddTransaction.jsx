@@ -128,7 +128,7 @@ const AddTransactions = () => {
           <Toast message={toastMessage} iconName={toastIcon} />
         </div>
       )}
-      <div className="h-full w-full space-y-8 bg-white">
+      <div className="h-full w-full space-y-10 bg-white">
         <div className="text-left">
           <h2 className="h2 text-xl md:text-2xl font-bold text-black-300">
             Add New Transaction

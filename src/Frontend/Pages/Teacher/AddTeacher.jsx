@@ -77,7 +77,7 @@ const AddTeachers = () => {
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mt-[32px] space-y-8 mb-[16px]"
+          className="mt-[32px] space-y-10 mb-[16px]"
         >
           <Input
             id="fullName"

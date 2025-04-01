@@ -148,7 +148,7 @@ const AddStudents = () => {
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mt-8 space-y-8 mb-4"
+          className="mt-8 space-y-10 mb-4"
         >
           <Input
             id="name"

@@ -6,6 +6,7 @@ import {
   GraduationCap,
   Plus,
   X,
+  FilePen,
   Eye,
 } from "lucide-react";
 import UpdateStudents from "../../Pages/Student/UpdateStudent";
@@ -140,9 +141,9 @@ fetchStudents();
         <div className="flex items-center gap-3">
           <button 
             onClick={() => handlePromoteStudent(row)} 
-            className="w-20 h-10 bg-blue-600 hover:bg-blue-400 text-white rounded-lg overflow-hidden flex flex-row justify-center items-center"
+            className="w-10 h-10 text-blue-600 hover:text-blue-400  rounded-lg overflow-hidden flex flex-row justify-center items-center"
           >
-            Promote
+            <FilePen size={20} />
           </button>
         </div>
       ),

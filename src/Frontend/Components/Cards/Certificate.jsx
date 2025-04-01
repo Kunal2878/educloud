@@ -164,7 +164,7 @@ const generatePDF = async () => {
         </h1>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-8">
+          <div className="space-y-10">
             <div>
               
               <div className="relative">
@@ -242,7 +242,7 @@ const generatePDF = async () => {
             </div>
           </div>
           
-          <div className="space-y-8">
+          <div className="space-y-10">
             <div className="relative">
               <input 
                 type="text" 
