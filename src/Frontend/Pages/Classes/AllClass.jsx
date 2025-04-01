@@ -11,16 +11,19 @@ import {
 import RegisterClass from "./RegisterClass";
 import UpdateClasses from "./UpdateClass"
 import { useSelector, useDispatch } from "react-redux";
-import { setClassData,setCurrentPage } from "../../../Store/slice";
-import { GetClasses } from '../../../service/api';
+import { setClassData,setCurrentPage,setConfirmRequest,setShowConfirmationModel,setStatus, setAddText } from "../../../Store/slice";
+import { GetClasses,DeleteClassAPI } from '../../../service/api';
 import { toast } from 'react-toastify';
 import { oops } from "../../../assets/index";
-
+import Cookies from "js-cookie";
 import Table from "../../Components/Elements/Table";
 import Pagination from "../../Components/Elements/Pagination";
+import Confirmation from "../../Components/Elements/ConfirmationModel"
+
 
 const AllClasses = () => {
   const url = import.meta.env.VITE_API_BASE_URL;
+  const token = Cookies.get("token");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -38,8 +41,10 @@ const AllClasses = () => {
   });
   const classes = useSelector((state) => state.userData.ClassData);
   const currentPage = useSelector((state) => state.userData.CurrentPage);
+  const showConfirmation = useSelector((state) => state.userData.showConfirmationModel);
+  const confirmRequest = useSelector((state) => state.userData.confirmRequest);
   const dispatch = useDispatch();
-
+console.log(confirmRequest)
   useEffect(() => {
     document.title = "All Classes";
     dispatch(setCurrentPage(1));
@@ -61,32 +66,33 @@ const AllClasses = () => {
     }
   }, [showToast, toastMessage, toastType]);
 
-  useEffect(() => {
-    const fetchClasses = async () => {
-      const response = await GetClasses(url);
-      if (response.status === 200 || response.status === 204 || response.status === 201) {
-        dispatch(setClassData(response.data.classes));
-        setPaginationData({
-          currentPage: response.data.pagination.currentPage|| 1,
-          totalItems: response.data.pagination.totalItems,
-          totalPages: response.data.pagination.totalPages,
-          totalItemsPerPage: response.data.pagination.studentsPerPage ||10
-        });
-        if(response.data.classes.length === 0) {
-        
-          setShowToast(true);
-          setToastMessage("No classes found");
-          setToastType("info");
-        }
-      } else {
-        setError(response.message);
-   
+  const fetchClasses = async () => {
+    const response = await GetClasses(url);
+    if (response.status === 200 || response.status === 204 || response.status === 201) {
+      dispatch(setClassData(response.data.classes));
+      setPaginationData({
+        currentPage: response.data.pagination.currentPage|| 1,
+        totalItems: response.data.pagination.totalItems,
+        totalPages: response.data.pagination.totalPages,
+        totalItemsPerPage: response.data.pagination.studentsPerPage ||10
+      });
+      if(response.data.classes.length === 0) {
+      
         setShowToast(true);
-        setToastMessage(response.message);
-        setToastType("error");
+        setToastMessage("No classes found");
+        setToastType("info");
       }
-      setLoading(false);
-    };
+    } else {
+      setError(response.message);
+ 
+      setShowToast(true);
+      setToastMessage(response.message);
+      setToastType("error");
+    }
+    setLoading(false);
+  };
+  useEffect(() => {
+    
 
     fetchClasses();
     
@@ -143,9 +149,52 @@ const AllClasses = () => {
       setshowUpdateClass(true);
   };
 
-  const handleDeleteClass = (classItem) => {
- 
+  const handleDeleteClass = async (classItem) => {
+    setselectedClass(classItem);
+    dispatch(setShowConfirmationModel(true))
+   
   };
+
+const DeleteClass = async ()=>{
+
+      const response = await DeleteClassAPI(url, token, selectedClass?._id);
+      if (response.status ===200 ||response.status ===201 || response.status ===204 ) {
+        dispatch(setStatus("success"))
+        dispatch(setAddText(` ${selectedClass?.className} deleted successfully`))
+        setTimeout(() => {
+          dispatch(setStatus(''));
+          dispatch(setAddText(''));
+          dispatch(setShowConfirmationModel(false));
+        }, 3000);
+        fetchClasses();
+      } else {
+        dispatch(setStatus("error"))
+        dispatch(setAddText(response.message))
+        setTimeout(() => {
+          dispatch(setStatus(''));
+          dispatch(setAddText(''));
+          dispatch(setShowConfirmationModel(false));
+        }, 3000);
+
+        if(response.status ===401)
+        {
+          Cookies.remove('token');
+                    Cookies.remove('user');
+                    window.location.href = '/user-options';
+          
+        }
+      }
+      dispatch(setConfirmRequest(false))
+}
+
+
+useEffect( ()=>{
+  if(confirmRequest)
+    {
+    DeleteClass()
+    }
+},[confirmRequest])
+
 
   if (loading) {
     return (
@@ -265,6 +314,36 @@ const AllClasses = () => {
           </div>
         )}
       </div>
+
+          {/* Confirmation Modal for Fine Imposition */}
+      {showConfirmation && (
+        <div
+          className={`
+            fixed inset-0 flex items-center justify-center 
+            bg-black bg-opacity-50 z-50 
+            ${
+              showConfirmation
+                ? "opacity-100 visible"
+                : "opacity-0 invisible pointer-events-none"
+            }
+            transition-all duration-300 ease-in-out
+          `}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              dispatch(setShowConfirmationModel(false))
+              setselectedClass(null);
+            }
+          }}
+        >
+          <Confirmation 
+            message={`Are you sure you want to delete the class ${selectedClass?.className}? All student data and other information associated with this class will be permanently deleted. This action cannot be undone.`}
+            note=" "          />
+        </div>
+      )}
+
+
+
+
 
       <div className="bg-white rounded-lg shadow-lg p-4">
 

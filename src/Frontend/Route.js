@@ -38,6 +38,7 @@
     export const GetStudentByClass = "student/getstudentbyclassid"
     export const UpdateClassDetails ='class/update-class'
     export const GetAllClasses = 'class/all-classes/no-pagination'
+    export const DeleteClass = 'class/delete-class'
     
     
 

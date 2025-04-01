@@ -10,7 +10,8 @@ import {
     GetSubjectByClass,AddMarkStudent, AddTransaction, GetTransactionsByTeacher,FilterTransaction,
      UpdateStudent, GetStudentAttendanceByID, PasswordChange,
       AddStudentTransaction,GetClassFeeTransaction,GetStudentFeeTransaction,
-      AddOtherExpense,GetOtherExpense,DeleteOtherExpenseByID,GetAllTeachers, GetAllClasses,GetGenderRatio,ImposeFine
+      AddOtherExpense,GetOtherExpense,DeleteOtherExpenseByID,GetAllTeachers, 
+      GetAllClasses,DeleteClass,GetGenderRatio,ImposeFine
   } from '../Frontend/Route';
 
 export const LoginUser = async (url, payload, role) => {
@@ -689,6 +690,38 @@ export const GetAllClassesAPI = async (url) => {
       return {
         status: response.status,
         data: response.data.data,
+        message: response.data.message
+      };
+    } else {
+      return {
+        status: response.status,
+        data: null,
+        message: response.data.message
+      };
+    }
+  } catch (err) {
+    return {
+      status: err.status,
+      data: null,
+      message: err.response.data.message || "Network error, try after sometime"
+    };
+  }
+};
+
+
+export const DeleteClassAPI = async (url, token, classID) => {
+  try {
+    const endpoint = `${url}${DeleteClass}/${classID}`;
+    const response = await axios.delete(endpoint, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (response.status === 200 || response.status === 204) {
+      return {
+        status: response.status,
+        data: response.data,
         message: response.data.message
       };
     } else {

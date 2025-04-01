@@ -6,7 +6,7 @@ import {
   GraduationCap,
   Plus,
   X,
-  FilePen,
+  PenSquare,
   Eye,
 } from "lucide-react";
 import UpdateStudents from "../../Pages/Student/UpdateStudent";
@@ -141,9 +141,9 @@ fetchStudents();
         <div className="flex items-center gap-3">
           <button 
             onClick={() => handlePromoteStudent(row)} 
-            className="w-10 h-10 text-blue-600 hover:text-blue-400  rounded-lg overflow-hidden flex flex-row justify-center items-center"
+            className="w-10 h-10 hover:text-purpleColor  rounded-lg overflow-hidden flex flex-row justify-center items-center"
           >
-            <FilePen size={20} />
+            <PenSquare size={20} />
           </button>
         </div>
       ),
@@ -219,11 +219,11 @@ fetchStudents();
       
       {/* Header */}
       <div className="flex flex-col md:flex-row text-black justify-between items-start md:items-center mb-[32px] p-2">
-        <div className="mb-4 md:mb-0">
-          <h2 className="h2 mb-2">Student Promotion</h2>
-          <div className="flex items-center subtitle-2">
-            <span className="">Students Details / </span>
-            <span>Student Promotion</span>
+        <div className="mb-4 md:mb-0 text-left">
+          <h2 className="h2 mb-2 text-left">Student Promotion</h2>
+          <div className="flex items-center subtitle-2 text-left">
+            <span className="text-left">Students Details / </span>
+            <span className="text-left">Student Promotion</span>
           </div>
         </div>
       </div>

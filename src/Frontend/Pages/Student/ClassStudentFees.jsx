@@ -466,8 +466,10 @@ import {
 import AddStudentFees from "./AddStudentFee";
 import Cookies from 'js-cookie'
 import { useSelector, useDispatch } from "react-redux";
-import { setStudentFinanceData, setCurrentPage, setShowConfirmationModel,setStatus, setAddText,setConfirmRequest } from "../../../Store/slice";
-import { GetTransactionsByTeacherAPI, GetClasses,GetAllClassesAPI, ImposeFineAPI,GetClassFeeTransactionAPI, FilterTransactionAPI, DeleteTransactionAPI } from '../../../service/api';
+import { setStudentFinanceData, setCurrentPage, setShowConfirmationModel,setStatus, setAddText,
+  setConfirmRequest } from "../../../Store/slice";
+import { GetTransactionsByTeacherAPI, GetClasses,GetAllClassesAPI, ImposeFineAPI,GetClassFeeTransactionAPI, 
+  FilterTransactionAPI, DeleteTransactionAPI } from '../../../service/api';
 import Table from "../../Components/Elements/Table";
 import ViewStudentFees from "../Student/ViewStudentsDetails/ViewStudentFeeHistory"
 import Pagination from "../../Components/Elements/Pagination";
@@ -504,7 +506,7 @@ const ClassStudentFees = () => {
   const confirmRequest = useSelector((state) => state.userData.confirmRequest);
   // const status = useSelector((state) => state.userData.status);
   // const addText = useSelector((state) => state.userData.addText);
-console.log(transactions?.students)
+
   const dispatch = useDispatch();
   const currentPage = useSelector((state) => state.userData.CurrentPage);
   const confirmationStatus = useSelector((state) => state.userData.confirmationStatus);
