@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { X, Plus, Loader } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
-import { setEventData, setAnnouncementData } from "../../Store/slice";
+import { setEventData, setAnnouncementData,setConfirmRequest,setShowConfirmationModel,setStatus, setAddText } from "../../Store/slice";
 import { useForm } from "react-hook-form";
 import { toast } from 'react-toastify';
 import { CreateEventAPI, CreateAnnouncementAPI, DeleteEventAPI, DeleteAnnouncementAPI, GetAllEventsAPI, GetAllAnnouncementsAPI } from '../../service/api';
-
+import Confirmation from "../Components/Elements/ConfirmationModel"
 const Events = () => {
   const token = Cookies.get("token");
   const url = import.meta.env.VITE_API_BASE_URL;
@@ -15,6 +15,8 @@ const Events = () => {
   const events = useSelector((state) => state.userData.EventData);
   const announcements = useSelector((state) => state.userData.AnnouncementData);
   const user = useSelector((state) => state.userData.user);
+  const showConfirmation = useSelector((state) => state.userData.showConfirmationModel);
+  const confirmRequest = useSelector((state) => state.userData.confirmRequest);
   
   const [selectedEvents, setSelectedEvents] = useState([]);
   const [selectedAnnouncements, setSelectedAnnouncements] = useState([]);
@@ -25,6 +27,7 @@ const Events = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showEventForm, setShowEventForm] = useState(false);
   const [showAnnouncementForm, setShowAnnouncementForm] = useState(false);
+  const [deleteType, setDeleteType] = useState('')
 
   const { 
     register: registerEvent, 
@@ -191,63 +194,98 @@ const Events = () => {
   };
 
   const handleDeleteEvents = async () => {
-    if (selectedEvents.length === 0) return;
-    setIsLoading(true);
-   
-      const response = await DeleteEventAPI(url, { eventIds: selectedEvents }, token);
-      if (response.status === 200 || response.status === 201 || response.status === 204) {
-        await fetchEvents();
-        setSelectedEvents([]);
-        setToastMessage(response.message || "Events deleted successfully");
-        setToastType("success");
-        setShowToast(true);
-      } else {
-        setToastMessage(response.message);
-        setToastType("error");
-        setShowToast(true);
-        if (response.status ===401)
-          {
-            Cookies.remove('token');
-            Cookies.remove('user');
-            window.location.href = '/user-options';
-
-        }
-      }
-  
-   
-    setIsLoading(false);
+setDeleteType('events')
+dispatch(setShowConfirmationModel(true));
   };
+
+const DeleteEvents = async()=>{
+  if (selectedEvents.length === 0) return;
+ 
+    const response = await DeleteEventAPI(url, { eventIds: selectedEvents }, token);
+
+    if (response.status ===200 ||response.status ===201 || response.status ===204 ) {
+      dispatch(setStatus("success"))
+      dispatch(setAddText(` Events deleted successfully`))
+      await fetchEvents();
+          } else {
+            dispatch(setStatus("error"))
+            dispatch(setAddText(response.message))
+      
+    
+            if(response.status ===401 && response.message ==="Invalid token")
+            {
+              Cookies.remove('token');
+              Cookies.remove('user');
+              window.location.href = '/user-options';
+              
+            }
+          }
+          setTimeout(() => {
+            dispatch(setStatus(''));
+            dispatch(setAddText(''));
+            dispatch(setShowConfirmationModel(false));
+          }, 3000);
+          dispatch(setConfirmRequest(false))
+}
+
+useEffect( ()=>{
+  if(confirmRequest)
+    {
+      if(deleteType==='events'){
+        DeleteEvents()
+      }
+      else if(deleteType==='announcements'){
+        DeleteAnnouncements()
+      }
+    }
+},[confirmRequest])
+
 
   const handleDeleteAnnouncements = async () => {
-    if (selectedAnnouncements.length === 0) return;
-    setIsLoading(true);
-   
-      const response = await DeleteAnnouncementAPI(url, { announcementIds: selectedAnnouncements }, token);
-      if (response.status === 200 || response.status === 201 || response.status === 204) {
-        await fetchAnnouncements();
-        setSelectedAnnouncements([]);
-        setToastMessage(response.message || "Announcements deleted successfully");
-        setToastType("success");
-        setShowToast(true);
-      } else {
-        setToastMessage(response.message);
-        setToastType("error");
-        setShowToast(true);
-        if (response.status === 401)
-          {
-            Cookies.remove('token');
-            Cookies.remove('user');
-            window.location.href = '/user-options';
-
-        }
-      }
-     
-   
+    setDeleteType('announcements')
+    dispatch(setShowConfirmationModel(true));
     
-
-    setIsLoading(false);
   };
   
+const DeleteAnnouncements = async ()=>{
+  if (selectedAnnouncements.length === 0) return;
+
+ 
+    const response = await DeleteAnnouncementAPI(url, { announcementIds: selectedAnnouncements }, token);
+   
+    if (response.status ===200 ||response.status ===201 || response.status ===204 ) {
+      dispatch(setStatus("success"))
+      dispatch(setAddText(` Announcements deleted successfully`))
+      await fetchAnnouncements();
+          } else {
+            dispatch(setStatus("error"))
+            dispatch(setAddText(response.message))
+      
+    
+               
+            if(response.status ===401 && response.message ==="Invalid token")
+            {
+              Cookies.remove('token');
+              Cookies.remove('user');
+              window.location.href = '/user-options';
+              
+            }
+          }
+          setTimeout(() => {
+            dispatch(setStatus(''));
+            dispatch(setAddText(''));
+            dispatch(setShowConfirmationModel(false));
+          }, 3000);
+          dispatch(setConfirmRequest(false))
+   
+ 
+
+
+}
+
+
+
+
 if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -457,6 +495,32 @@ if (isLoading) {
       <EventFormModal />
       <AnnouncementFormModal />
       
+{showConfirmation && (
+        <div
+          className={`
+            fixed inset-0 flex items-center justify-center 
+            bg-black bg-opacity-50 z-50 
+            ${
+              showConfirmation
+                ? "opacity-100 visible"
+                : "opacity-0 invisible pointer-events-none"
+            }
+            transition-all duration-300 ease-in-out
+          `}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              dispatch(setShowConfirmationModel(false))
+              setSelectedExam(null);
+            }
+          }}
+        >
+          <Confirmation 
+            message={`Are you sure you want to delete the ${deleteType}? This action cannot be undone.`}
+            note=""/>
+        </div>
+      )}
+
+
       {/* Tabs */}
       <div className="flex mb-4 border-b z-10">
         <button

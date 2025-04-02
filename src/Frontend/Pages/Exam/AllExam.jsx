@@ -198,6 +198,7 @@ dispatch(setShowConfirmationModel(true));
 
 const DeleteExam = async ()=>{
  const response = await DeleteExamAPI(url, token, selectedExam?._id);
+ 
       if (response.status ===200 ||response.status ===201 || response.status ===204 ) {
         dispatch(setStatus("success"))
         dispatch(setAddText(` ${selectedExam?.name} deleted successfully`))
