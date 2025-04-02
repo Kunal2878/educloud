@@ -148,7 +148,7 @@ const RegisterClass = () => {
           Register New Class
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-10 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-10 mb-8">
           <Input
             id="className"
             name="className"
@@ -168,7 +168,7 @@ const RegisterClass = () => {
             icon={School2}
           />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-10 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-10 mb-6">
           <Input
             id="fee"
             name="fee"
@@ -183,7 +183,7 @@ const RegisterClass = () => {
             id="lateFineAmount"
             name="lateFineAmount"
             type = "number"
-            label="Late Fine Amount (eg. Rs.100)"
+            label="Late Fine (eg. Rs.100)"
             register={register}
             errors={errors}
             required={true}
@@ -215,15 +215,16 @@ const RegisterClass = () => {
           {students.map((student, index) => (
             <div
               key={index}
-              className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4"
+              className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4 md:space-x-4"
             >
               <Input
                 id={`studentName-${index}`}
-                name={`studentName-${index}`}
+                name={`studentName-${index}`} 
                 label="Student Name"
                 value={student.name}
                 onChange={(e) => handleStudentChange(index, "name", e.target.value)}
                 icon={GraduationCap}
+                className="md:mr-2"
               />
               <Input
                 id={`studentEmail-${index}`}
