@@ -148,6 +148,15 @@ function App() {
       element: !Cookies.get("token") || !Cookies.get("user") ? <UserOption/> : <Nav path={"/teacher-attendance"}/>
     },
     {
+      path:'/teacher-leave-records',
+      element: !Cookies.get("token") || !Cookies.get("user") ? <UserOption/> : <Nav path={"/teacher-leave-records"}/>
+    },
+    {
+      path:'/leave-records',
+      element: !Cookies.get("token") || !Cookies.get("user") ? <UserOption/> : <Nav path={"/leave-records"}/>
+    },
+
+    {
       path:'/my-time-table',
       element: !Cookies.get("token") || !Cookies.get("user") ? <UserOption/> : <Nav path={"/my-time-table"}/>
     },

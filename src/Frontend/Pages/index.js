@@ -64,7 +64,9 @@ import AllClasses from "./Classes/AllClass";
 
 //Exams
 import AllExams from "./Exam/AllExam";
-//Khata Book
+//Leaves
+import AllLeaveDetails from "./Leaves/AllLeaves"
+import TeacherLeaves from "./Leaves/TeacherLeave"
 
 
 
@@ -126,6 +128,8 @@ export {
   TeachersStudentAddMarks,
   TeachersStudentAttendanceSystem,
   TeacherStudentMarksheet,
-  ConfirmationLogout
+  ConfirmationLogout,
+  AllLeaveDetails,
+  TeacherLeaves
 
 };

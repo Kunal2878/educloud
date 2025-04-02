@@ -1,6 +1,10 @@
     // Principal endpoints
     export const SignupPrincipal = 'principal/register'
     export const LoginPrincipal = 'principal/login'
+    export const Accept_RejectLeaveRequest = 'principal/accept-teachers-leave'
+    export const DeleteLeaveRequest = 'teacher/delete-teacher-leave'
+    export const GetAllLeaves = 'principal/get-teachers-leave'
+    
 
     // Teacher endpoints
     export const SignupTeacher = 'teacher/register'
@@ -13,6 +17,8 @@
     export const GetTeacherByID = 'teacher'
     export const PasswordChange = 'teacher/change-password'
     export const GetAllTeachers = 'teacher/all-teachers/no-pagination'
+    export const SendLeave = 'teacher/send-leave-request'
+    export const GetAllLeaveTeacher = 'teacher/get-all-leaves'
     
 
     // Student endpoints

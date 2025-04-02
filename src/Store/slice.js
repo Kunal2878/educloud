@@ -30,7 +30,8 @@ const dataSlice = createSlice({
     OtherExpenseData:[],
     TeacherAttendanceData:[],
     StudentAttendanceData:[],
-    GenderRatio:[]
+    GenderRatio:[],
+    LeaveData:[]
 
   },
   reducers: {
@@ -141,6 +142,9 @@ setAddText:(state,action) =>{
 setConfirmRequest:(state,action) =>{
   state.confirmRequest=action.payload
 },
+setLeaveData:(state,action) =>{
+  state.LeaveData=action.payload
+},
 
 }
 })
@@ -150,6 +154,6 @@ export const {setRole,setUser,setLoginData,setClassData,setStudentData,setTeache
   setLeaderBoard,setCurrentPage,setTransactionData,setStudentFinanceData,
   setOtherExpenseData,setStudentByClassData,setIsStudentUpdate,setTeacherAttendanceData,
   setStudentAttendanceData ,updateStudentAttendance,setIsLeaderBoardUpdate,setGenderRatio,setShowLogoutConfirm,
-  setShowConfirmationModel,setStatus,setAddText,setConfirmRequest}
+  setShowConfirmationModel,setStatus,setAddText,setConfirmRequest,setLeaveData}
  = dataSlice.actions
 export default dataSlice.reducer

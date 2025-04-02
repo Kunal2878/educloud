@@ -79,10 +79,17 @@ const Sidebar = ({ isOpen, role, onMenuClick }) => {
            path: "/mark-attendance",
          },
           {
-            label: "Teacher Attendance",
-            id: "teacher-attendance",
-            path: "/teacher-attendance",
-          },
+           label: "Teacher Attendance",
+           id: "teacher-attendance",
+           path: "/teacher-attendance",
+         },
+         
+         {
+           label: "Leave Records",
+           id: "leave-records",
+           path: "/leave-records",
+         },
+
         ]
 
       },
@@ -206,6 +213,12 @@ const Sidebar = ({ isOpen, role, onMenuClick }) => {
             label: "My Attendance",
             id: "my-attendance-teacher",
             path: "/my-attendance-teacher",
+          },
+
+          {
+            label: "Leave Records",
+            id: "teacher-leave-records",
+            path: "/teacher-leave-records",
           },
         ]
       },

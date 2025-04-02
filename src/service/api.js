@@ -10,7 +10,8 @@ import {
     GetSubjectByClass,AddMarkStudent, AddTransaction, GetTransactionsByTeacher,FilterTransaction,
      UpdateStudent, GetStudentAttendanceByID, PasswordChange,
       AddStudentTransaction,GetClassFeeTransaction,GetStudentFeeTransaction,
-      AddOtherExpense,GetOtherExpense,DeleteOtherExpenseByID,GetAllTeachers, 
+      AddOtherExpense,GetOtherExpense,DeleteOtherExpenseByID,GetAllTeachers, SendLeave,
+      GetAllLeaveTeacher, Accept_RejectLeaveRequest,DeleteLeaveRequest, GetAllLeaves,
       GetAllClasses,DeleteClass,GetGenderRatio,ImposeFine, DeleteExam
   } from '../Frontend/Route';
 
@@ -222,6 +223,147 @@ export const GetAllTeachersAPI = async (url) => {
     };
   }
 };
+export const SendLeaveAPI = async (url, payload) => {
+  try {
+    const endpoint = `${url}${SendLeave}`;
+    const response = await axios.post(endpoint, payload);
+    
+    if (response.status === 200 || response.status === 201) {
+      return {
+        status: response.status,
+        data: response.data,
+        message: response.data.message
+      };
+    } else {
+      return {
+        status: response.status,
+        data: null,
+        message: response.data.message
+      };
+    }
+  } catch (err) {
+    console.log(err)
+    return {
+      status: err.status,
+      data: null,
+      message: err.response.data.message || "Network error, try after sometime"
+    };
+  }
+};
+export const GetAllLeaveTeacherAPI = async (url, email) => {
+
+  try {
+    const endpoint = `${url}${GetAllLeaveTeacher}?email=${email}`;
+    const response = await axios.get(endpoint);
+    if (response.status === 200 || response.status === 201 || response.status === 204) {
+      return {
+        status: response.status,
+        data: response.data.data,
+        message: response.data.message
+      };
+    } else {
+      return {
+        status: response.status,
+        data: null,
+        message: response.data.message
+      };
+    }
+  } catch (err) {
+    console.log(err)
+    return {
+      status: err.status,
+      data: null,
+      message: err.response.data.message || "Network error, try after sometime"
+    };
+  }
+};
+
+export const Accept_RejectLeaveRequestAPI = async (url,id, payload) => {
+  console.log(id,payload)
+  try {
+    const endpoint = `${url}${Accept_RejectLeaveRequest}/${id}`;
+    const response = await axios.post(endpoint, payload);
+    
+    if (response.status === 200 || response.status === 201) {
+      return {
+        status: response.status,
+        data: response.data,
+        message: response.data.message
+      };
+    } else {
+      return {
+        status: response.status,
+        data: null,
+        message: response.data.message
+      };
+    }
+  } catch (err) {
+    console.log(err)
+    return {
+      status: err.status,
+      data: null,
+      message: err.response.data.message || "Network error, try after sometime"
+    };
+  }
+};
+
+export const DeleteLeaveRequestAPI = async (url, id) => {
+  console.log(id)
+  try {
+    const endpoint = `${url}${DeleteLeaveRequest}/${id}`;
+    const response = await axios.delete(endpoint);
+    if (response.status === 200 || response.status === 201) {
+      return {
+        status: response.status,
+        data: response.data,
+        message: response.data.message
+      };
+    } else {
+      return {
+        status: response.status,
+        data: null,
+        message: response.data.message
+      };
+    }
+  } catch (err) {
+    console.log(err)
+    return {
+      status: err.status,
+      data: null,
+      message: err.response.data.message || "Network error, try after sometime"
+    };
+  }
+};
+
+export const GetAllLeavesAPI = async (url) => {
+  try {
+    const endpoint = `${url}${GetAllLeaves}`;
+    const response = await axios.get(endpoint);
+    console.log(response.data)
+    if (response.status === 200 || response.status === 201 || response.status === 204) {
+      return {
+        status: response.status,
+        data: response.data.data,
+        message: response.data.message
+      };
+    } else {
+      return {
+        status: response.status,
+        data: null,
+        message: response.data.message
+      };
+    }
+  } catch (err) {
+    return {
+      status: err.status,
+      data: null,
+      message: err.response.data.message || "Network error, try after sometime"
+    };
+  }
+};
+
+
+
 
 export const GetAllTeacherCountAPI = async (url) => {
   try {

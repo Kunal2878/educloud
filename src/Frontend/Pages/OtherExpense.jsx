@@ -161,7 +161,7 @@ const OtherExpenses = () => {
       dispatch(setAddText(`Expenses deleted successfully`))
       
     } catch (error) {
-      dispatch(setStatus("success"))
+      dispatch(setStatus("error"))
       dispatch(setAddText(`Failed to  delete Expenses`))
     } finally {
       setShowToast(true);
