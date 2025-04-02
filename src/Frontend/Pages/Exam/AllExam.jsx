@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { useForm } from 'react-hook-form';
 import Cookies from "js-cookie";
-import { Calendar, Upload, ArrowRight, Eye,Trash } from "lucide-react";
+import { Upload, ArrowRight, Eye,Trash } from "lucide-react";
 import axios from "axios";
 import {useSelector, useDispatch} from 'react-redux'
 import { toast } from 'react-toastify';
-import { oops } from "../../../assets/index";
 import { CreateExam, GetAllExams, UploadExamTimeTable } from "../../Route";
 import { DeleteExamAPI} from '../../../service/api';
 import Confirmation from "../../Components/Elements/ConfirmationModel"
@@ -202,20 +201,11 @@ const DeleteExam = async ()=>{
       if (response.status ===200 ||response.status ===201 || response.status ===204 ) {
         dispatch(setStatus("success"))
         dispatch(setAddText(` ${selectedExam?.name} deleted successfully`))
-        setTimeout(() => {
-          dispatch(setStatus(''));
-          dispatch(setAddText(''));
-          dispatch(setShowConfirmationModel(false));
-        }, 3000);
         fetchExams();
       } else {
         dispatch(setStatus("error"))
         dispatch(setAddText(response.message))
-        setTimeout(() => {
-          dispatch(setStatus(''));
-          dispatch(setAddText(''));
-          dispatch(setShowConfirmationModel(false));
-        }, 3000);
+  
 
         if(response.status ===401)
         {
@@ -225,6 +215,11 @@ const DeleteExam = async ()=>{
           
         }
       }
+      setTimeout(() => {
+        dispatch(setStatus(''));
+        dispatch(setAddText(''));
+        dispatch(setShowConfirmationModel(false));
+      }, 3000);
       dispatch(setConfirmRequest(false))
   }
 

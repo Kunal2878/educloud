@@ -14,7 +14,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { setClassData,setCurrentPage,setConfirmRequest,setShowConfirmationModel,setStatus, setAddText } from "../../../Store/slice";
 import { GetClasses,DeleteClassAPI } from '../../../service/api';
 import { toast } from 'react-toastify';
-import { oops } from "../../../assets/index";
 import Cookies from "js-cookie";
 import Table from "../../Components/Elements/Table";
 import Pagination from "../../Components/Elements/Pagination";
@@ -161,20 +160,12 @@ const DeleteClass = async ()=>{
       if (response.status ===200 ||response.status ===201 || response.status ===204 ) {
         dispatch(setStatus("success"))
         dispatch(setAddText(` ${selectedClass?.className} deleted successfully`))
-        setTimeout(() => {
-          dispatch(setStatus(''));
-          dispatch(setAddText(''));
-          dispatch(setShowConfirmationModel(false));
-        }, 3000);
+        
         fetchClasses();
       } else {
         dispatch(setStatus("error"))
         dispatch(setAddText(response.message))
-        setTimeout(() => {
-          dispatch(setStatus(''));
-          dispatch(setAddText(''));
-          dispatch(setShowConfirmationModel(false));
-        }, 3000);
+       
 
         if(response.status ===401)
         {
@@ -184,6 +175,11 @@ const DeleteClass = async ()=>{
           
         }
       }
+      setTimeout(() => {
+        dispatch(setStatus(''));
+        dispatch(setAddText(''));
+        dispatch(setShowConfirmationModel(false));
+      }, 3000);
       dispatch(setConfirmRequest(false))
 }
 
@@ -363,19 +359,6 @@ useEffect( ()=>{
       )}
  
       </div>
-      {classes.length === 0 &&(
-
-<div className="flex flex-col items-center justify-center mt-4 p-4 ">
-           
-           
-           <img
-             src={oops}
-             alt="Failure"
-             className="w-[300px] h-[200px] sm:w-[400px] sm:h-[250px] md:w-[500px] md:h-[300px] lg:w-[600px] lg:h-[350px]  rounded-lg"
-           />
-         </div> 
-
-)}
 
       {paginationData.totalPages > 0 && (
         <Pagination

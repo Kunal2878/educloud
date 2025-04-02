@@ -63,7 +63,9 @@ const AddStudents = () => {
       });
       setClassData(response.data.data.classes);
     } catch (error) {
-      console.error("Error fetching classes:", error);
+      setShowToast(true);
+      setToastMessage(error.response.data.message || "Failed to fetch classes");
+      setToastType("error");
     }
   };
 
@@ -113,11 +115,8 @@ const AddStudents = () => {
         setSelectedClass("");
         setSelectedGender("");
         dispatch(setIsStudentUpdate(true))
-      } else if (response.status === 500) {
-        setShowToast(true);
-        setToastMessage(response.data.message);
-        setToastType("error");
-      } else {
+      } 
+       else {
         setShowToast(true);
         setToastMessage(response.data.message);
         setToastType("error");
@@ -190,7 +189,7 @@ const AddStudents = () => {
             required="Date of Birth is required"
             placeholder="eg. 2023-08-15"
             icon={Calendar}
-            className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto"
+            className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto [color-scheme:light]"
           />
    <Input
             id="studentPan"

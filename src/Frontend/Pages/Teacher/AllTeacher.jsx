@@ -15,7 +15,6 @@ import Table from "../../Components/Elements/Table";
 import Pagination from "../../Components/Elements/Pagination";
 import ViewTeacherDetails from './ViewTeacherDetails/ViewTeacherDetails';
 import { toast } from 'react-toastify';
-import { oops } from "../../../assets/index";
 const TeacherDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -268,19 +267,6 @@ const TeacherDetails = () => {
 
 </div>
 
-{teachers.length === 0 && (
-
-<div className="flex flex-col items-center justify-center mt-4 p-4 ">
-  
-           
-  
-  <img
-    src={oops}
-    alt="Failure"
-    className="w-[300px] h-[200px] sm:w-[400px] sm:h-[250px] md:w-[500px] md:h-[300px] lg:w-[600px] lg:h-[350px]  rounded-lg"
-  />
-</div>        
-)}
 
 
       {/* Pagination Component */}

@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { useForm } from "react-hook-form";
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from "react-redux";
-import { education,  onboarding, oops } from "../../assets";
+import { education,  onboarding } from "../../assets";
 import { Link } from 'react-router-dom';
 import { LoginUser } from '../../service/api';
 import Input from '../Components/Elements/Input';
