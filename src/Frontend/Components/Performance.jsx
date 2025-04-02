@@ -280,7 +280,7 @@ const [absentCount,setAbsentCount]= useState(0)
                 (<img className="w-16 h-20" src="/f_m.png" />):(
                   
                   <div className="text-2xl md:text-3xl font-bold" style={{ color: FEMALE_COLOR }}>
-                    {((presentCount / (presentCount + absentCount)) * 100).toFixed(1)}%
+                    {presentCount? ((presentCount / (presentCount + absentCount)) * 100).toFixed(1):'0'}%
                   </div>
                   
                 )}
