@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
-import { Mail,Lock,User,ArrowRight,Eye,EyeOff,Phone, VenusAndMars, School2,Calendar, IdCard
+import { Mail,Lock,User,ArrowRight,Eye,EyeOff,Phone, VenusAndMars, School2,Calendar, IdCard, MapPin
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -243,7 +243,7 @@ const AddStudents = () => {
             errors={errors}
             required="Address is required"
             placeholder="Address"
-            icon={IdCard}
+            icon={MapPin}
             className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto"
           />
     <Input
@@ -346,70 +346,80 @@ const AddStudents = () => {
             />
           </div>
           
-          <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto relative">
-            <Input
-              id="password"
-              name="password"
-              label="Password"
-              register={register}
-              errors={errors}
-              required="Password is required"
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              icon={Lock}
-              validation={{
-                minLength: {
-                  value: 8,
-                  message: "Password must be at least 8 characters",
-                },
-              }}
-              className="w-full"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-purple-500"
-            >
-              {showPassword ? (
-                <EyeOff className="h-5 w-5" />
-              ) : (
-                <Eye className="h-5 w-5" />
-              )}
-            </button>
-          </div>
+          <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto mb-8">
+  {/* Added margin-bottom (mb-8) to make space for the error message */}
+  <div className="relative">
+    <Input
+      id="password"
+      name="password"
+      label="Password"
+      register={register}
+      errors={errors}
+      required="Password is required"
+      type={showPassword ? "text" : "password"}
+      placeholder="Password"
+      icon={Lock}
+      validation={{
+        minLength: {
+          value: 8,
+          message: "Password must be at least 8 characters",
+        },
+      }}
+      className="w-full"
+    />
+    {/* The eye icon positioned absolutely relative to the parent div */}
+    <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-purple-500">
+      <button
+        type="button"
+        onClick={() => setShowPassword(!showPassword)}
+      >
+        {showPassword ? (
+          <EyeOff className="h-5 w-5" />
+        ) : (
+          <Eye className="h-5 w-5" />
+        )}
+      </button>
+    </div>
+  </div>
+</div>
           
-          <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto relative">
-            <Input
-              id="confirmPassword"
-              name="confirmPassword"
-              label="Confirm Password"
-              register={register}
-              errors={errors}
-              required="Please confirm your password"
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="Confirm Password"
-              icon={Lock}
-              validation={{
-                validate: (val) => {
-                  if (watch("password") != val) {
-                    return "Passwords do not match";
-                  }
-                },
-              }}
-              className="w-full"
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-purple-500"
-            >
-              {showConfirmPassword ? (
-                <EyeOff className="h-5 w-5" />
-              ) : (
-                <Eye className="h-5 w-5" />
-              )}
-            </button>
-          </div>
+          <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto mb-8">
+  {/* Added margin-bottom (mb-8) to make space for the error message */}
+  <div className="relative">
+    <Input
+      id="confirmPassword"
+      name="confirmPassword"
+      label="Confirm Password"
+      register={register}
+      errors={errors}
+      required="Please confirm your password"
+      type={showConfirmPassword ? "text" : "password"}
+      placeholder="Confirm Password"
+      icon={Lock}
+      validation={{
+        validate: (val) => {
+          if (watch("password") != val) {
+            return "Passwords do not match";
+          }
+        },
+      }}
+      className="w-full"
+    />
+    {/* The eye icon positioned absolutely relative to the parent div */}
+    <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-purple-500">
+      <button
+        type="button"
+        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+      >
+        {showConfirmPassword ? (
+          <EyeOff className="h-5 w-5" />
+        ) : (
+          <Eye className="h-5 w-5" />
+        )}
+      </button>
+    </div>
+  </div>
+</div>
           
           <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto">
             <button

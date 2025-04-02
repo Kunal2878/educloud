@@ -62,6 +62,15 @@ const AddTeachers = () => {
       setShowToast(true);
       setToastMessage(response.message);
       setToastType("error");
+
+    
+
+         if (response.status === 401) {  
+                Cookies.remove('user');
+                Cookies.remove('token');
+                window.location.href = '/user-options';                      
+              }
+      
     }
     setLoading(false);
     reset();
