@@ -11,7 +11,7 @@ import AddStudents from "../../Pages/Student/AddStudent";
 import UpdateStudents from "../../Pages/Student/UpdateStudent";
 import ViewStudentDetails from '../../Pages/Student/ViewStudentsDetails/ViewStudentDetails';
 import { useSelector, useDispatch } from "react-redux";
-import { setStudentData, setCurrentPage,setIsStudentUpdate } from "../../../Store/slice";
+import { setStudentData, setCurrentPage,setIsStudentUpdate } from "../../../Store/slice"; 
 import { toast } from 'react-toastify';
 import {  GetAllClassesAPI,GetStudentByClassAPI} from '../../../service/api';
 import Table from "../Elements/Table";

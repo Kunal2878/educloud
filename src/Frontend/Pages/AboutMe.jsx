@@ -34,7 +34,7 @@ const ProfilePage = () => {
               <div className="size-16 rounded-full bg-white border-2 border-blue-200 overflow-hidden flex justify-center items-center relative">
                 {user?.avatar ? (
                   <img
-                    src={user.avatar}
+                    src={user?.avatar}
                     alt={user.name}
                     className="w-full h-full object-cover"
                   />
@@ -102,20 +102,6 @@ const ProfilePage = () => {
 
             {/* Stats Section */}
             <div className="w-full md:w-1/2 flex flex-wrap gap-4 mb-6">
-            
-              {(user.role === "student" || user.role === "teacher") && (
-                <div className="bg-white p-4 rounded-lg shadow-md flex items-center gap-4 w-[calc(50%-8px)]">
-                  <div className="flex items-center gap-2">
-                    <div className="w-14 h-8 bg-blue-100 rounded-full flex justify-center items-center">
-                      <Calendar className="w-5 h-5 text-blue-500" />
-                    </div>
-                    <div>
-                      <p className="text-md md:text-lg font-black text-black ">90%</p>
-                      <p className="text-xs md:text-sm text-black-200">Attendance</p>
-                    </div>
-                  </div>
-                </div>
-              )}
 
               {(user.role === "student" || user.role === "teacher") && (
                 <div className="bg-white p-4 rounded-lg shadow-md flex items-center gap-4 w-[calc(50%-8px)]">
