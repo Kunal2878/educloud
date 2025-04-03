@@ -34,6 +34,7 @@ const ClassStudentFees = () => {
   const [selectedClassName, setSelectedClassName] = useState("");
   const [showViewStudent, setShowViewStudent] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [classFee, setClassFee] = useState(null)
   // const [status, setStatus] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -142,7 +143,6 @@ const ClassStudentFees = () => {
     setLoading(false);
   };
 
-console.log(transactions)
 
 
 
@@ -482,7 +482,11 @@ dispatch(setConfirmRequest(false))
             <div className="relative min-w-[200px]">
               <select
                 value={selectedClass}
-                onChange={handleClassChange}
+                onChange={(e) => {
+                  handleClassChange(e)
+                  const selectedFee = classes.find(c => c._id === e.target.value)?.fee || 0
+                  setClassFee(selectedFee)
+                }}
                 className="p-2 pl-3 border rounded-lg bg-primary-300 text-black-300 border-lamaSkyLight transition-all duration-200 h-11 w-full"
               >
                 <option value="">Select Class</option>
@@ -493,7 +497,6 @@ dispatch(setConfirmRequest(false))
                 ))}
               </select>
             </div>
-
             {/* Month Selection */}
             <div className="relative">
               <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2" size={20} />
@@ -514,6 +517,15 @@ dispatch(setConfirmRequest(false))
               <span>Filter</span>
             </button>
           </div>
+          <div className="ml-auto">
+                      {classFee && (
+                        <div className="flex items-center gap-2 p-2 px-4 bg-primary-300 text-black-300 rounded-lg h-11">
+                          <span className="font-medium">Tuition Fee:</span>
+                          <span>₹{classFee}</span>
+                        </div>
+                      )}
+                    </div>
+          
         </div>
 
         {/* Table Component */} 
