@@ -142,6 +142,10 @@ const ClassStudentFees = () => {
     setLoading(false);
   };
 
+console.log(transactions)
+
+
+
   const handleDeleteTransaction = async (transaction) => {
     try {
       const response = await DeleteTransactionAPI(url, token, transaction._id);

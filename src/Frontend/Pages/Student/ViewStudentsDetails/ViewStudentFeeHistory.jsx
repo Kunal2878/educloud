@@ -1,3 +1,47 @@
+// {
+//   "statusCode": 200,
+//   "data": [
+//       {
+//           "_id": "67eeb4672bc76ab31865fb44",
+//           "month": "June",
+//           "student": "67ecb1a700588b85095c9240",
+//           "__v": 0,
+//           "baseAmount": 1000,
+//           "createdAt": "2025-04-03T16:16:39.389Z",
+//           "finePaid": true,
+//           "isAdvancePayment": true,
+//           "lateFine": false,
+//           "paymentDate": "2025-04-03T16:16:39.280Z",
+//           "status": "paid",
+//           "updatedAt": "2025-04-03T16:16:39.389Z",
+//           "totalAmount": 1000,
+//           "id": "67eeb4672bc76ab31865fb44"
+//       },
+//       {
+//           "_id": "67eeb4672bc76ab31865fb43",
+//           "month": "May",
+//           "student": "67ecb1a700588b85095c9240",
+//           "__v": 0,
+//           "baseAmount": 1000,
+//           "createdAt": "2025-04-03T16:16:39.389Z",
+//           "finePaid": true,
+//           "isAdvancePayment": true,
+//           "lateFine": false,
+//           "paymentDate": "2025-04-03T16:16:39.280Z",
+//           "status": "paid",
+//           "updatedAt": "2025-04-03T16:16:39.389Z",
+//           "totalAmount": 1000,
+//           "id": "67eeb4672bc76ab31865fb43"
+//       }
+//   ],
+//   "message": "Fee payment history fetched successfully.",
+//   "success": true
+// }  
+  
+  
+  
+  
+  
   import React, { useState, useEffect } from "react";
   import {
     Search,
@@ -91,6 +135,15 @@
         ),
       },
       {
+        field: 'totalAmount',
+        headerName: 'Amount',
+        renderCell: (row) => (
+          <div className="flex items-center gap-2">
+            <span>{row.totalAmount || '-'}</span>
+          </div>
+        ),
+      },
+      {
         field: 'status',
         headerName: 'Status',
         renderCell: (row) => (
@@ -98,6 +151,26 @@
             row.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
           }`}>
             {row.status || '-'}
+          </div>
+        ),
+      },
+      {
+        field: 'paidFine',
+        headerName: 'Pay Fine',
+        renderCell: (row) => (
+          <div className={`px-2 py-1 rounded-full text-sm ${
+          row.lateFine?  row.paidFine  ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800':'text-gray-800'
+          }`}>
+            {row.lateFine?  row.paidFine?'paid':'not paid' :'No due fine'}
+          </div>
+        ),
+      },
+      {
+        field: 'paymentDate',
+        headerName: 'Date of Payment',
+        renderCell: (row) => (
+          <div className="flex items-center gap-2">
+            <span>{row.paymentDate ? new Date(row.paymentDate).toLocaleDateString('en-GB') : '-'}</span>
           </div>
         ),
       },
