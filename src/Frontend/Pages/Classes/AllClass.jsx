@@ -332,7 +332,7 @@ useEffect( ()=>{
           }}
         >
           <Confirmation 
-            message={`Delete class${selectedClass?.className}? This will permanently remove all associated student data and cannot be undone.`}
+            message={`Are you sure you want to delete class${selectedClass?.className}? This action cannot be undone and will remove all associated student data.`}
             note=""          />
         </div>
       )}

@@ -15,7 +15,7 @@ import UnderMaintenance from '../../UnderMaintence'
 
     return (
       <div className="w-full p-4 mt-6">
-        <div className="border-b border-gray-200">
+        <div className="border-b border-gray-200 overflow-x-auto">
           <nav className="flex space-x-4">
             {tabs.map((tab, index) => (
               <button

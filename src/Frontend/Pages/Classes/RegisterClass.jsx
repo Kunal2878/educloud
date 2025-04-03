@@ -138,7 +138,7 @@ const RegisterClass = () => {
   };
 
   return (
-    <div className="min-h-screen sm:px-16 px-6 sm:py-16 py-10 w-full">
+    <div className="h-auto overflow-auto sm:px-16 px-6 sm:py-16 py-10 w-full">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-4xl mx-auto bg-white rounded-lg p-2 transition-all duration-300"
@@ -208,53 +208,7 @@ const RegisterClass = () => {
           />
         </div>
 
-        <div className="mb-8 gap-8 md:gap-12">
-          <h3 className="text-lg font-semibold mb-8 text-black">
-            Add Students
-          </h3>
-          {students.map((student, index) => (
-            <div
-              key={index}
-              className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4 md:space-x-4"
-            >
-              <Input
-                id={`studentName-${index}`}
-                name={`studentName-${index}`} 
-                label="Student Name"
-                value={student.name}
-                onChange={(e) => handleStudentChange(index, "name", e.target.value)}
-                icon={GraduationCap}
-                className="md:mr-2"
-              />
-              <Input
-                id={`studentEmail-${index}`}
-                name={`studentEmail-${index}`}
-                label="Student Email"
-                type="email"
-                value={student.email}
-                onChange={(e) => handleStudentChange(index, "email", e.target.value)}
-                icon={Mail}
-              />
-            </div>
-          ))}
-          <div className="flex gap-4 md:gap-8 mt-6 mb-8 md:mb-16 align-center justify-center">
-            <button
-              type="button"
-              onClick={addStudent}
-              className="px-4 py-2 bg-white border-2 text-purpleColor border-purpleColor rounded-full hover:bg-gray-300 transition-all"
-            >
-              +
-            </button>
-            <button
-              type="button"
-              onClick={handleDeleteStudent}
-              className="px-4 py-2 bg-white border-2 text-danger border-danger rounded-full hover:bg-gray-300 transition-all"
-            >
-              -
-            </button>
-          </div>
-        </div>
-
+      
         <button
           type="submit"
           disabled={loading}
