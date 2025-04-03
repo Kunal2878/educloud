@@ -3,6 +3,7 @@
 //   import ExamMarkDetails from './ViewExamDetails';
   import TeacherAttendance from './ViewAttendanceHistory';
 import UnderMaintenance from '../../UnderMaintence'
+import TeacherFee from './ViewTeacherFeeHistory'
   const ViewTeacherDetails = (TeacherData) => {
     const [selectedTab, setSelectedTab] = useState(0);
 
@@ -10,7 +11,7 @@ import UnderMaintenance from '../../UnderMaintence'
       { label: 'Teacher Profile', component: <TeacherProfilePage TeacherData ={TeacherData} /> },
     //   { label: 'Exam Details', component: <ExamMarkDetails TeacherData ={TeacherData}/> },
       { label: 'Attendance', component: <TeacherAttendance  TeacherData ={TeacherData}/> },
-      { label: 'Teacher Fee History', component: <UnderMaintenance/> }
+      { label: 'Teacher Fee History', component: <TeacherFee TeacherData ={TeacherData}/> }
     ];
 
     return (
