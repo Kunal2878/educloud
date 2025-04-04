@@ -113,7 +113,49 @@ const summary = Summary?.Summary
       </ul>
     );
   };
-
+// Custom label function to display name and value
+const renderCustomLabel = (props) => {
+  const { cx, cy, midAngle, innerRadius, outerRadius, percent, index, payload } = props;
+  
+  // Calculate position for the label
+  const radius = innerRadius + (outerRadius - innerRadius) * 1.4;
+  const x = cx + radius * Math.cos(-midAngle * Math.PI / 180);
+  const y = cy + radius * Math.sin(-midAngle * Math.PI / 180);
+  
+  // Create a line from the slice to the label
+  const lineX1 = cx + (outerRadius + 10) * Math.cos(-midAngle * Math.PI / 180);
+  const lineY1 = cy + (outerRadius + 10) * Math.sin(-midAngle * Math.PI / 180);
+  
+  return (
+    <g>
+      {/* Line connecting slice to label */}
+      <line x1={lineX1} y1={lineY1} x2={x} y2={y} stroke={data[index].color} strokeWidth={1} />
+      
+      {/* Label text with name and value */}
+      <text 
+  x={x} 
+  y={y-8} 
+  fill="#333"
+  textAnchor={x > cx ? 'start' : 'end'}
+  dominantBaseline="central"
+  fontSize="12"
+  fontWeight="bold"
+>
+  {payload.name} {`₹${payload.value.toLocaleString()}`}
+</text>
+<text 
+  x={x} 
+  y={y+8} 
+  fill="#333"
+  textAnchor={x > cx ? 'start' : 'end'}
+  dominantBaseline="central"
+  fontSize="12"
+>
+({payload.count} students)
+</text>
+    </g>
+  );
+};
   // Add 3D effect with shadow and gradient - with percentage label
   const renderCustomizedShape = (props) => {
     const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, index } = props;
@@ -175,7 +217,7 @@ const summary = Summary?.Summary
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto  rounded-lg p-6 lg:p-12 mb-12">
+    <div className="w-full max-w-2xl mx-auto  rounded-lg p-4 lg:p-12 mb-12">
       <h2 className="text-xl font-bold text-center text-black-300  mb-6">Class Fee Collection Status</h2>
       <div className="text-center text-sm font-semibold text-black-300 mb-6">
         <div className="lg:flex lg:flex-row lg:justify-between lg:gap-4 flex flex-col gap-2 lg:mb-6 lg:mt-2 mt-6">
@@ -186,8 +228,10 @@ const summary = Summary?.Summary
         <div className="lg:mt-2 mt-6">
           <div className="bg-lamaYellow rounded-full py-1 px-4 lg:w-1/3 w-3/4 mx-auto">Late Fees: ₹{lateFeeAmount_total.toLocaleString() || 0}</div>
         </div>
-      </div>      <div className="lg:h-72 h-80 w-full">
-        <ResponsiveContainer width="100%" height="100%">
+      </div>      
+      
+      <div className="h-80 lg:h-[480px] w-full overflow-x-scroll flex flex-row justify-center items-center">
+        <ResponsiveContainer width="150%" height="100%" className="">
           <PieChart>
             <Pie
               activeIndex={activeIndex}
@@ -196,7 +240,7 @@ const summary = Summary?.Summary
               cx="50%"
               cy="50%"
               innerRadius={0}
-              outerRadius={90}
+              outerRadius={window.innerWidth < 768 ? 70 : 90}
               dataKey="value"
               onMouseEnter={onPieEnter}
               onMouseLeave={onPieLeave}
@@ -205,6 +249,7 @@ const summary = Summary?.Summary
               isAnimationActive={true}
               paddingAngle={1}
               shape={renderCustomizedShape}
+              label={window.innerWidth < 768 ? null : renderCustomLabel}
             >
               {data.map((entry, index) => (
                 <Cell 
@@ -214,12 +259,12 @@ const summary = Summary?.Summary
                 />
               ))}
             </Pie>
+            
             <Tooltip content={<CustomTooltip />} />
             <Legend content={renderLegend} />
           </PieChart>
         </ResponsiveContainer>
-      </div>
-    </div>
+      </div>    </div>
   );
 };
 
