@@ -230,7 +230,7 @@ const renderCustomLabel = (props) => {
         </div>
       </div>      
       
-      <div className="h-80 lg:h-[480px] w-full overflow-x-scroll flex flex-row justify-center items-center">
+      <div className="h-80 lg:h-[400px] w-full overflow-x-scroll flex flex-row justify-center items-center">
         <ResponsiveContainer width="150%" height="100%" className="">
           <PieChart>
             <Pie
