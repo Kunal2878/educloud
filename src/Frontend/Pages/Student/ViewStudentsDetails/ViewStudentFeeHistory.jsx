@@ -55,8 +55,6 @@ const ViewStudentFees = (studentData) => {
     dispatch(setCurrentPage(1));
   }, []);
 
-console.log(transactions)
-
   const fetchTransactions = async () => {
     try {
       setLoading(true);
