@@ -206,109 +206,91 @@ const OtherExpenses = () => {
     ? filteredExpenses.reduce((sum, expense) => sum + Number(expense.amount), 0)
     : 0;
 
-  // Expense Form Modal
-  const ExpenseFormModal = () => (
-    <div
-      className={`
-        fixed inset-0 flex items-center justify-center 
-        bg-black bg-opacity-50 z-50 
-        ${
-          showExpenseForm
-            ? "opacity-100 visible"
-            : "opacity-0 invisible pointer-events-none"
-        }
-        transition-all duration-300 ease-in-out
-      `}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          setShowExpenseForm(false);
-        }
-      }}
-    >
-      <div
-        className={`
-          relative rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto 
-          bg-white p-6 custom-scrollbar
-          ${
-            showExpenseForm
-              ? "opacity-100 scale-100 translate-y-0"
-              : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
-          }
-          transition-all duration-300 ease-in-out
-          transform origin-center
-        `}
-      >
-        <button
-          onClick={() => {setShowExpenseForm(false); resetExpense();}}
-          className="absolute top-6 right-6 p-2 bg-white rounded-full text-black-300 hover:scale-110"
-        >
-          <X size={24} />
-        </button>
-        <h2 className="h2 mb-[32px] text-left">Add Expense</h2>
-
-        {/* Expense Form with React Hook Form */}
-        <form onSubmit={handleSubmitExpense(onExpenseSubmit)} className="mb-[16px]">
-          <div className="mb-4">
-            <input
-              type="text"
-              placeholder="Expense Name"
-              className={`w-full p-2 rounded bg-transparent border-2 border-black-200 text-black-300 focus:outline ${expenseErrors.name ? 'border-red-500' : ''}`}
-              {...registerExpense("name", { required: "Name is required" })}
-            />
-            {expenseErrors.name && <p className="text-red-500 text-sm mt-1">{expenseErrors.name.message}</p>}
-          </div>
-          
-          <div className="mb-4">
-            <textarea
-              placeholder="Description"
-              className={`w-full h-32 p-2 border-2 rounded bg-transparent border-black-200 text-black-300 focus:outline resize-none ${expenseErrors.description ? 'border-red-500' : ''}`}
-              {...registerExpense("description", { required: "Description is required" })}
-            />
-            {expenseErrors.description && <p className="text-red-500 text-sm mt-1">{expenseErrors.description.message}</p>}
-          </div>
-          
-          <div className="mb-4">
-            <input
-              type="number"
-              placeholder="Amount"
-              className={`w-full p-2 border-2 rounded bg-transparent border-black-200 text-black-300 focus:outline ${expenseErrors.amount ? 'border-red-500' : ''}`}
-              {...registerExpense("amount", { 
-                required: "Amount is required",
-                min: { value: 1, message: "Amount must be greater than 0" }
-              })}
-            />
-            {expenseErrors.amount && <p className="text-red-500 text-sm mt-1">{expenseErrors.amount.message}</p>}
-          </div>
-          <div className="mb-4">
-                      <input
-                        type="date"
-                        placeholder="Date"
-                        className={`w-full p-2 border-2 rounded bg-transparent border-black-200 text-black-300 focus:outline [color-scheme:light] ${expenseErrors.date ? 'border-red-500' : ''}`}
-                        {...registerExpense("date", {                           required: "Date is required"
-                        })}
-                      />
-                      {expenseErrors.date && <p className="text-red-500 text-sm mt-1">{expenseErrors.date.message}</p>}
-                    </div>
-          
-
-
-
-          <button
-            type="submit"
-            className="w-full bg-success-500 text-white p-2 rounded flex items-center justify-center hover:scale-105 transition duration-200"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-            ) : (
-              "Create Expense"
-            )}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-
+    const ExpenseFormModal = () => {
+      // Clone the showExpenseForm state for animation control
+      const [isVisible, setIsVisible] = useState(false);
+      
+      // Watch for changes in the parent component's showExpenseForm state
+    
+    
+      const handleClose = () => {
+        setShowExpenseForm(false);
+        resetExpense();
+      };
+    
+      return (
+        <div className="min-h-full max-w-3xl flex items-center justify-center p-6">
+      <div className="h-full w-full space-y-12 bg-white">
+              {/* <button
+                onClick={handleClose}
+                className="absolute top-6 right-6 p-2 bg-white rounded-full text-black-300 hover:scale-110 transition-transform duration-300"
+              >
+                <X size={24} />
+              </button> */}
+              <h2 className="h2 mb-[32px] text-left text-black-300">Add Expense</h2>
+    
+              {/* Expense Form with React Hook Form */}
+              <form onSubmit={handleSubmitExpense(onExpenseSubmit)} className="mb-[16px]">
+                <div className="mb-4 relative w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto">
+                  <input
+                    type="text"
+                    placeholder="Expense Name"
+                    className={`w-full p-2 rounded bg-transparent border-2 border-black-200 text-black-300 focus:outline ${expenseErrors.name ? 'border-red-500' : ''}`}
+                    {...registerExpense("name", { required: "Name is required" })}
+                  />
+                  {expenseErrors.name && <p className="text-red-500 text-sm mt-1">{expenseErrors.name.message}</p>}
+                </div>
+                
+                <div className="mb-4 relative w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto ">
+                  <textarea
+                    placeholder="Description"
+                    className={`w-full h-32 p-2 border-2 rounded bg-transparent border-black-200 text-black-300 focus:outline resize-none ${expenseErrors.description ? 'border-red-500' : ''}`}
+                    {...registerExpense("description", { required: "Description is required" })}
+                  />
+                  {expenseErrors.description && <p className="text-red-500 text-sm mt-1">{expenseErrors.description.message}</p>}
+                </div>
+                
+                <div className="mb-4 relative w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto">
+                  <input
+                    type="number"
+                    placeholder="Amount"
+                    className={`w-full p-2 border-2 rounded bg-transparent border-black-200 text-black-300 focus:outline ${expenseErrors.amount ? 'border-red-500' : ''}`}
+                    {...registerExpense("amount", { 
+                      required: "Amount is required",
+                      min: { value: 1, message: "Amount must be greater than 0" }
+                    })}
+                  />
+                  {expenseErrors.amount && <p className="text-red-500 text-sm mt-1">{expenseErrors.amount.message}</p>}
+                </div>
+                <div className="mb-4 relative w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto">
+                  <input
+                    type="date"
+                    placeholder="Date"
+                    className={`w-full p-2 border-2 rounded bg-transparent border-black-200 text-black-300 focus:outline [color-scheme:light] ${expenseErrors.date ? 'border-red-500' : ''}`}
+                    {...registerExpense("date", {
+                      required: "Date is required"
+                    })}
+                  />
+                  {expenseErrors.date && <p className="text-red-500 text-sm mt-1">{expenseErrors.date.message}</p>}
+                </div>
+                
+                <button
+                  type="submit"
+                  className="w-full bg-success-500 text-white p-2 rounded flex items-center justify-center hover:scale-105 transition duration-200"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  ) : (
+                    "Create Expense"
+                  )}
+                </button>
+              </form>
+            </div>
+     
+        </div>
+      );
+    };
   return (
     <div className="p-4 relative sm:px-16 px-6 sm:py-16 py-10">
       {showToast && 
@@ -318,7 +300,53 @@ const OtherExpenses = () => {
       }
 
       {/* Modals */}
-      <ExpenseFormModal />
+      {/* <ExpenseFormModal /> */}
+
+      <div
+        className={`
+          fixed inset-0 flex items-center justify-center 
+          bg-black bg-opacity-50 z-50 
+          ${
+            showExpenseForm
+              ? "opacity-100 visible"
+              : "opacity-0 invisible pointer-events-none"
+          }
+          transition-all duration-300 ease-in-out
+        `}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            setShowExpenseForm(false);
+          }
+        }}
+      >
+        {showExpenseForm && (
+          <div
+            className={`
+              relative rounded-xl w-auto max-h-[90vh] overflow-y-auto 
+              bg-white
+              custom-scrollbar
+              ${
+                showExpenseForm
+                  ? "opacity-100 scale-100 translate-y-0"
+                  : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
+              }
+              transition-all duration-300 ease-in-out
+              transform origin-center
+            `}
+          >
+            <button
+                onClick={() => setShowExpenseForm(false)}
+              className="absolute top-6 right-4 p-2 z-100 rounded-full text-black-300 transition-colors duration-200 transform hover:scale-110"
+            >
+              <X size={24} />
+            </button>
+            <ExpenseFormModal onClose={() => setShowExpenseForm(false)} />
+          </div>
+        )}
+      </div>
+
+
+
 
       {/* Content */}
       <div className="w-full">
