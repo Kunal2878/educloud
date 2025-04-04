@@ -1,15 +1,14 @@
 // import { useState, useEffect } from 'react'
 // import { useForm } from 'react-hook-form'
 // import Cookies from "js-cookie"
-// import { School2, ChevronDown, Check, School, BookOpen, User, FileText, Calendar, IndianRupee } from 'lucide-react'
+// import { ChevronDown, Check, School, BookOpen, User, FileText, Calendar, IndianRupee } from 'lucide-react'
 // import { setClassData } from '../../../Store/slice'
-// import { GetClasses, GetAllClassesAPI, GetStudentByClassAPI, AddStudentTransactionAPI } from '../../../service/api'
+// import { GetAllClassesAPI, GetStudentByClassAPI, AddStudentTransactionAPI } from '../../../service/api'
 // import { useSelector, useDispatch } from 'react-redux'
-// import Toast from '../../Components/Toast'
 // import Input from "../../Components/Elements/Input"
 // import { toast } from 'react-toastify'
 
-// const AddStudentFees = () => {
+// const AddStudentAdvanceFees = () => {
 //   const [loading, setLoading] = useState(false)
 //   const [students, setStudents] = useState([])
 //   const [selectedClass, setSelectedClass] = useState('')
@@ -21,7 +20,6 @@
 //   const [toastType, setToastType] = useState('')
 //   const [classFee, setClassFee] = useState()
 //   const [lateFine, setLateFine] = useState()
-//   const [calculatedBaseAmount, setCalculatedBaseAmount] = useState(0)
 //   const classes = useSelector((state) => state.userData.ClassData)
 //   const dispatch = useDispatch()
 
@@ -179,11 +177,9 @@
 //       months: selectedMonths,
 //       status: selectedStatus,
 //       baseAmount: data.baseAmount,
-//       lateFine: data.lateFine === true,
-//       lateFineAmount: data.lateFine ? data.lateFineAmount : 0,
 //       finePaid: data.paidFine === true,
-//       isAdvancePayment: data.isAdvancePayment === true,
-//       paymentDate: data.isAdvancePayment ? data.paymentDate : null
+//       isAdvancePayment: true,
+//       paymentDate:  data.paymentDate
 //     }
     
 //     try {
@@ -229,7 +225,7 @@
 //       <div className="min-h-full max-w-3xl flex items-center justify-center p-4">
 //         <div className="h-full w-full space-y-10 bg-white">
 //           <div className="text-left">
-//             <h2 className="h2 text-black mt-5 flex flex-col items-start">Add Student Fee</h2>
+//             <h2 className="h2 text-black mt-5 flex flex-col items-start">Add Advance Fee</h2>
 //           </div>
 
 //           <form onSubmit={handleSubmit(onSubmit)} className="mt-[32px] space-y-8 mb-[16px]">
@@ -415,7 +411,7 @@
 //             <Input
 //               id="baseAmount"
 //               name="baseAmount"
-//               label="Base Amount)"
+//               label="Base Amount (eg. Rs.1000)"
 //               register={register}
 //               errors={errors}
 //               icon={IndianRupee}
@@ -423,57 +419,13 @@
 //               onChange={(e) => setClassFee(e.target.value)}
 //             />
 
-//             {/* Late Fine Checkbox */}
-//             <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto flex items-center">
-//               <input
-//                 type="checkbox"
-//                 id="lateFine"
-//                 {...register("lateFine")}
-//                 className="mr-2 w-4 h-4"
-//               />
-//               <label htmlFor="lateFine" className="text-black-300">Late Fine</label>
-//             </div>
-
-//             {/* Late Fine Amount (conditionally rendered) */}
-//             {lateFineChecked && (
-//               <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto">
-//                 <Input
-//                   id="lateFineAmount"
-//                   name="lateFineAmount"
-//                   type="number"
-//                   label="Late Fine Amount (eg. Rs.100)"
-//                   register={register}
-//                   errors={errors}
-//                   icon={IndianRupee}
-//                   value={lateFine}
-//                   onChange={(e) => setLateFine(e.target.value)}
-//                 />              </div>
-//             )}
-
-//             {/* Paid Fine Checkbox */}
-
-//             {
-//               lateFineChecked&&(
-
-//             <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto flex items-center">
-//               <input
-//                 type="checkbox"
-//                 id="paidFine"
-//                 {...register("paidFine")}
-//                 className="mr-2 w-4 h-4"
-//               />
-//               <label htmlFor="paidFine" className="text-black-300">Paid Fine</label>
-//             </div>
-//               )
-//             }
 
 
-//             {/* Advance Payment Date (conditionally rendered) */}
-        
+//             {/*  Payment Date (conditionally rendered) */}
 //               <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto">
 //                 <div className="relative">
 //                   <label className="block text-black-300 mb-1" htmlFor="paymentDate">
-//                     Advance Payment Date
+//                 Payment Date
 //                   </label>
 //                   <input
 //                     type="date"
@@ -490,7 +442,7 @@
 //                   )}
 //                 </div>
 //               </div>
-   
+        
 
 //             {/* Submit Button */}
 //             <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto mt-8">
@@ -515,20 +467,19 @@
 //   )
 // }
 
-// export default AddStudentFees
+// export default AddStudentAdvanceFees
 
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import Cookies from "js-cookie"
-import { School2, ChevronDown, Check, School, BookOpen, User, FileText, Calendar, IndianRupee } from 'lucide-react'
+import { ChevronDown, Check, School, BookOpen, User, FileText, Calendar, IndianRupee } from 'lucide-react'
 import { setClassData } from '../../../Store/slice'
-import { GetClasses, GetAllClassesAPI, GetStudentByClassAPI, AddStudentTransactionAPI } from '../../../service/api'
+import { GetAllClassesAPI, GetStudentByClassAPI, AddStudentTransactionAPI } from '../../../service/api'
 import { useSelector, useDispatch } from 'react-redux'
-import Toast from '../../Components/Toast'
 import Input from "../../Components/Elements/Input"
 import { toast } from 'react-toastify'
 
-const AddStudentFees = () => {
+const AddStudentAdvanceFees = () => {
   const [loading, setLoading] = useState(false)
   const [students, setStudents] = useState([])
   const [selectedClass, setSelectedClass] = useState('')
@@ -555,16 +506,18 @@ const AddStudentFees = () => {
   const [selectedStudentName, setSelectedStudentName] = useState('')
   const [selectedStatusName, setSelectedStatusName] = useState('')
 
-  // Get current month to limit available months
+  // Get current date and future months
   const currentDate = new Date()
-  const currentMonth = currentDate.getMonth() // 0-11
-
-  // Months array - only show up to current month
+  const currentMonthIndex = currentDate.getMonth()
+  
+  // All months array
   const allMonths = [
     "January", "February", "March", "April", "May", "June", 
     "July", "August", "September", "October", "November", "December"
   ]
-  const availableMonths = allMonths.slice(0, currentMonth + 1)
+  
+  // Future months array (months after current month)
+  const futureMonths = [...allMonths.slice(currentMonthIndex + 1), ...allMonths.slice(0, currentMonthIndex + 1)]
 
   // Status options
   const statusOptions = ["paid", "not paid"]
@@ -602,12 +555,12 @@ const AddStudentFees = () => {
     }
   }, [selectedClass])
 
-  // Calculate base amount when months or class fee changes
+  // Calculate base amount when selectedMonths or classFee changes
   useEffect(() => {
-    const totalAmount = selectedMonths.length * classFee
+    const totalAmount = selectedMonths.length * (classFee || 0)
     setCalculatedBaseAmount(totalAmount)
-    setValue('baseAmount', totalAmount)
-  }, [selectedMonths, classFee])
+    setValue("baseAmount", totalAmount) // Update form value
+  }, [selectedMonths, classFee, setValue])
 
   const fetchClasses = async () => {
     const response = await GetAllClassesAPI(url)
@@ -641,10 +594,10 @@ const AddStudentFees = () => {
     setSelectedClassName(classItem.className)
     setIsClassDropdownOpen(false)
     
-    // Reset months when class changes
+    // Reset selected months when class changes to recalculate base amount
     setSelectedMonths([])
     setCalculatedBaseAmount(0)
-    setValue('baseAmount', 0)
+    setValue("baseAmount", 0)
   }
 
   const selectStudent = (student) => {
@@ -655,20 +608,15 @@ const AddStudentFees = () => {
 
   const toggleMonth = (month) => {
     setSelectedMonths(prevMonths => {
-      let newMonths;
+      let newSelectedMonths;
       if (prevMonths.includes(month)) {
-        newMonths = prevMonths.filter(m => m !== month);
+        newSelectedMonths = prevMonths.filter(m => m !== month);
       } else {
-        newMonths = [...prevMonths, month];
+        newSelectedMonths = [...prevMonths, month];
       }
       
-      // Immediately update the base amount
-      const totalAmount = newMonths.length * classFee;
-      setCalculatedBaseAmount(totalAmount);
-      setValue('baseAmount', totalAmount);
-      
-      return newMonths;
-    });
+      return newSelectedMonths;
+    })
   }
 
   const selectStatus = (status) => {
@@ -722,12 +670,10 @@ const AddStudentFees = () => {
       student: selectedStudent,
       months: selectedMonths,
       status: selectedStatus,
-      baseAmount: data.baseAmount,
-      lateFine: data.lateFine === true,
-      lateFineAmount: data.lateFine ? data.lateFineAmount : 0,
+      baseAmount: calculatedBaseAmount, // Use calculated amount
       finePaid: data.paidFine === true,
-      isAdvancePayment: false,
-      paymentDate: data.isAdvancePayment ? data.paymentDate : null
+      isAdvancePayment: true,
+      paymentDate: data.paymentDate
     }
     
     try {
@@ -774,7 +720,7 @@ const AddStudentFees = () => {
       <div className="min-h-full max-w-3xl flex items-center justify-center p-4">
         <div className="h-full w-full space-y-10 bg-white">
           <div className="text-left">
-            <h2 className="h2 text-black mt-5 flex flex-col items-start">Add Student Fee</h2>
+            <h2 className="h2 text-black mt-5 flex flex-col items-start">Add Advance Fee</h2>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="mt-[32px] space-y-8 mb-[16px]">
@@ -865,7 +811,7 @@ const AddStudentFees = () => {
               </div>
             </div>
 
-            {/* Month Selection - Now with multiple selection but only showing months up to current month */}
+            {/* Month Selection - Now showing only future months */}
             <div className="relative w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto">
               <div className="relative bg-transparent border-2 border-black-200 text-black-300 rounded-lg focus:outline">
                 <button
@@ -887,7 +833,8 @@ const AddStudentFees = () => {
                 </button>
                 {isMonthDropdownOpen && (
                   <div className="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                    {availableMonths.map((month) => (
+                    {/* Only showing future months */}
+                    {futureMonths.map((month) => (
                       <div
                         key={month}
                         onClick={() => toggleMonth(month)}
@@ -956,75 +903,47 @@ const AddStudentFees = () => {
               </div>
             </div>
 
-            {/* Base Amount Input - Using existing Input component but with value derived from months * classFee */}
-            <Input
-              id="baseAmount"
-              name="baseAmount"
-              label="Base Amount"
-              register={register}
-              errors={errors}
-              icon={IndianRupee}
-              value={calculatedBaseAmount}
-              onChange={(e) => {
-                // Allow manual override of the calculated value
-                setValue('baseAmount', e.target.value);
-              }}
-            />
-
-            {/* Late Fine Checkbox */}
-            <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto flex items-center">
-              <input
-                type="checkbox"
-                id="lateFine"
-                {...register("lateFine")}
-                className="mr-2 w-4 h-4"
-              />
-              <label htmlFor="lateFine" className="text-black-300">Late Fine</label>
-            </div>
-
-            {/* Late Fine Amount (conditionally rendered) */}
-            {lateFineChecked && (
-              <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto">
-                <Input
-                  id="lateFineAmount"
-                  name="lateFineAmount"
-                  type="number"
-                  label="Late Fine Amount (eg. Rs.100)"
-                  register={register}
-                  errors={errors}
-                  icon={IndianRupee}
-                  value={lateFine}
-                  onChange={(e) => setLateFine(e.target.value)}
-                />
-              </div>
-            )}
-
-            {/* Paid Fine Checkbox */}
-            {lateFineChecked && (
-              <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto flex items-center">
+            {/* Base Amount Input - Now automatically calculated */}
+            {/* <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto">
+              <label className="block text-black-300 mb-1" htmlFor="baseAmount">
+                Base Amount (Rs.)
+              </label>
+              <div className="relative">
+                <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 text-danger w-4 h-4 md:w-5 md:h-5" />
                 <input
-                  type="checkbox"
-                  id="paidFine"
-                  {...register("paidFine")}
-                  className="mr-2 w-4 h-4"
+                  type="number"
+                  id="baseAmount"
+                  readOnly
+                  {...register("baseAmount")}
+                  value={calculatedBaseAmount}
+                  className="w-full p-2 pl-10 border-2 border-black-200 bg-transparent text-black-300 rounded-lg focus:outline-none"
                 />
-                <label htmlFor="paidFine" className="text-black-300">Paid Fine</label>
               </div>
-            )}
+            </div> */}
+               <Input
+                          id="baseAmount"
+                          name="baseAmount"
+                          label="Base Amount"
+                          register={register}
+                          errors={errors}
+                          icon={IndianRupee}
+                          value={calculatedBaseAmount}
+                          onChange={(e) => setClassFee(e.target.value)}
+                        />
 
-            {/* Advance Payment Date */}
+            {/* Payment Date */}
             <div className="w-full sm:w-96 md:w-[24rem] lg:w-[28rem] mx-auto">
               <div className="relative">
                 <label className="block text-black-300 mb-1" htmlFor="paymentDate">
-                Payment Date
+                  Payment Date
                 </label>
                 <input
                   type="date"
                   id="paymentDate"
                   max={formattedDate}
                   {...register("paymentDate", {
-                    required: isAdvancePaymentChecked,
-                    validate: value => !isAdvancePaymentChecked || new Date(value) <= new Date() || "Date cannot be in the future"
+                    required: true,
+                    validate: value => new Date(value) <= new Date() || "Date cannot be in the future"
                   })}
                   className="w-full p-2 border-2 border-black-200 bg-transparent text-black-300 rounded-lg focus:outline-none [color-scheme:light]"
                 />
@@ -1057,4 +976,4 @@ const AddStudentFees = () => {
   )
 }
 
-export default AddStudentFees
+export default AddStudentAdvanceFees

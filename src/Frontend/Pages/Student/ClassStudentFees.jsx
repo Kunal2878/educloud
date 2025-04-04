@@ -22,7 +22,7 @@ import Pagination from "../../Components/Elements/Pagination";
 import { toast } from 'react-toastify';
 import StudentFeePieChart from "../../Components/Elements/PieChartModel"
 import Confirmation from "../../Components/Elements/ConfirmationModel"
-
+import ViewStudentFeeTabs from './StudentFeeTab'
 const ClassStudentFees = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -302,7 +302,7 @@ dispatch(setConfirmRequest(false))
       headerName: 'Status',
       renderCell: (row) => (
         <div className={`px-2 py-2 flex items-center lg:py-1 rounded-lg lg:rounded-full text-sm ${
-          row.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+          row.status === 'paid' ? ' text-success-500' : ' text-danger'
         }`}>
           {row.status || '-'}
         </div>
@@ -375,7 +375,7 @@ dispatch(setConfirmRequest(false))
             >
               <X size={24} />
             </button>
-            <AddStudentFees onClose={() => {
+            <ViewStudentFeeTabs onClose={() => {
               setShowAddTransaction(false);
               fetchTransactions(); // Refresh data after adding
             }} />

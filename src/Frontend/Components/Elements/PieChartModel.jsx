@@ -1,17 +1,6 @@
 import React, { useState } from 'react';
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer, Sector } from 'recharts';
 
-
-// { 
-//     lateFeeCount = 4,
-//     paidCount = 1,
-//     totalStudents = 8,
-//     unpaidCount = 7,
-//     baseAmount = 500,
-//     lateFeeAmount = 50
-//   }
-
-
 const StudentFeePieChart = (Summary) => {
 const baseAmount =1000
 const lateFeeAmount =100
@@ -32,7 +21,7 @@ const summary = Summary?.Summary
   ].filter(item => item.value > 0 && item.count > 0); // Filter out zero values
 
   const COLORS = data.map(item => item.color);
-console.log(data)
+
   // 3D effect styling using gradients and shadow
   const create3DEffect = (startColor) => {
     return {
@@ -186,7 +175,7 @@ console.log(data)
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6 lg:p-12 mb-12">
+    <div className="w-full max-w-2xl mx-auto  rounded-lg p-6 lg:p-12 mb-12">
       <h2 className="text-xl font-bold text-center text-black-300  mb-6">Class Fee Collection Status</h2>
       <div className="text-center text-sm font-semibold text-black-300 mb-6">
         <div className="lg:flex lg:flex-row lg:justify-between lg:gap-4 flex flex-col gap-2 lg:mb-6 lg:mt-2 mt-6">
