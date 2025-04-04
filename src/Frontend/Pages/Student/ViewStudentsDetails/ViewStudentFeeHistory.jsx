@@ -33,8 +33,6 @@ const ViewStudentFees = (studentData) => {
     totalItems: 0,
     totalPages: 0
   });
-  console.log(studentData?.studentData)
-
   const id = studentData?.studentData?._id || studentData?.studentData?.student?._id
   const studentName = studentData?.studentData?.name || studentData?.studentData?.student?.name || "Student";
   const studentClass = studentData?.studentData?.class?.name || studentData?.studentData?.student?.class?.name || "N/A";
@@ -46,22 +44,44 @@ const ViewStudentFees = (studentData) => {
   const token = Cookies.get("token");
 
   // Calculate summary amounts
-  const totalAmount = transactions.reduce((sum, t) => sum + (t.baseAmount || 0), 0);
   const totalPaidAmount = transactions.filter(t => t.status === "paid").reduce((sum, t) => sum + (t.totalAmount || 0), 0);
   const totalPendingAmount = transactions.filter(t => t.status !== "paid").reduce((sum, t) => sum + (t.baseAmount || 0), 0);
+  const pendingFine = transactions.filter(t => t.paidFine !== "paid").reduce((sum, t) => sum + (t.lateFineAmount || 0), 0);
   const totalLateFineAmount = transactions.reduce((sum, t) => sum + (t.lateFineAmount || 0), 0);
+  const totalAmount = transactions.reduce((sum, t) => sum + (t.baseAmount || 0), 0);
 
   useEffect(() => {
-    document.title = "My Dues";
+    document.title = "Student Finance";
     dispatch(setCurrentPage(1));
   }, []);
+
+console.log(transactions)
 
   const fetchTransactions = async () => {
     try {
       setLoading(true);
       const response = await GetStudentFeeTransactionAPI(url, token, id);
       if (response.status === 200 || response.status === 204 || response.status === 201) {
-        setTransactions(response.data)
+        const monthOrder = {
+          'January': 1,
+          'February': 2,
+          'March': 3,
+          'April': 4,
+          'May': 5,
+          'June': 6,
+          'July': 7,
+          'August': 8,
+          'September': 9,
+          'October': 10,
+          'November': 11,
+          'December': 12
+        };
+        
+        // Sort the transactions by month
+        const sortedTransactions = [...response.data].sort((a, b) => {
+          return monthOrder[a.month] - monthOrder[b.month];
+        });
+        setTransactions(sortedTransactions)
         setPaginationData({
           currentPage: response.data.currentPage || 1,
           totalItems: response.data.totalItems || 0,
@@ -140,7 +160,7 @@ const ViewStudentFees = (studentData) => {
       headerName: 'Pay Fine',
       renderCell: (row) => (
         <div className={`px-2 py-1 rounded-full text-sm ${
-          row.lateFine ? (row.finePaid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800') : 'text-gray-800'
+          row.lateFine ? (row.finePaid ? ' text-success-500' : ' text-danger') : 'text-gray-800'
         }`}>
           {row.lateFine ? (row.finePaid ? 'paid' : 'not paid') : 'No due fine'}
         </div>
@@ -151,7 +171,7 @@ const ViewStudentFees = (studentData) => {
       headerName: 'Date of Payment',
       renderCell: (row) => (
         <div className="flex items-center gap-2">
-          <span>{row.paymentDate ? new Date(row.paymentDate).toLocaleDateString('en-GB') : '-'}</span>
+          <span>{row.paymentDate ? new Date(row.paymentDate).toLocaleDateString('en-GB') : 'Pending'}</span>
         </div>
       ),
     },
@@ -160,7 +180,7 @@ const ViewStudentFees = (studentData) => {
   if (loading) {
     return (
       <div className="sm:px-16 px-6 sm:py-8 py-6">
-        <div className="bg-white p-2 rounded-md shadow-lg flex items-center justify-center h-40">
+        <div className="bg-white p-2 rounded-md flex items-center justify-center h-40">
           <Loader className="h-12 w-12 animate-spin text-purpleColor" />
         </div>
       </div>
@@ -181,20 +201,25 @@ const ViewStudentFees = (studentData) => {
             <p className="font-semibold text-black-300">{studentClass}</p>
           </div> */}
           <div className="p-3 border rounded-md">
-            <p className="text-gray-500 text-sm">Total Amount</p>
+            <p className="text-gray-500 text-sm">Total Base Amount</p>
             <p className="font-semibold text-black-300">₹{totalAmount}</p>
-          </div>
-          <div className="p-3 border rounded-md">
-            <p className="text-gray-500 text-sm">Total Paid</p>
-            <p className="font-semibold text-green-600">₹{totalPaidAmount}</p>
-          </div>
-          <div className="p-3 border rounded-md">
-            <p className="text-gray-500 text-sm">Total Pending</p>
-            <p className="font-semibold text-red-600">₹{totalPendingAmount}</p>
           </div>
           <div className="p-3 border rounded-md md:col-span-1">
             <p className="text-gray-500 text-sm">Total Late Fine</p>
             <p className="font-semibold text-amber-600">₹{totalLateFineAmount}</p>
+          </div>
+          <div className="p-3 border rounded-md md:col-span-1">
+            <p className="text-gray-500 text-sm">Total Payable Amount</p>
+            <p className="font-semibold text-blue-600">₹{totalAmount+totalLateFineAmount}</p>
+          </div>
+
+          <div className="p-3 border rounded-md">
+            <p className="text-gray-500 text-sm">Total Paid</p>
+            <p className="font-semibold text-green-600">₹{totalPaidAmount+pendingFine}</p>
+          </div>
+          <div className="p-3 border rounded-md">
+            <p className="text-gray-500 text-sm">Total Pending</p>
+            <p className="font-semibold text-red-600">₹{totalPendingAmount}</p>
           </div>
         </div>
       </div>
@@ -207,7 +232,7 @@ const ViewStudentFees = (studentData) => {
       </div>
 
       {/* Fee Table */}
-      <div className="bg-white p-2 rounded-md shadow-lg">
+      <div className="bg-white p-2 rounded-md">
         {/* Error display */}
         {error && (
           <div className="p-2 mb-4 text-red-500 bg-red-50 rounded">
@@ -220,7 +245,7 @@ const ViewStudentFees = (studentData) => {
           columns={columns}
           data={transactions || []}
           checkboxSelection={false}
-          extraClasses="m-4"
+          extraClasses="m-4 shadow-none "
         />
 
         {transactions.length === 0 && (

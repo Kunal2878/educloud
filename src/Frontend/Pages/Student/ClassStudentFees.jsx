@@ -312,20 +312,27 @@ dispatch(setConfirmRequest(false))
       field: 'details',
       headerName: 'Impose Fine',
       renderCell: (row) => (
-        <div className="flex items-center justify-start ">
-          <input
-            type="radio"
-            checked={row?.details?.isLateFeeApplied || false}
-            onChange={() => handleImposeFine(row)}
-            disabled={row?.details?.isLateFeeApplied|| false}
-            className={`h-4 w-4 appearance-none ${
-              row?.details?.isLateFeeApplied ? 
-              'bg-red-500 text-black-3000 border-black-300' : 'bg-gray-200 border-black-300'
-            } rounded focus:ring-blue-500`}
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e")`
-            }}
-          />        </div>
+        <div className="flex items-center justify-start lg:ml-6">
+          {row?.details?.isLateFeeApplied ? (
+            <input
+              type="radio"
+              checked={true}
+              disabled={true}
+              className="h-4 w-4 appearance-none bg-red-500 text-black-3000 border-black-300 rounded focus:ring-blue-500"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e")`
+              }}
+            />
+          ) : (
+            <button 
+              onClick={() => handleImposeFine(row)}
+              className="text-yellow-600 hover:text-danger transition-colors font-black flex flex-row justify-center items-center"
+              title="Impose Fine"
+            >
+              <IndianRupee size={18} className="stroke-current" />
+            </button>
+          )}
+        </div>
       ),
     },
     {
