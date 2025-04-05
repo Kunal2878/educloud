@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { X, Plus, Loader } from "lucide-react";
+import { setEventData, setAnnouncementData,setConfirmRequest,setShowConfirmationModel,setStatus, setAddText,setEventsChanged } from "../../Store/slice";
 import { useSelector, useDispatch } from "react-redux";
-import { setEventData, setAnnouncementData,setConfirmRequest,setShowConfirmationModel,setStatus, setAddText } from "../../Store/slice";
 import { useForm } from "react-hook-form";
 import { toast } from 'react-toastify';
 import { CreateEventAPI, CreateAnnouncementAPI, DeleteEventAPI, DeleteAnnouncementAPI, GetAllEventsAPI, GetAllAnnouncementsAPI } from '../../service/api';
 import Confirmation from "../Components/Elements/ConfirmationModel"
+import EventFormModal from './CreateEvent'
+import AnnouncementFormModal from './CreateAnnouncement'
+
 const Events = () => {
   const token = Cookies.get("token");
   const url = import.meta.env.VITE_API_BASE_URL;
@@ -15,6 +18,7 @@ const Events = () => {
   const events = useSelector((state) => state.userData.EventData);
   const announcements = useSelector((state) => state.userData.AnnouncementData);
   const user = useSelector((state) => state.userData.user);
+  const eventsChanged = useSelector((state) => state.userData.eventsChanged);
   const showConfirmation = useSelector((state) => state.userData.showConfirmationModel);
   const confirmRequest = useSelector((state) => state.userData.confirmRequest);
   
@@ -122,61 +126,7 @@ const Events = () => {
     setIsLoading(false);
   };
 
-  const onEventSubmit = async (data) => {
-    setIsLoading(true);
  
-      const response = await CreateEventAPI(url, data, token);
-      if (response.status === 200 || response.status === 201 || response.status === 204) {
-        await fetchEvents();
-        resetEvent();
-        setToastMessage(response.message||"Event created successfully");
-        setToastType("success");
-        setShowToast(true);
-        setShowEventForm(false);
-      } else {
-        setToastMessage(response.message);
-        setToastType("error");
-        setShowToast(true);
-        if (response.status ===401)
-          {
-            Cookies.remove('token');
-            Cookies.remove('user');
-            window.location.href = '/user-options';
-
-        }
-
-      }
-      setIsLoading(false);
-  
-  };
-
-  const onAnnouncementSubmit = async (data) => {
-    setIsLoading(true);
-   
-      const response = await CreateAnnouncementAPI(url, data, token);
-      if (response.status === 200 || response.status === 201 || response.status === 204) {
-        await fetchAnnouncements();
-        resetAnnouncement();
-        setToastMessage(response.message || "Announcement created successfully");
-        setToastType("success");
-        setShowToast(true);
-        setShowAnnouncementForm(false);
-      } else {
-        setToastMessage(response.message);
-        setToastType("error");
-        setShowToast(true);
-        if (response.status === 401)
-          {
-            Cookies.remove('token');
-            Cookies.remove('user');
-            window.location.href = '/user-options';
-
-        }
-      }
-    
-    setIsLoading(false) ;
-  };
-
   const handleEventSelection = (eventId) => {
     setSelectedEvents((prev) =>
       prev.includes(eventId)
@@ -278,12 +228,21 @@ const DeleteAnnouncements = async ()=>{
           }, 3000);
           dispatch(setConfirmRequest(false))
    
- 
-
-
 }
 
+useEffect(() => {
+  if(eventsChanged ==='events'){
+    fetchEvents();
+    dispatch(setEventsChanged(''))
 
+  }
+  else if(eventsChanged ==='announcements')
+  {
+    fetchAnnouncements(); 
+    dispatch(setEventsChanged(''))
+
+  }
+},[eventsChanged]);
 
 
 if (isLoading) {
@@ -295,205 +254,102 @@ if (isLoading) {
       </div>
     );
   }
-  // Event Form Modal
-  const EventFormModal = () => (
-    <div
-      className={`
-        fixed inset-0 flex items-center justify-center 
-        bg-black bg-opacity-50 z-50 
-        ${
-          showEventForm
-            ? "opacity-100 visible"
-            : "opacity-0 invisible pointer-events-none"
-        }
-        transition-all duration-300 ease-in-out
-      `}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          setShowEventForm(false);
-        }
-      }}
-    >
-      <div
-        className={`
-          relative rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto 
-          bg-white p-6 custom-scrollbar
-          ${
-            showEventForm
-              ? "opacity-100 scale-100 translate-y-0"
-              : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
-          }
-          transition-all duration-300 ease-in-out
-          transform origin-center
-        `}
-      >
-        <button
-          onClick={() => setShowEventForm(false)}
-          className="absolute top-6 right-6 p-2 bg-white rounded-full text-black-300 hover:scale-110"
-        >
-          <X size={24} />
-        </button>
-        <h2 className="h2 mb-[32px] text-left">Create Event</h2>
 
-        {/* Event Form with React Hook Form */}
-        <form onSubmit={handleSubmitEvent(onEventSubmit)} className="mb-[16px]">
-          <div className="mb-4">
-            <input
-              type="text"
-              placeholder="Event Title"
-              className={`w-full p-2 rounded bg-transparent border-2 border-black-200 text-black-300 focus:outline ${eventErrors.title ? 'border-red-500' : ''}`}
-              {...registerEvent("title", { required: "Title is required" })}
-            />
-            {eventErrors.title && <p className="text-red-500 text-sm mt-1">{eventErrors.title.message}</p>}
-          </div>
-          
-          <div className="mb-4">
-            <textarea
-              placeholder="Event Description"
-              className={`w-full h-32 p-2 border-2 rounded bg-transparent border-black-200 text-black-300 focus:outline resize-none ${eventErrors.content ? 'border-red-500' : ''}`}
-              {...registerEvent("content", { required: "Description is required" })}
-            />
-            {eventErrors.content && <p className="text-red-500 text-sm mt-1">{eventErrors.content.message}</p>}
-          </div>
-          
-          <div className="mb-4">
-            <input
-              type="date"
-              placeholder="Date"
-              className={`w-full p-2 border-2 rounded bg-transparent border-black-200 text-black-300 focus:outline [&::-webkit-calendar-picker-indicator]:text-black [&::-webkit-calendar-picker-indicator]:filter-none ${eventErrors.eventDate ? 'border-red-500' : ''}`}
-              {...registerEvent("eventDate", { required: "Date is required" })}
-            />
-            {eventErrors.eventDate && <p className="text-red-500 text-sm mt-1">{eventErrors.eventDate.message}</p>}
-          </div>          
-          <div className="mb-4">
-            <input
-              type="text"
-              placeholder="Location"
-              className={`w-full p-2 border-2 rounded bg-transparent border-black-200 text-black-300 focus:outline ${eventErrors.venue ? 'border-red-500' : ''}`}
-              {...registerEvent("venue", { required: "Location is required" })}
-            />
-            {eventErrors.venue && <p className="text-red-500 text-sm mt-1">{eventErrors.venue.message}</p>}
-          </div>
-          <div className="mb-4">
-                      <input
-                        type="number"
-                        placeholder="Amount"
-                        className={`w-full p-2 border-2 rounded bg-transparent border-black-200 text-black-300 focus:outline ${eventErrors.amount ? 'border-red-500' : ''}`}
-                        {...registerEvent("amount", { required: "Amount is required" })}
-                      />
-                      {eventErrors.amount && <p className="text-red-500 text-sm mt-1">{eventErrors.amount.message}</p>}
-                    </div>
-          
-
-
-
-          <button
-            type="submit"
-            className="w-full bg-success-500 text-white p-2 rounded flex items-center justify-center hover:scale-105 transition duration-200"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-            ) : (
-              "Create Event"
-            )}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-
-  // Announcement Form Modal
-  const AnnouncementFormModal = () => (
-    <div
-      className={`
-        fixed inset-0 flex items-center justify-center 
-        bg-black bg-opacity-50 z-50 
-        ${
-          showAnnouncementForm
-            ? "opacity-100 visible"
-            : "opacity-0 invisible pointer-events-none"
-        }
-        transition-all duration-300 ease-in-out
-      `}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          setShowAnnouncementForm(false);
-        }
-      }}
-    >
-      <div
-        className={`
-          relative rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto 
-          bg-white p-6 custom-scrollbar
-          ${
-            showAnnouncementForm
-              ? "opacity-100 scale-100 translate-y-0"
-              : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
-          }
-          transition-all duration-300 ease-in-out
-          transform origin-center
-        `}
-      >
-        <button
-          onClick={() => setShowAnnouncementForm(false)}
-          className="absolute top-6 right-6 p-2 bg-white rounded-full text-black-300 hover:scale-110"
-        >
-          <X size={24} />
-        </button>
-        <h2 className="h2 mb-[32px] text-left">Create Announcement</h2>
-
-        {/* Announcement Form with React Hook Form */}
-        <form onSubmit={handleSubmitAnnouncement(onAnnouncementSubmit)} className="space-y-[16px]">
-          <div className="text-left space-y-2">
-            <label htmlFor="title" className="h3 cursor-pointer">
-              Title
-            </label>
-            <input
-              id="title"
-              placeholder="Announcement Title"
-              className={`w-full p-2 border-2 rounded bg-transparent border-black-100 focus:outline focus:outline-2 focus:outline-black-200 text-black-300 ${announcementErrors.title ? 'border-red-500' : ''}`}
-              {...registerAnnouncement("title", { required: "Title is required" })}
-            />
-            {announcementErrors.title && <p className="text-red-500 text-sm mt-1">{announcementErrors.title.message}</p>}
-          </div>
-          
-          <div className="text-left space-y-2">
-            <label htmlFor="description" className="h3 cursor-pointer">
-              Description
-            </label>
-            <textarea
-              id="description"
-              placeholder="Announcement Description"
-              className={`w-full h-32 p-2 border-2 rounded bg-transparent border-black-100 focus:outline focus:outline-2 focus:outline-black-200 text-black-300 resize-none ${announcementErrors.description ? 'border-red-500' : ''}`}
-              {...registerAnnouncement("content", { required: "Description is required" })}
-            />
-            {announcementErrors.description && <p className="text-red-500 text-sm mt-1">{announcementErrors.description.message}</p>}
-          </div>
-          
-          <button
-            type="submit"
-            className="mt-[16px] w-full bg-success-500 text-white p-2 rounded  flex items-center justify-center hover:scale-105 transition-all duration-200"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-            ) : (
-              "Create Announcement"
-            )}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+  
 
   return (
     <div className="p-4 relative sm:px-16 px-6 sm:py-16 py-10">
      
 
       {/* Modals */}
-      <EventFormModal />
-      <AnnouncementFormModal />
+      <div
+        className={`
+          fixed inset-0 flex items-center justify-center 
+          bg-black bg-opacity-50 z-50 
+          ${
+            showEventForm
+              ? "opacity-100 visible"
+              : "opacity-0 invisible pointer-events-none"
+          }
+          transition-all duration-300 ease-in-out
+        `}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            setShowEventForm(false);
+          }
+        }}
+      >
+        {showEventForm && (
+          <div
+            className={`
+              relative rounded-xl w-auto max-h-[90vh] overflow-y-auto 
+              bg-white
+              custom-scrollbar
+              ${
+                showEventForm
+                  ? "opacity-100 scale-100 translate-y-0"
+                  : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
+              }
+              transition-all duration-300 ease-in-out
+              transform origin-center
+            `}
+          >
+            <button
+                onClick={() => setShowEventForm(false)}
+              className="absolute top-6 right-4 p-2 z-100 rounded-full text-black-300 transition-colors duration-200 transform hover:scale-110"
+            >
+              <X size={24} />
+            </button>
+             <EventFormModal onClose={() => setShowEventForm(false)} />
+          </div>
+        )}
+      </div>
+      <div
+        className={`
+          fixed inset-0 flex items-center justify-center 
+          bg-black bg-opacity-50 z-50 
+          ${
+            showAnnouncementForm
+              ? "opacity-100 visible"
+              : "opacity-0 invisible pointer-events-none"
+          }
+          transition-all duration-300 ease-in-out
+        `}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            setShowAnnouncementForm(false);
+          }
+        }}
+      >
+        {showAnnouncementForm && (
+          <div
+            className={`
+              relative rounded-xl w-auto max-h-[90vh] overflow-y-auto 
+              bg-white
+              custom-scrollbar
+              ${
+                showAnnouncementForm
+                  ? "opacity-100 scale-100 translate-y-0"
+                  : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
+              }
+              transition-all duration-300 ease-in-out
+              transform origin-center
+            `}
+          >
+            <button
+                onClick={() => setShowAnnouncementForm(false)}
+              className="absolute top-6 right-4 p-2 z-100 rounded-full text-black-300 transition-colors duration-200 transform hover:scale-110 mb-4"
+            >
+              <X size={24} />
+            </button>
+             <AnnouncementFormModal onClose={() => setShowAnnouncementForm(false)} />
+          </div>
+        )}
+      </div>
+     
+
+
+      
       
 {showConfirmation && (
         <div

@@ -221,12 +221,7 @@ const OtherExpenses = () => {
       return (
         <div className="min-h-full max-w-3xl flex items-center justify-center p-6">
       <div className="h-full w-full space-y-12 bg-white">
-              {/* <button
-                onClick={handleClose}
-                className="absolute top-6 right-6 p-2 bg-white rounded-full text-black-300 hover:scale-110 transition-transform duration-300"
-              >
-                <X size={24} />
-              </button> */}
+           
               <h2 className="h2 mb-[32px] text-left text-black-300">Add Expense</h2>
     
               {/* Expense Form with React Hook Form */}
@@ -299,8 +294,6 @@ const OtherExpenses = () => {
         </div>
       }
 
-      {/* Modals */}
-      {/* <ExpenseFormModal /> */}
 
       <div
         className={`
