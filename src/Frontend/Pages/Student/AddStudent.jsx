@@ -124,13 +124,18 @@ const AddStudents = () => {
         setShowToast(true);
         setToastMessage(response.data.message);
         setToastType("error");
+        if (response.status === 401) {  
+          Cookies.remove('user');
+          Cookies.remove('token');
+          window.location.href = '/user-options';                      
+        }
       }
     } catch (error) {
       setShowToast(true);
       setToastMessage(error.response?.data.message);
       setToastType("error");
 
-       if (response.status === 401) {  
+       if (error.status === 401) {  
                   Cookies.remove('user');
                   Cookies.remove('token');
                   window.location.href = '/user-options';                      

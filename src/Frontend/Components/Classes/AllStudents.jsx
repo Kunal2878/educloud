@@ -171,7 +171,10 @@ useEffect(() => {
     },
   ];
 
-
+  const handleEditStudent = (student) => {
+    setSelectedStudent(student);
+    setShowUpdateStudent(true);
+};
   const handleViewStudent = (student) => {
   
     setSelectedStudent(student);
@@ -475,7 +478,7 @@ showConfirmation && (
           data={students || []}
           checkboxSelection={false}
           actions={true}
-          // onEdit={handleEditStudent}
+          onEdit={handleEditStudent}
           onDelete={handleDeleteStudent}
           extraClasses="m-4"
         />
